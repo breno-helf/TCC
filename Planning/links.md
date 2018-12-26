@@ -1,4 +1,4 @@
-# Links for work with hashing algorithms
+# Links estudados até o momento sobre hashing e tabelas chave-valor
 
 - https://dave.cheney.net/2018/05/29/how-the-go-runtime-implements-maps-efficiently-without-generics
 
