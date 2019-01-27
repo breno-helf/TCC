@@ -14,5 +14,6 @@
 
 - https://en.wikipedia.org/wiki/Universal_hashing
 
+- http://interactivepython.org/runestone/static/pythonds/SortSearch/Hashing.html
 
 
