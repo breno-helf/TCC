@@ -16,4 +16,4 @@
 
 - http://interactivepython.org/runestone/static/pythonds/SortSearch/Hashing.html
 
-
+- https://blog.bradfieldcs.com/an-introduction-to-hashing-in-the-era-of-machine-learning-6039394549b0
