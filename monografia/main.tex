@@ -17,7 +17,7 @@
 % ---------------------------------------------------------------------------- %
 % Pacotes 
 \usepackage[T1]{fontenc}
-\usepackage[brazil]{babel}
+\usepackage[english]{babel}
 \usepackage[latin1]{inputenc}
 \usepackage[pdftex]{graphicx}           % usamos arquivos pdf/png como figuras
 \usepackage{setspace}                   % espaçamento flexível
@@ -38,6 +38,7 @@
 \usepackage[all]{hypcap}                    % soluciona o problema com o hyperref e capitulos
 \usepackage[round,sort,nonamebreak]{natbib} % citação bibliográfica textual(plainnat-ime.bst)
 \usepackage{emptypage}  % para não colocar número de página em página vazia
+
 \fontsize{60}{62}\usefont{OT1}{cmr}{m}{n}{\selectfont}
 
 % ---------------------------------------------------------------------------- %
@@ -48,6 +49,7 @@
 \renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{#1}}{}}
 \renewcommand{\sectionmark}[1]{\markright{\MakeUppercase{#1}}{}}
 \renewcommand{\headrulewidth}{0pt}
+\newcommand{\TODO}[1]{{\textcolor{red}{\textbf{TODO:} #1}} \\}
 
 % ---------------------------------------------------------------------------- %
 \graphicspath{{./figuras/}}             % caminho das figuras (recomendável)
@@ -107,9 +109,9 @@ framexrightmargin=10pt
 \thispagestyle{empty}
 \begin{center}
     \vspace*{2.3cm}
-    Universidade de São Paulo\\
-    Instituto de Matemática e Estatística\\
-    Bachalerado em Ciência da Computação
+    University of São Paulo\\
+    Institute of Mathematics and Statistics\\
+    Bachelor's in Computer Science
 
 
     \vspace*{3cm}
@@ -124,7 +126,7 @@ framexrightmargin=10pt
     \vskip 5cm
     \normalsize{São Paulo}
 
-    \normalsize{Novembro de 2019}
+    \normalsize{November de 2019}
 \end{center}
 
 % ---------------------------------------------------------------------------- %
@@ -142,7 +144,7 @@ framexrightmargin=10pt
     \vskip 2cm
 
     \begin{flushright}
-	Monografia final da disciplina \\
+	Final undergraduate thesis for subject \\
         MAC0499 -- Trabalho de Formatura Supervisionado.
     \end{flushright}
 
@@ -155,7 +157,7 @@ framexrightmargin=10pt
     \vskip 5cm
     \normalsize{São Paulo}
 
-    \normalsize{Novembro de 2019}
+    \normalsize{November de 2019}
     \end{center}
 \pagebreak
 
@@ -177,51 +179,45 @@ framexrightmargin=10pt
 
 % ---------------------------------------------------------------------------- %
 % Resumo
-\chapter*{Resumo}
+\chapter*{Abstract}
 
-Elemento obrigatório, constituído de uma sequência de frases concisas e
-objetivas, em forma de texto.  Deve apresentar os objetivos, métodos empregados,
-resultados e conclusões.  O resumo deve ser redigido em parágrafo único, conter
-no máximo 500 palavras e ser seguido dos termos representativos do conteúdo do
-trabalho (palavras-chave).
+During this undergraduate thesis I will explain and learn more about one of the most fascinating and used idea in Computer Science, Hashing and Hash tables. I divided this thesis in three main parts:
+
+\begin{itemize}
+   \item Hash Functions
+   \item Hash Tables
+   \item Applications
+\end{itemize}
+
+\TODO{Remember to explain multiplicative hashing}
+During the first part I explain why hashing functions are an important idea in Computer Science, summarize some of the ideas Donald Knuth present on his book (The Art of Computer programming, Vol. 3) and use some metrics to evaluate what is a good hash function.
+
+\TODO{Replace collision resultion with open addressing.}
+During the second part I will explain one the most used data structures in computer programming, hash tables. I will explain what constitute a hash table, show some of the classic implementations of this data structure and explain some of the most used collision-resolution strategies. It is nice to observe here that although hash tables is a simple concept, there is still debates regarding this subject with no clear consensus on what is a state of the art hash table.
+
+\TODO{It would be nice to explain consistent hashing}
+During the third, and last, part I will explain some application of hash functions in computer science problems. I will explain Rabin-Karp, a string search algorithm that uses hashing and a solution to identify isomorphisms on trees using hashing functions.
+
+I hope this is as fun to read for you as it was for me to write!
 \\
 
-\noindent \textbf{Palavras-chave:} palavra-chave1, palavra-chave2, palavra-chave3.
+\noindent \textbf{Keywords:} Hash functions, Hash Tables, collision-resolution, open-addressing.
 
 % ---------------------------------------------------------------------------- %
 % Abstract
-\chapter*{Abstract}
+% \chapter*{Abstract}
 
-Elemento obrigatório, elaborado com as mesmas características do resumo em
-língua portuguesa.
-\\
+% Elemento obrigatório, elaborado com as mesmas características do resumo em
+% língua portuguesa.
+% \\
 
-\noindent \textbf{Keywords:} keyword1, keyword2, keyword3.
+% \noindent \textbf{Keywords:} keyword1, keyword2, keyword3.
 
 
 % ---------------------------------------------------------------------------- %
-% Sumário
+% Summary
 \tableofcontents    % imprime o sumário
 
-
-
-
-%% % ---------------------------------------------------------------------------- %
-%% \chapter{Lista de Abreviaturas}
-%% \begin{tabular}{ll}
-%%          CFT         & Transformada contínua de Fourier (\emph{Continuous Fourier Transform})\\
-%%          DFT         & Transformada discreta de Fourier (\emph{Discrete Fourier Transform})\\
-%%         EIIP         & Potencial de interação elétron-íon (\emph{Electron-Ion Interaction Potentials})\\
-%%         STFT         & Tranformada de Fourier de tempo reduzido (\emph{Short-Time Fourier Transform})\\
-%% \end{tabular}
-
-%% % ---------------------------------------------------------------------------- %
-%% \chapter{Lista de Símbolos}
-%% \begin{tabular}{ll}
-%%         $\omega$    & Frequência angular\\
-%%         $\psi$      & Função de análise \emph{wavelet}\\
-%%         $\Psi$      & Transformada de Fourier de $\psi$\\
-%% \end{tabular}
 
 %% % ---------------------------------------------------------------------------- %
 %% % Listas de figuras e tabelas criadas automaticamente
@@ -241,16 +237,16 @@ língua portuguesa.
 %\onehalfspacing            % espaçamento um e meio
 
 
-\input cap-introducao        % associado ao arquivo: 'cap-introducao.tex'
-\input cap-desenvolvimentos  % associado ao arquivo: 'cap-desenvolvimento.tex'
-\input cap-conclusoes        % associado ao arquivo: 'cap-conclusoes.tex'
+\input cap-introduction     % associado ao arquivo: 'cap-introduction.tex'
+\input cap-hash-functions   % associado ao arquivo: 'cap-hash-functions.tex'
+\input cap-conclusions       % associado ao arquivo: 'cap-conclusoes.tex'
 
 % cabeçalho para os apêndices
 \renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{\appendixname\ \thechapter}} {\MakeUppercase{#1}} }
 \fancyhead[RE,LO]{}
 \appendix
 
-\include{ape-exemplo}      % associado ao arquivo: 'ape-conjuntos.tex'
+\include{apendix}      % associado ao arquivo: 'ape-conjuntos.tex'
 
 
 % ---------------------------------------------------------------------------- %

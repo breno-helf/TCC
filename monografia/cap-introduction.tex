@@ -1,0 +1,13 @@
+%% ------------------------------------------------------------------------- %%
+\chapter{Introduction}
+\label{cap:Introduction}
+
+Hashing and Hash functions are among the most classic topics within computer science, yet is still one of the topics with most debate about what is state of the art. While the hash table was invented in 1953, widely discussed by Donald Knuth in his famous book The Art of Computer Programming (Vol.3, Chapter 6.4), there are still many tweaks that can be made to boost its performance for specific use cases. One great example is F14, an open-source memory efficient hash table by Facebook \footnote{F14 is open sourced: \url{https://engineering.fb.com/developer-tools/f14/}}.
+
+An example of lack of consensus in this area are the different hash functions and hash table implementations in different languages. There is no clear consensus on how to decide the size of a hash table, what are the tradeoffs of the collision-resolution algorithms or even what defines a good hashing function. Hopefully, we got years of research on the topic to study and present a view on the subject, and that is what I am going to do thoughout this undegraduate thesis.
+
+During this introduction I will give a brief idea of what are hash functions, hash tables and why they are interesting. This will also give you a grasp of what you can expect to read about in each chapter.
+
+\section{Hash Functions}
+
+Hash functions are functions that can be used to map data of an arbitrary size to data of a fized size \cite{HashFuncWiki}
