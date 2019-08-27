@@ -1,18 +1,22 @@
+% Started with the following Brazilain portugese template, adapted to english:
+%
+% ---------------------------------------------------------------------------- %
 % Arquivo LaTeX de exemplo de monografia para a disciplina MAC0499
 % 
 % Adaptado em julho/2015 a partir do
 %
-% ---------------------------------------------------------------------------- %
 % Arquivo LaTeX de exemplo de dissertação/tese a ser apresentados à CPG do IME-USP
 %
 % Versão 5: Sex Mar  9 18:05:40 BRT 2012
 %
 % Criação: Jesús P. Mena-Chalco
 % Revisão: Fabio Kon e Paulo Feofiloff
-
+% ---------------------------------------------------------------------------- %
+%
+%
+%
 
 \documentclass[12pt,twoside,a4paper]{book}
-
 
 % ---------------------------------------------------------------------------- %
 % Pacotes 
@@ -36,9 +40,8 @@
 %\usepackage[pdftex,plainpages=false,pdfpagelabels,pagebackref,colorlinks=true,citecolor=black,linkcolor=black,urlcolor=black,filecolor=black,bookmarksopen=true]{hyperref} % links em preto
 \usepackage[pdftex,plainpages=false,pdfpagelabels,pagebackref,colorlinks=true,citecolor=DarkGreen,linkcolor=NavyBlue,urlcolor=DarkRed,filecolor=green,bookmarksopen=true]{hyperref} % links coloridos
 \usepackage[all]{hypcap}                    % soluciona o problema com o hyperref e capitulos
-\usepackage[round,sort,nonamebreak]{natbib} % citação bibliográfica textual(plainnat-ime.bst)
+\usepackage[square, numbers]{natbib} % citação bibliográfica textual(plainnat-ime.bst)
 \usepackage{emptypage}  % para não colocar número de página em página vazia
-
 \fontsize{60}{62}\usefont{OT1}{cmr}{m}{n}{\selectfont}
 
 % ---------------------------------------------------------------------------- %
@@ -65,7 +68,7 @@
 % Opções de listing usados para o código fonte
 % Ref: http://en.wikibooks.org/wiki/LaTeX/Packages/Listings
 \lstset{ %
-language=Java,                  % choose the language of the code
+language=C++,                  % choose the language of the code
 basicstyle=\footnotesize,       % the size of the fonts that are used for the code
 numbers=left,                   % where to put the line-numbers
 numberstyle=\footnotesize,      % the size of the fonts that are used for the line-numbers
@@ -127,8 +130,8 @@ framexrightmargin=10pt
     \normalsize{São Paulo}
 
     \normalsize{November de 2019}
-\end{center}
-
+  \end{center}
+  
 % ---------------------------------------------------------------------------- %
 % Página de rosto
 %
@@ -181,27 +184,24 @@ framexrightmargin=10pt
 % Resumo
 \chapter*{Abstract}
 
-During this undergraduate thesis I will explain and learn more about one of the most fascinating and used idea in Computer Science, Hashing and Hash tables. I divided this thesis in three main parts:
+During this undergraduate thesis I will explain about two of the most fascinating and used ideas in Computer Science, hash functions and hash tables. I divided this thesis in three main parts:
 
 \begin{itemize}
-   \item Hash Functions
-   \item Hash Tables
+   \item Hash functions
+   \item Hash tables
    \item Applications
 \end{itemize}
 
-\TODO{Remember to explain multiplicative hashing}
-During the first part I explain why hashing functions are an important idea in Computer Science, summarize some of the ideas Donald Knuth present on his book (The Art of Computer programming, Vol. 3) and use some metrics to evaluate what is a good hash function.
+During the first part I explain why hash functions are an important idea in Computer Science, summarize some of the ideas Donald Knuth present on his book (The Art of Computer programming, Vol. 3) and use some metrics to evaluate what is a good hash function.
 
-\TODO{Replace collision resultion with open addressing.}
-During the second part I will explain one the most used data structures in computer programming, hash tables. I will explain what constitute a hash table, show some of the classic implementations of this data structure and explain some of the most used collision-resolution strategies. It is nice to observe here that although hash tables is a simple concept, there is still debates regarding this subject with no clear consensus on what is a state of the art hash table.
+During the second part I talk about one of the most used data structures in computer programming, hash tables. I will explain what constitute a hash table, show some of the classic implementations of this data structure and explain some of the most used open addressing strategies. It is nice to observe here that although hash tables is a simple concept, there is still debates regarding this subject with no clear consensus on what is a state of the art hash table.
 
-\TODO{It would be nice to explain consistent hashing}
-During the third, and last, part I will explain some application of hash functions in computer science problems. I will explain Rabin-Karp, a string search algorithm that uses hashing and a solution to identify isomorphisms on trees using hashing functions.
+During the third, and last, part I will cite and explain some application of hash functions in computer science problems. I will explain Rabin-Karp, a string search algorithm that uses hashing and a solution to identify isomorphisms on trees using hashing functions.
 
 I hope this is as fun to read for you as it was for me to write!
 \\
 
-\noindent \textbf{Keywords:} Hash functions, Hash Tables, collision-resolution, open-addressing.
+\noindent \textbf{Keywords:} hash functions, hash tables, collision-resolution, open-addressing.
 
 % ---------------------------------------------------------------------------- %
 % Abstract
@@ -216,7 +216,7 @@ I hope this is as fun to read for you as it was for me to write!
 
 % ---------------------------------------------------------------------------- %
 % Summary
-\tableofcontents    % imprime o sumário
+\tableofcontents    % print contents
 
 
 %% % ---------------------------------------------------------------------------- %
@@ -227,33 +227,35 @@ I hope this is as fun to read for you as it was for me to write!
 
 
 % ---------------------------------------------------------------------------- %
-% Capítulos do trabalho
+% Chapters of the thesis
 \mainmatter
 
-% cabeçalho para as páginas de todos os capítulos
+% Head of all chapters
 \fancyhead[RE,LO]{\thesection}
 
-\singlespacing              % espaçamento simples
-%\onehalfspacing            % espaçamento um e meio
+\singlespacing              % simple spacing
+\onehalfspacing             % one and a half spacing
 
 
-\input cap-introduction     % associado ao arquivo: 'cap-introduction.tex'
-\input cap-hash-functions   % associado ao arquivo: 'cap-hash-functions.tex'
-\input cap-conclusions       % associado ao arquivo: 'cap-conclusoes.tex'
+\input cap-introduction     % associated with file: 'cap-introduction.tex'
+\input cap-hash-functions   % associated with file: 'cap-hash-functions.tex'
+\input cap-hash-tables      % associated with file: 'cap-hash-tables.tex'
+\input cap-applications     % associated with file: 'cap-applications.tex'
+\input cap-conclusions      % associated with file: 'cap-conclusoes.tex'
 
-% cabeçalho para os apêndices
+% Head for apendix
 \renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{\appendixname\ \thechapter}} {\MakeUppercase{#1}} }
 \fancyhead[RE,LO]{}
 \appendix
 
-\include{apendix}      % associado ao arquivo: 'ape-conjuntos.tex'
+\include{apendix}      % associated with file: 'ape-conjuntos.tex'
 
 
 % ---------------------------------------------------------------------------- %
 % Bibliografia
-\backmatter \singlespacing   % espaçamento simples
-\bibliographystyle{plainnat-ime} % citação bibliográfica textual
-\bibliography{bibliografia}  % associado ao arquivo: 'bibliografia.bib'
+\backmatter \singlespacing   % simple spacing
+\bibliographystyle{plainnat-ime} % Bibliographic table citation
+\bibliography{bibliografia}  % associated with file: 'bibliografia.bib'
 
 
 %%%  ---------------------------------------------------------------------------- %
