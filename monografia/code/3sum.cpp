@@ -39,12 +39,9 @@ bool threeSumWithHashTable(vector<int> v, int S) {
    for (int i = 0; i < v.size(); i++) {
       for (int j = i + 1; j < v.size(); j++) {
          hashTable[v[i]]--;
-         hashTable[v[j]]--;
-
-         
+         hashTable[v[j]]--;         
          if (hashTable.find(S - v[i] - v[j]) != hashTable.end() &&
              hashTable[S - v[i] - v[j]] > 0) return true;
-
          hashTable[v[i]]++;
          hashTable[v[j]]++;
       }
