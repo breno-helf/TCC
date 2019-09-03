@@ -7,3 +7,86 @@
 \item Rabin Karp
 \item Hashing trees
 \end{itemize}
+
+Hash functions and hash tables have a great number of applications in computer science. During this last section I focus on applications of hash functions in algorithms, but citing superficially applications in other areas (like criptography, data deduplication and caching).
+
+Among the applications that I explain in this section there is a focus in two applications: Rabin-Karp string matching algorithm and hashing of a rooted tree for isomorphism checking. Rabin-karp string matching algorithm is one of the main application of a technique called rolling hashing. Hahsing of rooted tree for isomorphism checking is an interesting application sometimes used in competitive programming.
+
+To motivate the start of this thesis I will start using hash tables to solve a very simple, yet famous, problem called 3-sum.
+
+\section{3-sum problem}
+
+The problem is stated as following:
+
+\textit{Make a function that given an array of integer numbers and an integer S, it returns if there are any 3 different elements in this array that its sum equals S. Assume that there are no three different elements in the array that overflow a 32-bit integer when summed together.}
+
+This a very interesting problem that has many different solutions. To start I will show and explain to you the brute force solution: \\
+\\
+\bigskip
+
+\begin{lstlisting}
+bool threeSumWithoutHashTable(vector<int> v, int S) {
+   for (int i = 0; i < v.size(); i++) {
+      for (int j = i + 1; j < v.size(); j++) {
+         for (int k = j + 1; k < v.size(); k++) {
+            if (v[i] + v[j] + v[k] == S) return true;
+         }
+      }
+   }
+   return false;
+}
+\end{lstlisting}
+
+\medskip
+
+The above solution solves the problem in \( O(n^3) \) time complexity and \( O(1) \) memory complexity, being \( n \) the size of the array. It don't allocate any memory but checks every triple to find if one satisfy the condition. The question is, can we do better in time complexity using hash tables? The answer is yes:
+
+\medskip
+
+\begin{lstlisting}
+bool threeSumWithHashTable(vector<int> v, int S) {
+   unordered_map<int, int> hashTable; 
+   for (int i = 0; i < v.size(); i++) {
+      hashTable[v[i]]++;
+   }
+   for (int i = 0; i < v.size(); i++) {
+      for (int j = i + 1; j < v.size(); j++) {
+         hashTable[v[i]]--;
+         hashTable[v[j]]--;         
+         if (hashTable.find(S - v[i] - v[j]) != hashTable.end() &&
+             hashTable[S - v[i] - v[j]] > 0) return true;
+         hashTable[v[i]]++;
+         hashTable[v[j]]++;
+      }
+   }
+   return false;
+}
+\end{lstlisting}
+
+\medskip
+
+The above solution solves the problem in \( O(n^2) \), time complexity (average) and \( O(n) \) memory complexity. Although the worst case scenario is \( O(n^3) \) and it uses more memory, this solution is way faster in practice for large input cases. To showcase this I made simmulations with the codes shown (that can be found in bibliography), the results are: \\
+
+\bigskip
+
+\begin{tabular}{|l|l|l|l|}
+  \hline
+  ArraySize & Time Without Hash Table & Time with Hash Table & Increase in Performance \\
+  \hline
+  128       & 4.231ms                 & 6.494ms              & -53.4\%                  \\
+  \hline
+  256       & 34.223ms                & 26.665ms             & 22.0\%                   \\
+  \hline
+  512       & 267.499ms               & 99.130ms             & 62.9\%                   \\
+  \hline
+  1024      & 1742.688ms              & 302.453ms            & 82.6\%                   \\
+  \hline
+  2048      & 7345.126ms              & 683.197ms            & 90.6\%                   \\
+  \hline
+  4096      & 25029.888ms             & 761.363ms            & 96.9\%                   \\
+  \hline
+\end{tabular}
+
+\bigskip
+
+As we can see for the table above, the three sum solution using hash table quickly surpasses the brute force implementation. As we will see later, hash tables (or \textit{unordered\_map}) are not the fastest hash tables possible \cite{UnorderedMapDiscussion}. That means we can have an even greater performance than what is shown now.  
