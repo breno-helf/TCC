@@ -26,10 +26,30 @@ The value extracted from the hash function for an object is usually called \text
 
 To formalize a little, lets define a hash function as a function \( H \) that takes an element \( x \in X \) and has \( [0, M) \) as a codomain.
 
-\[ 0 \leq H(x) < M \]
-
-\medskip
-
 This is the same definition used by Donald Knuth \cite{TAOCP3} and some articles \cite{RobinHoodHashing}. This definition makes sense for our case because we will be talking mostly about hash functions used in hash tables, and in that case we want integers that will be indexes in an array (as we will se later on). In other cases will may see hash functions value as strings, like for when we hash an string for password storage or when we use a hash function in files for check-sum (for when we are checking if two files are the same). For the goal of this thesis we will not be focusing on those functions, but it is important to notice that strings can also be abstracted to integers if we just look at the bytes.
 
 For our specific case we are looking at a hash function that is good for the construction of hash tables, that is that is fast to calculate and minimizes the number of collisions. Depending on our goals we might want a different metric, for check-sums for example we may want a function that is very sensible to chages, and for passwords one that is very hard to find its inverse.
+
+As said in Donald Knuth's book, we know that it is theoricatically impossible to create a hash functio that generates true random data from non random data in actual file, but we can do pretty close to that (or in some cases, even better).  Donald Knuth describes 2 specific methods for simple hash function, named \textit{division hashing} and \textit{multiplicative hashing} techniques. As the name sugests, the first is based on division and the former on multiplication.
+
+The divison hashing method simply to represent the data as a number take the remainder of that number modulo a value. Supposing that we can represent the data as an integer \( X \) the division hashing would be to choose a value M and the hashing function would be \( X mod M \). The C++ code would look as following:
+
+\begin{lstlisting}
+int divisionHashing(int X, int M) {
+  return X % M;
+}
+\end{lstlisting}
+
+In general large prime numbers tend to be a good value to \( M \), because if not we may have repetitions. One great example of this is if \( M \) is even, then the parity of hash value of \( X \) will match the parity of \( X \) (which will cause a bad distribution). The same pattern will happen in different intervals for different powers of \( 2 \).
+
+For the multiplicative hashing, we can furst imagine that the overflow is like a ``natural'' modulo operation (We also have methods to take the modulo without overflowing, to know more about that ). Supposing that we can represent the data as an integer \( X \), the multiplication hashing would be to choose a value \( A \) that we mulitply by \( X \) and then take the value module \( M \) (That \( M \) is described as a power of \( 2 \) by Donald Knuth, so it would be a more ``General'' multiplicative method). The C++ code would look as follwing:
+
+\medskip
+
+\begin{lstlisting}
+int multiplicativeHashing(int X, int A, int M) {
+  return (A * X) % M; 
+}
+\end{lstlisting}
+
+As you can see from above multiplicative hashing is just a more general division hashing. In knuth's book he restricts \( A \) to be relatively prime to \( w \), being \( w \) the size of a ``word'' in the machine (which is \( MAX\_INT \) in our case). That definition is often useful if you can retrieve a value \( Y \) for a given hahs value \( F \). It is good to note here that if \( H(X) = F \) and \( H(Y) = F \), \( X \) is not necessarily equal to \( Y \), as two keys can have the same hash value.

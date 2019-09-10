@@ -25,3 +25,9 @@
 - Arrumar ~amortizado e sim Esperado
 - Escrever "Bulk" do Hash Functions
 - Ler Robin Hood Hashing
+
+## Semana 5
+
+- Dar uma olhada no Cormen
+- Terminar capitulo de Funcoes de Hashing
+- Comecar a ler sobre Chaining vs Open-Addressing
