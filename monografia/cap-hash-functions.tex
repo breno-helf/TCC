@@ -32,24 +32,40 @@ For our specific case we are looking at a hash function that is good for the con
 
 As said in Donald Knuth's book, we know that it is theoricatically impossible to create a hash functio that generates true random data from non random data in actual file, but we can do pretty close to that (or in some cases, even better).  Donald Knuth describes 2 specific methods for simple hash function, named \textit{division hashing} and \textit{multiplicative hashing} techniques. As the name sugests, the first is based on division and the former on multiplication.
 
-The divison hashing method simply to represent the data as a number take the remainder of that number modulo a value. Supposing that we can represent the data as an integer \( X \) the division hashing would be to choose a value M and the hashing function would be \( X mod M \). The C++ code would look as following:
+The divison hashing method simply to represent the data as a number take the remainder of that number modulo a value. Supposing that we can represent the data as a non negative integer \( X \) the division hashing would be to choose a value M and the hashing function would be \( X mod M \). The C++11 code would look as following:
 
 \begin{lstlisting}
-int divisionHashing(int X, int M) {
+unsigned_int divisionHashing(unsigned_int X, unsigned_int M) {
   return X % M;
 }
 \end{lstlisting}
 
 In general large prime numbers tend to be a good value to \( M \), because if not we may have repetitions. One great example of this is if \( M \) is even, then the parity of hash value of \( X \) will match the parity of \( X \) (which will cause a bad distribution). The same pattern will happen in different intervals for different powers of \( 2 \).
 
-For the multiplicative hashing, we can furst imagine that the overflow is like a ``natural'' modulo operation (We also have methods to take the modulo without overflowing, to know more about that ). Supposing that we can represent the data as an integer \( X \), the multiplication hashing would be to choose a value \( A \) that we mulitply by \( X \) and then take the value module \( M \) (That \( M \) is described as a power of \( 2 \) by Donald Knuth, so it would be a more ``General'' multiplicative method). The C++ code would look as follwing:
+For the multiplicative hashing, we can furst imagine that the overflow is like a ``natural'' modulo operation (We also have methods to take the modulo without overflowing, to know more about that ). Supposing that we can represent the data as an non negative integer \( X \), the multiplication hashing would be to choose a value \( A \) that we mulitply by \( X \) and then take the value module \( M \) (That \( M \) is described as a power of \( 2 \) by Donald Knuth, so it would be a more ``General'' multiplicative method). The C++11 code would look as follwing:
 
 \medskip
 
 \begin{lstlisting}
-int multiplicativeHashing(int X, int A, int M) {
+unsigned_int multiplicativeHashing(unsigned_int X,
+                                   unsigned_int A,
+                                   unsigned_int M) {
   return (A * X) % M; 
 }
 \end{lstlisting}
 
 As you can see from above multiplicative hashing is just a more general division hashing. In knuth's book he restricts \( A \) to be relatively prime to \( w \), being \( w \) the size of a ``word'' in the machine (which is \( MAX\_INT \) in our case). That definition is often useful if you can retrieve a value \( Y \) for a given hahs value \( F \). It is good to note here that if \( H(X) = F \) and \( H(Y) = F \), \( X \) is not necessarily equal to \( Y \), as two keys can have the same hash value.
+
+Here it is good to note, we have many ways of converting non numerical data to non negative integers. In the end, it is all just a sequence bytes, that when readed in a specific way form another type of data, such as images or strings. For example, one way of transforming a string to a non negative integer is summing the ASCII value of its characters. The C++11 code for that would look as following:
+
+\begin{lstlisting}
+unsigned_int convertStringToInteger(string str) {
+  unsigned_int hashValue = 0;
+  for (char c : str) {
+    hashValue += (int) c;
+  }
+  return hashValue;
+}
+\end{lstlisting}
+
+We always use usigned integers for our non negative integer calculations due to the natural modulo operation of it on overflow cases. It is equivalent to having a \( mod 2^{32} \) every time it overflows (As we only look at the leading 32 bits).
