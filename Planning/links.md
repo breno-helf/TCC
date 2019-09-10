@@ -35,3 +35,5 @@
 - https://www.strchr.com/hash_functions
 
 - https://softwareengineering.stackexchange.com/questions/49550/which-hashing-algorithm-is-best-for-uniqueness-and-speed
+
+- https://cs.uwaterloo.ca/research/tr/1986/CS-86-14.pdf
