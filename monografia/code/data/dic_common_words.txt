@@ -1,0 +1,500 @@
+human being 
+adult
+man
+woman
+child
+boy
+girl
+thing 
+cube
+ball
+mind
+body
+soul
+will
+reality
+truth
+consciousness
+metaphysics
+ethics
+epistemology
+aesthetics
+life
+freedom
+job
+biography
+musician
+explorer
+scientist
+inventor
+writer
+thinker
+politician
+Statesman
+carpenter
+driver
+mathematician
+book
+bibliography
+bread
+coffee
+maize
+cotton
+soya bean
+sorghum
+wheat
+barley
+oats
+fruit
+vegetable
+tobacco
+cheese
+alcohol
+tea
+potato
+water
+beer
+wine
+Africa
+Antarctica
+Asia
+Oceania
+Europe
+North America
+South America
+river
+ocean
+sea
+volcano
+canyon
+reef
+falls
+lake
+city
+dinosaur
+prehistory
+archaeology
+age
+Renaissance
+discovery
+slavery
+revolution
+anarchy
+communism
+fascism
+democracy
+monarchy
+dictatorship
+nationalism
+globalisation
+socialism
+liberalism
+capitalism
+imperialism
+racism
+feminism
+diplomacy
+Human rights
+sexism
+punishment
+abortion
+birth control
+war
+peace
+islam
+judaism
+christianity
+buddhism
+hinduism
+sikhism
+god
+spirit
+atheism
+agnosticism
+humanism
+theatre
+television
+radio
+film
+gambling
+literature
+dance
+art
+music 
+pop
+rock
+traditional
+classical
+jazz
+comics
+games 
+chess
+go
+checkers
+backgammon
+cards
+dice
+Heat
+Electricity
+Magnetism
+Gravity
+Mass
+Force
+Time
+Length
+Area
+Velocity
+Acceleration
+Atom
+Electron
+Proton
+Neutron
+Photon
+quantum
+Chemical element
+Periodic table
+Chemical reaction
+Molecule
+Acid
+Alkali
+pH
+Salt
+Compound
+Organic chemistry
+bacterium
+archaea
+protist
+fungus
+plant 
+tree
+flower
+animal 
+bird
+fish
+horse
+insect
+mammal
+reptile
+snake
+elephant
+camel
+cattle
+sheep
+dog
+cat
+lion
+eagle
+bear
+dragon
+geology
+ecology
+Solar system 
+Sun
+Earth 
+Moon
+Mercury
+Venus
+Mars
+Jupiter
+Saturn
+Uranus
+Neptune
+Pluto
+galaxy
+Milky Way
+Big Bang
+rain
+cloud
+snow
+hail
+hurricane
+salt
+diamond
+chalk
+granite
+flint
+sandstone
+quartz
+gold
+silver
+iron
+copper
+zinc
+tin
+aluminium
+bronze
+brass
+steel
+benzene
+kerosene
+Agriculture
+fire
+Metallurgy
+Writing
+Alphabet
+Ship
+Sail
+Inclined plane
+Wheel
+Pulley
+Lever
+Screw
+Wedge
+Weapon 
+Gun
+Axe
+Sword
+Longbow
+Explosive
+Gunpowder
+Bicycle
+Steam engine
+Train
+Automobile
+Electronics
+Electric motor
+Radio
+Television
+Telephone
+Aircraft
+Computer
+Laser
+Internet
+English
+Mandarin
+Cantonese
+Arabic
+German
+Hindi
+Urdu
+Bahasa Indonesia
+Russian
+Spanish
+French
+Esperanto
+Sanskrit
+Latin
+Greek
+Japanese
+Korean
+Thai
+Vietnamese
+Portuguese
+Italian
+Dutch
+pyramids
+arch
+dome
+bridge
+nail
+number 
+integer
+geometry
+algebra 
+equation
+Variable
+Proof
+Calculus
+Trigonometry
+Calendar
+Set theory
+Logic
+heart
+lungs
+vagina
+penis
+kidneys
+stomach
+liver
+spleen
+intestines
+skeleton
+breast
+skin
+head 
+eye
+mouth
+ear
+brain
+arm 
+elbow
+wrist
+hand 
+finger
+thumb
+leg 
+knee
+ankle
+foot 
+toe
+pregnancy 
+fetus
+placenta
+blindness
+deafness
+disease
+illness
+cancer
+malnutrition
+starvation
+obesity
+cholera
+tuberculosis
+AIDS
+smallpox
+malaria
+dysentery
+leprosy
+virus
+medication
+vaccination
+surgery
+Soccer
+Cricket
+Baseball
+American football
+Athletics
+Swimming
+Earthquake
+Volcano
+Hurricane
+Flood
+Avalanche
+meltdown
+Tornado
+Tsunami
+Blue
+Red
+Green
+Yellow
+Orange
+Black
+White
+January
+February
+March
+April
+May
+June
+July
+August
+September
+October
+November
+December
+Monday
+Tuesday
+Wednesday
+Thursday
+Friday
+Saturday
+Sunday
+one
+two
+three
+four
+five
+six
+seven
+eight
+nine
+ten
+eleven
+twelve
+thirteen
+fourteen
+fifteen
+sixteen
+seventeen
+eighteen
+nineteen
+twenty
+thirty
+forty
+fifty
+sixty
+seventy
+eighty
+ninety
+hundred
+thousand
+million
+billion
+meter
+kilometer
+litre
+gram
+kilogram
+second
+degree
+to be
+to begin
+to give birth
+to be born
+to come
+to count
+to dance
+to die
+to dream
+to drink
+to eat
+to forget
+to get down
+to get in
+to get out
+to get up
+to give
+to go
+to go away
+to hate
+to have
+to leave
+to live
+to love
+to make
+to marry
+to rain
+to read
+to remember
+to run
+to sing
+to sit
+to sleep
+to smoke
+to start
+to stay
+to wish
+to write
+small
+big
+long
+short
+large
+narrow
+deep
+swallow
+fast
+slow
+high
+low
+expensive
+cheap
+young
+aged
+new
+old
+used
+many
+few
+slowly
+early
+late
+far
+near
+name
+word
+love
+to know
+egg
+to fly
+cold
