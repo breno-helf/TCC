@@ -42,21 +42,21 @@ unsigned_int divisionHashing(unsigned_int X, unsigned_int M) {
 
 In general large prime numbers tend to be a good value to \( M \), because if not we may have repetitions. One great example of this is if \( M \) is even, then the parity of hash value of \( X \) will match the parity of \( X \) (which will cause a bad distribution). The same pattern will happen in different intervals for different powers of \( 2 \).
 
-For the multiplicative hashing, we can furst imagine that the overflow is like a ``natural'' modulo operation (We also have methods to take the modulo without overflowing, to know more about that ). Supposing that we can represent the data as an non negative integer \( X \), the multiplication hashing would be to choose a value \( A \) that we mulitply by \( X \) and then take the value module \( M \) (That \( M \) is described as a power of \( 2 \) by Donald Knuth, so it would be a more ``General'' multiplicative method). The C++11 code would look as follwing:
+For the multiplicative hashing, we can furst imagine that the overflow is like a ``natural'' modulo operation (We also have methods to take the modulo without overflowing, to know more about that ). Supposing that we can represent the data as an non negative integer \( X \), the multiplication hashing would be to choose a value \( A \) that we mulitply by \( X \) and then take the value module \( 2^P \) (That is how is described in donald knuth book, by \textit{``taking the leading bits of the least signifcant half of \( A * X \)''}). The C++11 code would look as follwing:
 
 \medskip
 
 \begin{lstlisting}
 unsigned_int multiplicativeHashing(unsigned_int X,
                                    unsigned_int A,
-                                   unsigned_int M) {
-  return (A * X) % M; 
+                                   unsigned_int P) {
+  return (A * X) << P; 
 }
 \end{lstlisting}
 
-As you can see from above multiplicative hashing is just a more general division hashing. In knuth's book he restricts \( A \) to be relatively prime to \( w \), being \( w \) the size of a ``word'' in the machine (which is \( MAX\_INT \) in our case). That definition is often useful if you can retrieve a value \( Y \) for a given hahs value \( F \). It is good to note here that if \( H(X) = F \) and \( H(Y) = F \), \( X \) is not necessarily equal to \( Y \), as two keys can have the same hash value.
+In knuth's book he restricts \( A \) to be relatively prime to \( w \), being \( w \) the size of a ``word'' in the machine (which is \( MAX\_INT \) in our case). That definition is often useful if you can retrieve a value \( Y \) for a given hash value \( F \). It is good to note here that if \( H(X) = F \) and \( H(Y) = F \), \( X \) is not necessarily equal to \( Y \), as two keys can have the same hash value.
 
-Here it is good to note, we have many ways of converting non numerical data to non negative integers. In the end, it is all just a sequence bytes, that when readed in a specific way form another type of data, such as images or strings. For example, one way of transforming a string to a non negative integer is summing the ASCII value of its characters. The C++11 code for that would look as following:
+Here it is also good to note, we have many ways of converting non numerical data to non negative integers. In the end, it is all just a sequence bytes, that when readed in a specific way form another type of data, such as images or strings. For example, one way of transforming a string to a non negative integer is summing the ASCII value of its characters. The C++11 code for that would look as following:
 
 \begin{lstlisting}
 unsigned_int convertStringToInteger(string str) {
@@ -68,4 +68,37 @@ unsigned_int convertStringToInteger(string str) {
 }
 \end{lstlisting}
 
-We always use usigned integers for our non negative integer calculations due to the natural modulo operation of it on overflow cases. It is equivalent to having a \( mod 2^{32} \) every time it overflows (As we only look at the leading 32 bits).
+We always use usigned integers for our non negative integer calculations due to the natural modulo operation of it on overflow cases. It is equivalent to having a \( mod \ 2^{32} \) every time it overflows (As we only look at the leading 32 bits). We can also use \( XOR \) function to mix numbers together. 
+
+There is also a very common type of hash functions that tend to work pretty well for strings \cite{DragonHashFunc}. It is a ``Superset'' of multiplicative hash functions, or a generalization. The C++11 code would look as following:
+
+\begin{lstlisting}
+unsigned_int hashForString(string str,
+                           unsigned_int initialValue,
+                           unsigned_int multiplier,
+                           unsigned_int modulo) {
+  unsigned_int hash = initialValue;
+  for (char c : str) {
+    hash = (multiplier * hash + (int)c);
+  }
+  return hash % modulo;
+}
+\end{lstlisting}
+
+The above function is very common for string hashing, and by just choosing a different initial value and multiplier we can have completely different hash funcitons. Although using summing or using XOR usually don't provide much difference, XOR is preferable due to the fact that we do not need to worry about overflow. Some values are of known hash funcitons, for example with \( multiplier = 33 \) and \( initialValue = 5381 \) generates \textit{Bernstein hash djb2} \cite{BernsteinHash} or \( multiplier = 31 \) and \( initialValue = 0 \) generates \textit{Kernighan and Ritchie's hash} \cite{KernighanHash}. Those are famous functions and their values are not choosen randomly, as there are some factors that maximizes the chance of producing a good hash function (remembering, good means low collision rate and fast computation). Those factors are:
+
+\begin{itemize}
+\item The multiplier should be bigger than the size of your alphabet (in our case usually 26 for english words or 256 for ASCII). That is the case because if it is smaller we can have wrong matches easier. For example, suppose that \( multiplier = 10 \) and \( initialValue = 0 \), we have \( H('ABA') = H('AAK') = 7225 \) before taking the modulo operation.
+
+\item The multiplication by the multiplier should be easy to calculate with simple operations, such as bitwise operations and adding. That is quite intuitive as we want a hash function that is fast to calculate. 
+
+\item The multiplier should be coprime with the modulo. That is because if not we will ``cicle'' hashes at a greater rate than the modulo (We can use some modular arithmetic to prove that). Usually prime numbers tend to be good multipliers.
+\end{itemize}
+
+Now that we know some good templates for producing hash functions lets try to find a concrete metric or formula that measures the quality of a hash function. Fortunately, the famous Red Dragon Book \cite{DragonBook} has already proposed a formula to measures the quality of a hash function. The formula is the following:
+
+\[ \sum_{j = 0}^{m - 1} \frac{b_j(b_j + 1)/2}{ (n/2m)(n + 2m - 1) } \]
+
+Where \( n \) is the number of keys, \( m \) is the number of total slots and \( b_j \) is the number of keys in the \( j-th \) slot. The intuition for the numerator is the number of operations we will need to execute to find each element of the table. For example, we need 1 operation to find the first element, 2 to find the second, and so on. That means that we will end up with the follwing arithmetic progression. We know that a hash function that distributes the keys in a uniformly random distribution has expected bucket size of \( n / m \), so we can calculate that the expected value of the numerator formula is \( (n/2m)(n + 2m - 1) \). So that gives us a ratio of collisions (thinking just about operations to access a value) of ``our'' hash function with an ``ideal'' function. That means that a value close to \( 1.00 \) of the above formula is good, and values below to \( 1.00 \) means that we had less conflicts than an uniformly distributed random function.
+
+From common data as used in Dragon Book and Strchr website \cite{DragonHashFunc} I will reproduce some tests with the previously cited hash functions.
