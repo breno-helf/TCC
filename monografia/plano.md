@@ -31,3 +31,12 @@
 - Dar uma olhada no Cormen
 - Terminar capitulo de Funcoes de Hashing
 - Comecar a ler sobre Chaining vs Open-Addressing
+
+## Semana 6
+
+- Fazer oq nao fez semana passada ne seu pato
+
+## Semana 7
+
+- Fazer Grafico do Dragon Book e escrever analise
+- Alugar cormer e ler antes de continuar cormen.
