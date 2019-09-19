@@ -1,351 +1,306 @@
-Testing for file data/dic_Shakespeare.txt
-
-	For table size = 1031
-		bernsteinHashADD = 1.012
-		bernsteinHashXOR = 0.998
-		kernighanRitchieHashADD = 0.978
-		kernighanRitchieHashXOR = 1.003
-		redDragonBookHash = 0.988
-		defaultHash = 0.993
-		paulHesiehHash = 0.999
-		dumbHashADD = 1.805
-		dumbHashXOR = 8.293
-		identityHash = 1.329
-
-	For table size = 16411
-		bernsteinHashADD = 0.996
-		bernsteinHashXOR = 1.000
-		kernighanRitchieHashADD = 0.991
-		kernighanRitchieHashXOR = 0.995
-		redDragonBookHash = 1.003
-		defaultHash = 0.988
-		paulHesiehHash = 1.003
-		dumbHashADD = 4.207
-		dumbHashXOR = 19.367
-		identityHash = 1.763
-
-	For table size = 131101
-		bernsteinHashADD = 0.998
-		bernsteinHashXOR = 1.001
-		kernighanRitchieHashADD = 1.001
-		kernighanRitchieHashXOR = 0.998
-		redDragonBookHash = 0.999
-		defaultHash = 1.001
-		paulHesiehHash = 1.003
-		dumbHashADD = 4.564
-		dumbHashXOR = 21.012
-		identityHash = 1.820
-
--------------------------------------------------
-Testing for file data/dic_common_words.txt
-
-	For table size = 1031
-		bernsteinHashADD = 0.997
-		bernsteinHashXOR = 0.973
-		kernighanRitchieHashADD = 1.013
-		kernighanRitchieHashXOR = 1.011
-		redDragonBookHash = 0.997
-		defaultHash = 1.003
-		paulHesiehHash = 0.986
-		dumbHashADD = 1.092
-		dumbHashXOR = 2.452
-		identityHash = 1.190
-
-	For table size = 16411
-		bernsteinHashADD = 1.005
-		bernsteinHashXOR = 0.999
-		kernighanRitchieHashADD = 1.007
-		kernighanRitchieHashXOR = 1.001
-		redDragonBookHash = 1.011
-		defaultHash = 1.003
-		paulHesiehHash = 1.003
-		dumbHashADD = 1.318
-		dumbHashXOR = 3.000
-		identityHash = 1.192
-
-	For table size = 131101
-		bernsteinHashADD = 1.000
-		bernsteinHashXOR = 1.000
-		kernighanRitchieHashADD = 1.000
-		kernighanRitchieHashXOR = 1.000
-		redDragonBookHash = 1.002
-		defaultHash = 1.000
-		paulHesiehHash = 0.998
-		dumbHashADD = 1.335
-		dumbHashXOR = 3.040
-		identityHash = 1.208
-
--------------------------------------------------
-Testing for file data/dic_fr.txt
-
-	For table size = 1031
-		bernsteinHashADD = 0.995
-		bernsteinHashXOR = 0.998
-		kernighanRitchieHashADD = 1.003
-		kernighanRitchieHashXOR = 1.001
-		redDragonBookHash = 1.000
-		defaultHash = 0.997
-		paulHesiehHash = 1.000
-		dumbHashADD = 1.350
-		dumbHashXOR = 11.362
-		identityHash = 1.713
-
-	For table size = 16411
-		bernsteinHashADD = 1.007
-		bernsteinHashXOR = 1.000
-		kernighanRitchieHashADD = 0.999
-		kernighanRitchieHashXOR = 0.993
-		redDragonBookHash = 0.988
-		defaultHash = 1.001
-		paulHesiehHash = 1.007
-		dumbHashADD = 6.768
-		dumbHashXOR = 60.515
-		identityHash = 4.942
-
-	For table size = 131101
-		bernsteinHashADD = 0.999
-		bernsteinHashXOR = 0.998
-		kernighanRitchieHashADD = 1.001
-		kernighanRitchieHashXOR = 0.998
-		redDragonBookHash = 0.999
-		defaultHash = 1.002
-		paulHesiehHash = 1.001
-		dumbHashADD = 9.069
-		dumbHashXOR = 81.088
-		identityHash = 6.230
-
--------------------------------------------------
-Testing for file data/dic_ip.txt
-
-	For table size = 1031
-		bernsteinHashADD = 1.011
-		bernsteinHashXOR = 0.997
-		kernighanRitchieHashADD = 0.976
-		kernighanRitchieHashXOR = 1.001
-		redDragonBookHash = 1.010
-		defaultHash = 1.006
-		paulHesiehHash = 1.008
-		dumbHashADD = 5.295
-		dumbHashXOR = 16.788
-		identityHash = 25.122
-
-	For table size = 16411
-		bernsteinHashADD = 1.003
-		bernsteinHashXOR = 1.004
-		kernighanRitchieHashADD = 0.983
-		kernighanRitchieHashXOR = 1.002
-		redDragonBookHash = 1.009
-		defaultHash = 1.004
-		paulHesiehHash = 0.999
-		dumbHashADD = 13.730
-		dumbHashXOR = 43.532
-		identityHash = 63.660
-
-	For table size = 131101
-		bernsteinHashADD = 1.000
-		bernsteinHashXOR = 1.001
-		kernighanRitchieHashADD = 1.003
-		kernighanRitchieHashXOR = 1.005
-		redDragonBookHash = 1.003
-		defaultHash = 1.004
-		paulHesiehHash = 1.004
-		dumbHashADD = 15.145
-		dumbHashXOR = 48.018
-		identityHash = 70.220
-
--------------------------------------------------
-Testing for file data/dic_numbers.txt
-
-	For table size = 1031
-		bernsteinHashADD = 0.973
-		bernsteinHashXOR = 1.016
-		kernighanRitchieHashADD = 0.952
-		kernighanRitchieHashXOR = 0.968
-		redDragonBookHash = 1.021
-		defaultHash = 0.989
-		paulHesiehHash = 1.010
-		dumbHashADD = 13.185
-		dumbHashXOR = 14.631
-		identityHash = 0.950
-
-	For table size = 16411
-		bernsteinHashADD = 0.985
-		bernsteinHashXOR = 1.017
-		kernighanRitchieHashADD = 0.985
-		kernighanRitchieHashXOR = 0.985
-		redDragonBookHash = 0.997
-		defaultHash = 0.997
-		paulHesiehHash = 0.999
-		dumbHashADD = 16.131
-		dumbHashXOR = 17.900
-		identityHash = 0.985
-
-	For table size = 131101
-		bernsteinHashADD = 0.998
-		bernsteinHashXOR = 0.998
-		kernighanRitchieHashADD = 0.998
-		kernighanRitchieHashXOR = 0.998
-		redDragonBookHash = 0.998
-		defaultHash = 1.000
-		paulHesiehHash = 0.998
-		dumbHashADD = 16.345
-		dumbHashXOR = 18.137
-		identityHash = 0.998
-
--------------------------------------------------
-Testing for file data/dic_postfix.txt
-
-	For table size = 1031
-		bernsteinHashADD = 0.990
-		bernsteinHashXOR = 1.006
-		kernighanRitchieHashADD = 1.011
-		kernighanRitchieHashXOR = 1.011
-		redDragonBookHash = 1.014
-		defaultHash = 0.990
-		paulHesiehHash = 0.961
-		dumbHashADD = 1.092
-		dumbHashXOR = 2.452
-		identityHash = 1.182
-
-	For table size = 16411
-		bernsteinHashADD = 1.003
-		bernsteinHashXOR = 1.005
-		kernighanRitchieHashADD = 0.993
-		kernighanRitchieHashXOR = 1.005
-		redDragonBookHash = 1.009
-		defaultHash = 1.007
-		paulHesiehHash = 0.991
-		dumbHashADD = 1.318
-		dumbHashXOR = 3.000
-		identityHash = 1.192
-
-	For table size = 131101
-		bernsteinHashADD = 0.998
-		bernsteinHashXOR = 1.000
-		kernighanRitchieHashADD = 0.998
-		kernighanRitchieHashXOR = 1.000
-		redDragonBookHash = 1.004
-		defaultHash = 0.998
-		paulHesiehHash = 1.000
-		dumbHashADD = 1.335
-		dumbHashXOR = 3.040
-		identityHash = 1.208
-
--------------------------------------------------
-Testing for file data/dic_prefix.txt
-
-	For table size = 1031
-		bernsteinHashADD = 0.997
-		bernsteinHashXOR = 1.006
-		kernighanRitchieHashADD = 1.011
-		kernighanRitchieHashXOR = 1.002
-		redDragonBookHash = 1.014
-		defaultHash = 1.011
-		paulHesiehHash = 1.013
-		dumbHashADD = 1.092
-		dumbHashXOR = 2.452
-		identityHash = 201.691
-
-	For table size = 16411
-		bernsteinHashADD = 0.995
-		bernsteinHashXOR = 1.005
-		kernighanRitchieHashADD = 0.995
-		kernighanRitchieHashXOR = 0.999
-		redDragonBookHash = 0.993
-		defaultHash = 0.995
-		paulHesiehHash = 0.991
-		dumbHashADD = 1.318
-		dumbHashXOR = 3.000
-		identityHash = 246.749
-
-	For table size = 131101
-		bernsteinHashADD = 1.002
-		bernsteinHashXOR = 1.000
-		kernighanRitchieHashADD = 0.998
-		kernighanRitchieHashXOR = 1.002
-		redDragonBookHash = 0.998
-		defaultHash = 1.000
-		paulHesiehHash = 1.000
-		dumbHashADD = 1.335
-		dumbHashXOR = 3.040
-		identityHash = 250.024
-
--------------------------------------------------
-Testing for file data/dic_variables.txt
-
-	For table size = 1031
-		bernsteinHashADD = 0.989
-		bernsteinHashXOR = 1.018
-		kernighanRitchieHashADD = 0.972
-		kernighanRitchieHashXOR = 1.023
-		redDragonBookHash = 1.005
-		defaultHash = 0.987
-		paulHesiehHash = 0.974
-		dumbHashADD = 1.112
-		dumbHashXOR = 4.430
-		identityHash = 3.837
-
-	For table size = 16411
-		bernsteinHashADD = 1.004
-		bernsteinHashXOR = 1.001
-		kernighanRitchieHashADD = 1.001
-		kernighanRitchieHashXOR = 1.005
-		redDragonBookHash = 1.014
-		defaultHash = 1.001
-		paulHesiehHash = 0.994
-		dumbHashADD = 1.751
-		dumbHashXOR = 7.940
-		identityHash = 5.881
-
-	For table size = 131101
-		bernsteinHashADD = 1.003
-		bernsteinHashXOR = 0.999
-		kernighanRitchieHashADD = 0.997
-		kernighanRitchieHashXOR = 1.001
-		redDragonBookHash = 1.001
-		defaultHash = 1.001
-		paulHesiehHash = 1.002
-		dumbHashADD = 1.836
-		dumbHashXOR = 8.327
-		identityHash = 6.044
-
--------------------------------------------------
-Testing for file data/dic_win32.txt
-
-	For table size = 1031
-		bernsteinHashADD = 1.004
-		bernsteinHashXOR = 0.998
-		kernighanRitchieHashADD = 1.001
-		kernighanRitchieHashXOR = 0.992
-		redDragonBookHash = 0.981
-		defaultHash = 1.008
-		paulHesiehHash = 1.006
-		dumbHashADD = 0.995
-		dumbHashXOR = 4.515
-		identityHash = 4.826
-
-	For table size = 16411
-		bernsteinHashADD = 0.992
-		bernsteinHashXOR = 1.003
-		kernighanRitchieHashADD = 0.999
-		kernighanRitchieHashXOR = 1.000
-		redDragonBookHash = 0.996
-		defaultHash = 0.992
-		paulHesiehHash = 0.994
-		dumbHashADD = 1.449
-		dumbHashXOR = 8.368
-		identityHash = 8.428
-
-	For table size = 131101
-		bernsteinHashADD = 0.996
-		bernsteinHashXOR = 1.001
-		kernighanRitchieHashADD = 0.998
-		kernighanRitchieHashXOR = 0.997
-		redDragonBookHash = 1.000
-		defaultHash = 0.999
-		paulHesiehHash = 1.000
-		dumbHashADD = 1.526
-		dumbHashXOR = 8.809
-		identityHash = 8.792
-
--------------------------------------------------
+data/dic_Shakespeare.txt
+	1031
+		bernsteinHashADD 1.012
+		bernsteinHashXOR 0.998
+		kernighanRitchieHashADD 0.978
+		kernighanRitchieHashXOR 1.003
+		redDragonBookHash 0.988
+		defaultHash 0.993
+		paulHesiehHash 0.999
+		dumbHashADD 1.805
+		dumbHashXOR 8.293
+		identityHash 1.329
+	16411
+		bernsteinHashADD 0.996
+		bernsteinHashXOR 1.000
+		kernighanRitchieHashADD 0.991
+		kernighanRitchieHashXOR 0.995
+		redDragonBookHash 1.003
+		defaultHash 0.988
+		paulHesiehHash 1.003
+		dumbHashADD 4.207
+		dumbHashXOR 19.367
+		identityHash 1.763
+	131101
+		bernsteinHashADD 0.998
+		bernsteinHashXOR 1.001
+		kernighanRitchieHashADD 1.001
+		kernighanRitchieHashXOR 0.998
+		redDragonBookHash 0.999
+		defaultHash 1.001
+		paulHesiehHash 1.003
+		dumbHashADD 4.564
+		dumbHashXOR 21.012
+		identityHash 1.820
+data/dic_common_words.txt
+	1031
+		bernsteinHashADD 0.997
+		bernsteinHashXOR 0.973
+		kernighanRitchieHashADD 1.013
+		kernighanRitchieHashXOR 1.011
+		redDragonBookHash 0.997
+		defaultHash 1.003
+		paulHesiehHash 0.986
+		dumbHashADD 1.092
+		dumbHashXOR 2.452
+		identityHash 1.190
+	16411
+		bernsteinHashADD 1.005
+		bernsteinHashXOR 0.999
+		kernighanRitchieHashADD 1.007
+		kernighanRitchieHashXOR 1.001
+		redDragonBookHash 1.011
+		defaultHash 1.003
+		paulHesiehHash 1.003
+		dumbHashADD 1.318
+		dumbHashXOR 3.000
+		identityHash 1.192
+	131101
+		bernsteinHashADD 1.000
+		bernsteinHashXOR 1.000
+		kernighanRitchieHashADD 1.000
+		kernighanRitchieHashXOR 1.000
+		redDragonBookHash 1.002
+		defaultHash 1.000
+		paulHesiehHash 0.998
+		dumbHashADD 1.335
+		dumbHashXOR 3.040
+		identityHash 1.208
+data/dic_fr.txt
+	1031
+		bernsteinHashADD 0.995
+		bernsteinHashXOR 0.998
+		kernighanRitchieHashADD 1.003
+		kernighanRitchieHashXOR 1.001
+		redDragonBookHash 1.000
+		defaultHash 0.997
+		paulHesiehHash 1.000
+		dumbHashADD 1.350
+		dumbHashXOR 11.362
+		identityHash 1.713
+	16411
+		bernsteinHashADD 1.007
+		bernsteinHashXOR 1.000
+		kernighanRitchieHashADD 0.999
+		kernighanRitchieHashXOR 0.993
+		redDragonBookHash 0.988
+		defaultHash 1.001
+		paulHesiehHash 1.007
+		dumbHashADD 6.768
+		dumbHashXOR 60.515
+		identityHash 4.942
+	131101
+		bernsteinHashADD 0.999
+		bernsteinHashXOR 0.998
+		kernighanRitchieHashADD 1.001
+		kernighanRitchieHashXOR 0.998
+		redDragonBookHash 0.999
+		defaultHash 1.002
+		paulHesiehHash 1.001
+		dumbHashADD 9.069
+		dumbHashXOR 81.088
+		identityHash 6.230
+data/dic_ip.txt
+	1031
+		bernsteinHashADD 1.011
+		bernsteinHashXOR 0.997
+		kernighanRitchieHashADD 0.976
+		kernighanRitchieHashXOR 1.001
+		redDragonBookHash 1.010
+		defaultHash 1.006
+		paulHesiehHash 1.008
+		dumbHashADD 5.295
+		dumbHashXOR 16.788
+		identityHash 25.122
+	16411
+		bernsteinHashADD 1.003
+		bernsteinHashXOR 1.004
+		kernighanRitchieHashADD 0.983
+		kernighanRitchieHashXOR 1.002
+		redDragonBookHash 1.009
+		defaultHash 1.004
+		paulHesiehHash 0.999
+		dumbHashADD 13.730
+		dumbHashXOR 43.532
+		identityHash 63.660
+	131101
+		bernsteinHashADD 1.000
+		bernsteinHashXOR 1.001
+		kernighanRitchieHashADD 1.003
+		kernighanRitchieHashXOR 1.005
+		redDragonBookHash 1.003
+		defaultHash 1.004
+		paulHesiehHash 1.004
+		dumbHashADD 15.145
+		dumbHashXOR 48.018
+		identityHash 70.220
+data/dic_numbers.txt
+	1031
+		bernsteinHashADD 0.973
+		bernsteinHashXOR 1.016
+		kernighanRitchieHashADD 0.952
+		kernighanRitchieHashXOR 0.968
+		redDragonBookHash 1.021
+		defaultHash 0.989
+		paulHesiehHash 1.010
+		dumbHashADD 13.185
+		dumbHashXOR 14.631
+		identityHash 0.950
+	16411
+		bernsteinHashADD 0.985
+		bernsteinHashXOR 1.017
+		kernighanRitchieHashADD 0.985
+		kernighanRitchieHashXOR 0.985
+		redDragonBookHash 0.997
+		defaultHash 0.997
+		paulHesiehHash 0.999
+		dumbHashADD 16.131
+		dumbHashXOR 17.900
+		identityHash 0.985
+	131101
+		bernsteinHashADD 0.998
+		bernsteinHashXOR 0.998
+		kernighanRitchieHashADD 0.998
+		kernighanRitchieHashXOR 0.998
+		redDragonBookHash 0.998
+		defaultHash 1.000
+		paulHesiehHash 0.998
+		dumbHashADD 16.345
+		dumbHashXOR 18.137
+		identityHash 0.998
+data/dic_postfix.txt
+	1031
+		bernsteinHashADD 0.990
+		bernsteinHashXOR 1.006
+		kernighanRitchieHashADD 1.011
+		kernighanRitchieHashXOR 1.011
+		redDragonBookHash 1.014
+		defaultHash 0.990
+		paulHesiehHash 0.961
+		dumbHashADD 1.092
+		dumbHashXOR 2.452
+		identityHash 1.182
+	16411
+		bernsteinHashADD 1.003
+		bernsteinHashXOR 1.005
+		kernighanRitchieHashADD 0.993
+		kernighanRitchieHashXOR 1.005
+		redDragonBookHash 1.009
+		defaultHash 1.007
+		paulHesiehHash 0.991
+		dumbHashADD 1.318
+		dumbHashXOR 3.000
+		identityHash 1.192
+	131101
+		bernsteinHashADD 0.998
+		bernsteinHashXOR 1.000
+		kernighanRitchieHashADD 0.998
+		kernighanRitchieHashXOR 1.000
+		redDragonBookHash 1.004
+		defaultHash 0.998
+		paulHesiehHash 1.000
+		dumbHashADD 1.335
+		dumbHashXOR 3.040
+		identityHash 1.208
+data/dic_prefix.txt
+	1031
+		bernsteinHashADD 0.997
+		bernsteinHashXOR 1.006
+		kernighanRitchieHashADD 1.011
+		kernighanRitchieHashXOR 1.002
+		redDragonBookHash 1.014
+		defaultHash 1.011
+		paulHesiehHash 1.013
+		dumbHashADD 1.092
+		dumbHashXOR 2.452
+		identityHash 201.691
+	16411
+		bernsteinHashADD 0.995
+		bernsteinHashXOR 1.005
+		kernighanRitchieHashADD 0.995
+		kernighanRitchieHashXOR 0.999
+		redDragonBookHash 0.993
+		defaultHash 0.995
+		paulHesiehHash 0.991
+		dumbHashADD 1.318
+		dumbHashXOR 3.000
+		identityHash 246.749
+	131101
+		bernsteinHashADD 1.002
+		bernsteinHashXOR 1.000
+		kernighanRitchieHashADD 0.998
+		kernighanRitchieHashXOR 1.002
+		redDragonBookHash 0.998
+		defaultHash 1.000
+		paulHesiehHash 1.000
+		dumbHashADD 1.335
+		dumbHashXOR 3.040
+		identityHash 250.024
+data/dic_variables.txt
+	1031
+		bernsteinHashADD 0.989
+		bernsteinHashXOR 1.018
+		kernighanRitchieHashADD 0.972
+		kernighanRitchieHashXOR 1.023
+		redDragonBookHash 1.005
+		defaultHash 0.987
+		paulHesiehHash 0.974
+		dumbHashADD 1.112
+		dumbHashXOR 4.430
+		identityHash 3.837
+	16411
+		bernsteinHashADD 1.004
+		bernsteinHashXOR 1.001
+		kernighanRitchieHashADD 1.001
+		kernighanRitchieHashXOR 1.005
+		redDragonBookHash 1.014
+		defaultHash 1.001
+		paulHesiehHash 0.994
+		dumbHashADD 1.751
+		dumbHashXOR 7.940
+		identityHash 5.881
+	131101
+		bernsteinHashADD 1.003
+		bernsteinHashXOR 0.999
+		kernighanRitchieHashADD 0.997
+		kernighanRitchieHashXOR 1.001
+		redDragonBookHash 1.001
+		defaultHash 1.001
+		paulHesiehHash 1.002
+		dumbHashADD 1.836
+		dumbHashXOR 8.327
+		identityHash 6.044
+data/dic_win32.txt
+	1031
+		bernsteinHashADD 1.004
+		bernsteinHashXOR 0.998
+		kernighanRitchieHashADD 1.001
+		kernighanRitchieHashXOR 0.992
+		redDragonBookHash 0.981
+		defaultHash 1.008
+		paulHesiehHash 1.006
+		dumbHashADD 0.995
+		dumbHashXOR 4.515
+		identityHash 4.826
+	16411
+		bernsteinHashADD 0.992
+		bernsteinHashXOR 1.003
+		kernighanRitchieHashADD 0.999
+		kernighanRitchieHashXOR 1.000
+		redDragonBookHash 0.996
+		defaultHash 0.992
+		paulHesiehHash 0.994
+		dumbHashADD 1.449
+		dumbHashXOR 8.368
+		identityHash 8.428
+	131101
+		bernsteinHashADD 0.996
+		bernsteinHashXOR 1.001
+		kernighanRitchieHashADD 0.998
+		kernighanRitchieHashXOR 0.997
+		redDragonBookHash 1.000
+		defaultHash 0.999
+		paulHesiehHash 1.000
+		dumbHashADD 1.526
+		dumbHashXOR 8.809
+		identityHash 8.792

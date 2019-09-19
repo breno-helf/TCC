@@ -1,0 +1,99 @@
+data/dic_Shakespeare.txt
+		bernsteinHashADD 0.996
+		bernsteinHashXOR 1.000
+		kernighanRitchieHashADD 0.991
+		kernighanRitchieHashXOR 0.995
+		redDragonBookHash 1.003
+		defaultHash 0.988
+		paulHesiehHash 1.003
+		dumbHashADD 4.207
+		dumbHashXOR 19.367
+		identityHash 1.763
+data/dic_common_words.txt
+		bernsteinHashADD 1.005
+		bernsteinHashXOR 0.999
+		kernighanRitchieHashADD 1.007
+		kernighanRitchieHashXOR 1.001
+		redDragonBookHash 1.011
+		defaultHash 1.003
+		paulHesiehHash 1.003
+		dumbHashADD 1.318
+		dumbHashXOR 3.000
+		identityHash 1.192
+data/dic_fr.txt
+		bernsteinHashADD 1.007
+		bernsteinHashXOR 1.000
+		kernighanRitchieHashADD 0.999
+		kernighanRitchieHashXOR 0.993
+		redDragonBookHash 0.988
+		defaultHash 1.001
+		paulHesiehHash 1.007
+		dumbHashADD 6.768
+		dumbHashXOR 60.515
+		identityHash 4.942
+data/dic_ip.txt
+		bernsteinHashADD 1.003
+		bernsteinHashXOR 1.004
+		kernighanRitchieHashADD 0.983
+		kernighanRitchieHashXOR 1.002
+		redDragonBookHash 1.009
+		defaultHash 1.004
+		paulHesiehHash 0.999
+		dumbHashADD 13.730
+		dumbHashXOR 43.532
+		identityHash 63.660
+data/dic_numbers.txt
+		bernsteinHashADD 0.985
+		bernsteinHashXOR 1.017
+		kernighanRitchieHashADD 0.985
+		kernighanRitchieHashXOR 0.985
+		redDragonBookHash 0.997
+		defaultHash 0.997
+		paulHesiehHash 0.999
+		dumbHashADD 16.131
+		dumbHashXOR 17.900
+		identityHash 0.985
+data/dic_postfix.txt
+		bernsteinHashADD 1.003
+		bernsteinHashXOR 1.005
+		kernighanRitchieHashADD 0.993
+		kernighanRitchieHashXOR 1.005
+		redDragonBookHash 1.009
+		defaultHash 1.007
+		paulHesiehHash 0.991
+		dumbHashADD 1.318
+		dumbHashXOR 3.000
+		identityHash 1.192
+data/dic_prefix.txt
+		bernsteinHashADD 0.995
+		bernsteinHashXOR 1.005
+		kernighanRitchieHashADD 0.995
+		kernighanRitchieHashXOR 0.999
+		redDragonBookHash 0.993
+		defaultHash 0.995
+		paulHesiehHash 0.991
+		dumbHashADD 1.318
+		dumbHashXOR 3.000
+		identityHash 246.749
+data/dic_variables.txt
+		bernsteinHashADD 1.004
+		bernsteinHashXOR 1.001
+		kernighanRitchieHashADD 1.001
+		kernighanRitchieHashXOR 1.005
+		redDragonBookHash 1.014
+		defaultHash 1.001
+		paulHesiehHash 0.994
+		dumbHashADD 1.751
+		dumbHashXOR 7.940
+		identityHash 5.881
+data/dic_win32.txt
+		bernsteinHashADD 0.992
+		bernsteinHashXOR 1.003
+		kernighanRitchieHashADD 0.999
+		kernighanRitchieHashXOR 1.000
+		redDragonBookHash 0.996
+		defaultHash 0.992
+		paulHesiehHash 0.994
+		dumbHashADD 1.449
+		dumbHashXOR 8.368
+		identityHash 8.428
