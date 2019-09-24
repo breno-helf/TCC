@@ -2,27 +2,29 @@
 \chapter{Applications}
 \label{cap:Applications}
 
-\begin{itemize}
-\item Give a glance at what type of application we have, focus on 2 algorithimic
-\item Rabin Karp
-\item Hashing trees
-\end{itemize}
+%% ------------------------------------------------------------------------- %%
+%\begin{itemize}
+%\item Give a glance at what type of application we have, focus on 2 algorithimic
+%\item Rabin Karp
+%\item Hashing trees
+%\end{itemize}
+%% ------------------------------------------------------------------------- %%
 
 Hash functions and hash tables have a great number of applications in computer science. During this last section I focus on applications of hash functions in algorithms, but citing superficially applications in other areas (like criptography, data deduplication and caching).
 
 Among the applications that I explain in this section there is a focus in two applications: Rabin-Karp string matching algorithm and hashing of a rooted tree for isomorphism checking. Rabin-karp string matching algorithm is one of the main application of a technique called rolling hashing. Hahsing of rooted tree for isomorphism checking is an interesting application sometimes used in competitive programming.
 
 To motivate the start of this thesis I will start using hash tables to solve a very simple, yet famous, problem called 3-sum.
-
 \section{3-sum problem}
-
 The problem is stated as following:
 
-\textit{Make a function that given an array of integer numbers and an integer S, it returns if there are any 3 different elements in this array that its sum equals S. Assume that there are no three different elements in the array that overflow a 32-bit integer when summed together.}
+\medskip
 
-This a very interesting problem that has many different solutions. To start I will show and explain to you the brute force solution: \\
-\\
-\bigskip
+\textquote{\textit{Make a function that given an array of integer numbers and an integer S, it returns if there are any 3 different elements in this array that its sum equals S. Assume that there are no three different elements in the array that overflow a 32-bit integer when summed together.}}
+
+\medskip
+
+This a very interesting problem that has many different solutions. To start I will show and explain to you the brute force solution:
 
 \begin{lstlisting}
 bool threeSumWithoutHashTable(vector<int> v, int S) {
@@ -89,4 +91,82 @@ The above solution solves the problem in \( O(n^2) \), time complexity (average)
 
 \bigskip
 
-As we can see for the table above, the three sum solution using hash table quickly surpasses the brute force implementation. As we will see later, hash tables (or \textit{unordered\_map}) are not the fastest hash tables possible \cite{UnorderedMapDiscussion}. That means we can have an even greater performance than what is shown now.  
+As we can see for the table above, the three sum solution using hash table quickly surpasses the brute force implementation.
+
+\section{Rabin-Karp}
+
+Rabin karp is a famous pattern matching on string algorithm. Differently than other classic solutions to pattern matching, such as Knuth-Morris-Pratt algorithm or Boyer Moore, Rabin karp is based on hashing. It relies on the property that if the hash of two strings is different, they are certainly different strings, and if they are equal, they can be the same string. The definition of the pattern matching problem is the following:
+
+\medskip
+
+\textquote{\textit{Make a function that given two strings, one string t and one string p, it returns the index of the first occurrence of p in t, or -1 if p is not present in t. It is guaranteed that the lenght of t is greater than the lenght of p.}}
+
+\medskip
+
+So given two strings, we need to find the first ocurrence of \( p \) in \( t \). To first solve this problem, I will use the naive, brute force solution:
+
+\begin{lstlisting}
+int findPatternBruteForce(string t, string p) {
+   for (int i = 0; i <= t.size() - p.size(); i++) {
+      bool match = true;
+      for (int j = 0; j < p.size(); j++) {
+         if (t[i + j] != p[j]) {
+            match = false;
+            break;
+         }
+      }
+      if (match) return i;
+   }
+
+   return -1;
+}
+\end{lstlisting}
+
+We can see that the brute force solution has worst case scenario of \( O(nm) \) being \( n = |t| \), the size of the string \( t \), and \( m = |p| \), the size of the string \( p \). One posible optimization for this solution is if we could check a text interval against the pattern quicket than \( O(m) \). If we had the hash of the pattern and the hash of the text interval, we could easily do that. The hash of the pattern is constant, but we have \( O(n) \) intervals to check, and given that each interval has \( O(m) \) size, if we calculated each of them alone this would take \( O(nm) \) again. However, for some hash functions, given the hash of an interval we could calculate the next hash faster. One example of a hash function with this property is the \( dumbHashXOR \) hash function presented in chapter 1. Lets test it with intervals in ``abracadabra'' with intervals of size 4:
+
+\[ dumbHashXOR("brac") = dumbHashXOR("abra") \oplus "a" \oplus "c" \]
+
+So given the hash of 'abra' we could easily move to 'brac'. Functions with this ``shifting'' property are called rolling hash functions. As we saw in the hash function chapter, ``dumbHashXOR'' is a bad hash function. Hopefully, we have better rolling hash functions for that, one example is polynomial hashing. The polynomial hashing of a string \( s \) with prime \( P \) would be:
+
+\[ \sum_{i=0}^{m-1}s[i]*P^{i} \]
+
+So we know that given hash of \( s[0...m-1] \) we can calculate the hash of \( s[1...m] \) in \( O(1) \) in the following way:
+
+\[ PolynomialHash(s[1...m]) = \sum_{i=1}^{m}s[i]*P^{i-1} = \sum_{i=0}^{m-1}s[i]*P^{i} - s[0] + s[m] * P^{m-1} \]
+
+We would just need to store \( P^{m-1} \) for recalculating the hash. So we can check if the pattern is matched on the text quicker with hashing. As just hashing may return a match where we don't have a match, we need to double check to have 100\% accuracy. So the algorithm will be:
+
+\begin{lstlisting}
+const int PRIME = 33;
+const int MOD = 1000033;
+int findPatternRabinKarp(string t, string p) {
+   int textHash = 0, patternHash = 0;
+   int pot = 1;
+
+   // pot will be PRIME^{p.size() - 1}
+   for (int i = 0; i < p.size() - 1; i++)
+      pot = (pot * PRIME) % MOD;
+
+   for (int i = 0; i < p.size(); i++) {
+      textHash = (textHash * PRIME + t[i]) % MOD;
+      patternHash = (patternHash * PRIME + p[i]) % MOD;
+   }
+
+   for (int i = 0; i <= t.size() - p.size(); i++) {
+      if (textHash == patternHash) {
+         bool match = true;
+         for (int j = 0; j < p.size(); j++) {
+            if (t[i + j] != p[j]) {
+               match = false;
+               break;
+            }
+         }
+         if (match) return i;
+      }
+
+      textHash = (PRIME * (textHash - pot * t[i]) + t[i + p.size()] + MOD) % MOD;
+   }
+
+   return -1;
+}
+\end{lstlisting}
