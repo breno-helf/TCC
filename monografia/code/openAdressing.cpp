@@ -12,7 +12,7 @@ class HashTable {
    }
 
    unsigned int hashFunction(string s) {
-      return 1;
+      return hash<string>()(s) % m;
    }
    
    void insert(string key, int value) {
@@ -31,7 +31,8 @@ class HashTable {
    
    void remove(string key) {
       unsigned int idx = hashFunction(key);
-      table[idx].first = "";
+      table[idx].first = pair<string, int>("", 0);
+      n--;
    }
    
 private:
@@ -42,9 +43,11 @@ private:
 };
    
 int main() {
-   vector< pair<string, int> > table;
-   table.resize(16);
-   for (int i = 0; i < 10; i++) {
-      printf("--> %d -- %d\n", table[i].first.c_str(), table[i].second);
+   HashTable HT = HashTable();
+   HT.insert("Abacate", 10);
+   HT.insert("Banana", 7);
+   HT.insert("Morango", 2);
+   for (int i = 0; i < HT.m; i++) {
+      printf("--> %s -- %d\n", HT.table[i].first.c_str(), HT.table[i].second);
    }
 }

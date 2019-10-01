@@ -170,3 +170,38 @@ int findPatternRabinKarp(string t, string p) {
    return -1;
 }
 \end{lstlisting}
+
+the complexity of this algorithm is \( O(n) \) expected, because the number of string collusions on line 17 on the code above is expected to be low. One interesting fact is that when testing both algorithms shown against each other, for random strings, generated with random characters, the first algorithm is actually faster. That is because in most cases we would exit the brute force early on (we have actually \( (1/26)^j \) chance of getting to the next step for each check for an alphabetical random string), making it ``expected linear'' for this case. And as Rabin Karp has an overhead for calculating the hash, that makes it slower for that case. But that doesn't mean that the algorithm is actually worse, for real text and for random strings where each character is repeated 100 times the algorithm show its strength.
+
+All the code and tests made for this algorithm can be find in my github \cite{GithubRepo}.
+
+\section{Hashing trees to check for Isomorphism}
+
+For this last alogrithmic application of hash functions and hash tables I will describe how to decide if two rooted trees are isomorphic. We can say that two trees,  \( T_1 \) and tree \( T_2 \) are isomorphic if there is a bijection between vertices \(V_1 \) and \(V_2 \) such that:
+
+\[ \forall u, v \in V_1~ ~ u ~adj_{T_1} ~v \iff \phi(u) ~adj_{T_2} ~\phi(v) \]
+
+That is, if \(u \) is adjacent to \( v \) in the first tree, \( phi(u) \) must be adjacent to \( phi(v) \) in the second tree (and vice versa).
+
+Given that definition, we can state the problem of deciding if two trees are isomorphic:
+
+\medskip
+
+\textquote{\textit{Make a function that given two rooted trees, decide if they are isomorphic.}}
+
+\medskip
+
+We could solve this problem using hash functions if we knew how to hash trees to integers. As we saw in the first chapter, everything is bits in the end and we just need a smart way of representing our data. We can represent a rooted tree as a node that points to its child nodes and so on. So we could define a great hash function that always collide when we have isomorphic trees. The following hash function was described by competitive programmer \textit{rng\_58} in his blog \cite{TreeIsomorphism}.
+
+
+\[ Hash(N) = \begin{cases} 1 ~\text{if N is a leaf (has no childs)} \\
+    \Pi_{i = 1}^{k} (x_d + Hash(C_i)) ~mod M ~\text{where} ~C_i ~\text{is a child node, and d is the depth of N}
+  \end{cases} \]
+
+For that function we need an array \( x \) at the least the size of the maximum depth between both trees. That function is actually a polynomial value of our tree. We can visualize that on the following image:
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=12cm]{figuras/treeIsomorphism.png}
+  \caption{Example of a tree with the hash of each node. }
+\end{figure}

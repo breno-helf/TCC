@@ -1,24 +1,9 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-class Node {
-public:
-   string key;
-   int value;
-   Node* nxt;
-
-   Node(string KEY = "", int VALUE = 0, Node* NXT = NULL) {
-      key = KEY;
-      value = VALUE;
-      nxt = NXT;
-   }
-
-   ~Node();
-};
-
 class ChainingHashTable {
 public:
-   vector<Node*> table;
+   vector< list< pair<string, int> > > table;
    int m, n;
    
    ChainingHashTable() {
@@ -28,75 +13,65 @@ public:
    }
 
    unsigned int hashFunction(string s) {
-      return 1;
+      return hash<string>()(s) % m;
    }
    
    void insert(string key, int value) {
-      unsigned int idx = hashFunction(key);
-      if (table[idx] == NULL) {
-         table[idx] = new Node(key, value);
-      } else {
-         Node* cur = table[idx];
-         while (cur->nxt != NULL)
-            cur = cur->nxt;
-         cur->nxt = new Node(key, value);
-      }
-      
+      unsigned int idx = hashFunction(key);      
+      table[idx].emplace_front(key, value);
       n++;
       resizeIfNecessary();
    }
    
    int find(string key) {
       unsigned int idx = hashFunction(key);
-      Node* cur = table[idx];
-
-      while (cur->key != key)
-         cur = cur->nxt;
-      
-      if (cur->key == key)
-         return cur->value;
+      auto it = find_if(table[idx].begin(), table[idx].end(),
+                        [&key](auto kv) { return kv.first == key; });
+      if (it != table[idx].end())
+         return it->second;
       return 0;
    }
    
    void remove(string key) {
       unsigned int idx = hashFunction(key);
-      // Empty bucket
-      if (table[idx] == NULL)
-         return;
-
-      // Remove head of bucket
-      if (table[idx]->key == key) {
-         Node* rem = table[idx];
-         table[idx] = table[idx]->nxt;
-         free(rem);
-         return;
+      auto it = find_if(table[idx].begin(), table[idx].end(),
+                        [&key](auto kv) { return kv.first == key; });
+      if (it != table[idx].end()) {
+         table[idx].erase(it);
+         n--;
       }
-
-      // General case
-      Node* cur = table[idx];      
-      while (cur->nxt != NULL && cur->nxt->key != key)
-         cur = cur->nxt;      
-      if (cur->nxt != NULL) {
-         Node* rem = cur->nxt;
-         cur->nxt = rem->nxt;
-         free(rem);
-      }
-      
    }
    
 private:
+   double alpha = 1;
    void resizeIfNecessary() {
-      if (n == m)
+      if (n >= m * alpha) {
+         vector< list< pair<string, int> > > oldTable = table;
+         int oldM = m;
+         table.clear();
          m *= 2;
+         table.resize(m);
+         for (int i = 0; i < oldM; i++) {
+            for (auto kv : oldTable[i])
+               insert(kv.first, kv.second);
+         }
+      }
    }
 };
    
 int main() {
-   ChainingHashTable table = ChainingHashTable();
-   table.insert("Kobus", 7);
-   table.insert("Estrela", 2);
-   printf("--> %s %d\n", "Kobus", table.find("Kobus"));
-   printf("--> %s %d\n", "Estrela", table.find("Estrela"));
-   table.remove("Estrela");
-   table.remove("Kobus");
+   ChainingHashTable HT = ChainingHashTable();
+   HT.insert("Kobus", 7);
+   HT.insert("Estrela", 2);
+   printf("--> %s %d\n", "Kobus", HT.find("Kobus"));
+   printf("--> %s %d\n", "Estrela", HT.find("Estrela"));
+   HT.remove("Estrela");
+   HT.remove("Kobus");
+   HT.insert("Abacate", 10);
+   HT.insert("Banana", 7);
+   HT.insert("Morango", 2);
+   HT.insert("Colidexxx", 3);
+
+   printf("--> %s %d\n", "Morango", HT.find("Morango"));
+   printf("--> %s %d\n", "Colidexxx", HT.find("Colidexxx"));
 }

@@ -40,3 +40,9 @@
 
 - Fazer Grafico do Dragon Book e escrever analise
 - Alugar cormer e ler antes de continuar cormen.
+
+## Semana 8
+
+- Terminar Rabin Karp
+- Arrumar algoritmo Chaining
+- Keep Working
