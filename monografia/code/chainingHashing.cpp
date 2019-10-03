@@ -26,7 +26,7 @@ public:
    int find(string key) {
       unsigned int idx = hashFunction(key);
       auto it = find_if(table[idx].begin(), table[idx].end(),
-                        [&key](auto kv) { return kv.first == key; });
+                        [&key](auto& kv) { return kv.first == key; });
       if (it != table[idx].end())
          return it->second;
       return 0;
@@ -35,7 +35,7 @@ public:
    void remove(string key) {
       unsigned int idx = hashFunction(key);
       auto it = find_if(table[idx].begin(), table[idx].end(),
-                        [&key](auto kv) { return kv.first == key; });
+                        [&key](auto& kv) { return kv.first == key; });
       if (it != table[idx].end()) {
          table[idx].erase(it);
          n--;

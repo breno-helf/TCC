@@ -28,13 +28,10 @@ This a very interesting problem that has many different solutions. To start I wi
 
 \begin{lstlisting}
 bool threeSumWithoutHashTable(vector<int> v, int S) {
-   for (int i = 0; i < v.size(); i++) {
-      for (int j = i + 1; j < v.size(); j++) {
-         for (int k = j + 1; k < v.size(); k++) {
+   for (int i = 0; i < v.size(); i++)
+      for (int j = i + 1; j < v.size(); j++)
+         for (int k = j + 1; k < v.size(); k++)
             if (v[i] + v[j] + v[k] == S) return true;
-         }
-      }
-   }
    return false;
 }
 \end{lstlisting}
@@ -48,10 +45,9 @@ The above solution solves the problem in \( O(n^3) \) time complexity and \( O(1
 \begin{lstlisting}
 bool threeSumWithHashTable(vector<int> v, int S) {
    unordered_map<int, int> hashTable; 
-   for (int i = 0; i < v.size(); i++) {
+   for (int i = 0; i < v.size(); i++)
       hashTable[v[i]]++;
-   }
-   for (int i = 0; i < v.size(); i++) {
+   for (int i = 0; i < v.size(); i++)
       for (int j = i + 1; j < v.size(); j++) {
          hashTable[v[i]]--;
          hashTable[v[j]]--;         
@@ -60,7 +56,6 @@ bool threeSumWithHashTable(vector<int> v, int S) {
          hashTable[v[i]]++;
          hashTable[v[j]]++;
       }
-   }
    return false;
 }
 \end{lstlisting}
@@ -109,15 +104,13 @@ So given two strings, we need to find the first ocurrence of \( p \) in \( t \).
 int findPatternBruteForce(string t, string p) {
    for (int i = 0; i <= t.size() - p.size(); i++) {
       bool match = true;
-      for (int j = 0; j < p.size(); j++) {
+      for (int j = 0; j < p.size(); j++)
          if (t[i + j] != p[j]) {
             match = false;
             break;
          }
-      }
       if (match) return i;
    }
-
    return -1;
 }
 \end{lstlisting}
@@ -142,31 +135,26 @@ const int MOD = 1000033;
 int findPatternRabinKarp(string t, string p) {
    int textHash = 0, patternHash = 0;
    int pot = 1;
-
    // pot will be PRIME^{p.size() - 1}
    for (int i = 0; i < p.size() - 1; i++)
       pot = (pot * PRIME) % MOD;
-
    for (int i = 0; i < p.size(); i++) {
       textHash = (textHash * PRIME + t[i]) % MOD;
       patternHash = (patternHash * PRIME + p[i]) % MOD;
    }
-
    for (int i = 0; i <= t.size() - p.size(); i++) {
       if (textHash == patternHash) {
          bool match = true;
-         for (int j = 0; j < p.size(); j++) {
+         for (int j = 0; j < p.size(); j++)
             if (t[i + j] != p[j]) {
                match = false;
                break;
             }
-         }
          if (match) return i;
       }
-
-      textHash = (PRIME * (textHash - pot * t[i]) + t[i + p.size()] + MOD) % MOD;
+      textHash = (PRIME * (textHash - pot * t[i]) + t[i+p.size()]) % MOD;
+      if (textHash < 0) textHash += MOD;
    }
-
    return -1;
 }
 \end{lstlisting}
@@ -174,6 +162,26 @@ int findPatternRabinKarp(string t, string p) {
 the complexity of this algorithm is \( O(n) \) expected, because the number of string collusions on line 17 on the code above is expected to be low. One interesting fact is that when testing both algorithms shown against each other, for random strings, generated with random characters, the first algorithm is actually faster. That is because in most cases we would exit the brute force early on (we have actually \( (1/26)^j \) chance of getting to the next step for each check for an alphabetical random string), making it ``expected linear'' for this case. And as Rabin Karp has an overhead for calculating the hash, that makes it slower for that case. But that doesn't mean that the algorithm is actually worse, for real text and for random strings where each character is repeated 100 times the algorithm show its strength.
 
 All the code and tests made for this algorithm can be find in my github \cite{GithubRepo}.
+
+\section{Complete Tripartite Graph}
+
+We can also use hashing for graph problems. This is a pretty specific problem but with a very interesting application from the hashing point of view. The problem statement goes as following:
+
+\medskip
+
+\textquote{\textit{Given an undirected graph, decided if the vertices can be partitioned in three groups, such that no two vertices of the same group are connected and every two vertices of different groups are connected .}}
+
+That is, given a graph decide if the graph is a tripartite complete graph. 
+
+One thing that we can easily notice in that problem is that all the vertices from a partition will have the same adjacency list (They will look to all the other vertices). From that we can hash every adjacency list into an integer, and divide the nodes in groups. If we have 3 groups, we have a potential tripartition. Then we can double check if all the vertices in a partition have an adjacency list of size \( n - partitionSize \), where \( n \) is the number of vertices in the graph and \( partitionSize \) is the size of the partition. That will guarantee that they are pointing to all vertices outside the partition.
+
+For the hashing algorithm on the solution of this problem, we can use any of the hashing algorithms described in the first chapter, as we can see an array of integers as a string. If we use a hashing algorithm that is not \( dumbXOR \), we need to first sort the array to ensure that all equivalent lists will have the same array.
+
+If we use \( dumbXOR \), one thing that can help to minimize collisions is to give each vertex a random value in a greater set. For examples, if we have \( n = 10^5 \) for the size of our graph, we can map the nodes to a random value between \( 0 \) and \( 10^9 + 7 \). That would increase the size of our pontential hashes, minimizing the possible collisions.
+
+This problem can be seen in codeforces: \url{https://codeforces.com/contest/1228/problem/D}
+
+\medskip
 
 \section{Hashing trees to check for Isomorphism}
 
@@ -195,13 +203,36 @@ We could solve this problem using hash functions if we knew how to hash trees to
 
 
 \[ Hash(N) = \begin{cases} 1 ~\text{if N is a leaf (has no childs)} \\
-    \Pi_{i = 1}^{k} (x_d + Hash(C_i)) ~mod M ~\text{where} ~C_i ~\text{is a child node, and d is the depth of N}
+    \Pi_{i = 1}^{k} (x_d + Hash(C_i)) ~mod M ~\text{where} ~C_i ~\text{is a child node, and d is the height of N}
   \end{cases} \]
 
-For that function we need an array \( x \) at the least the size of the maximum depth between both trees. That function is actually a polynomial value of our tree. We can visualize that on the following image:
+For that function we need an array \( x \) at the least the size of the maximum height between both trees. That function is actually a polynomial value of our tree. We can visualize that on the following image:
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=12cm]{figuras/treeIsomorphism.png}
+  \includegraphics[width=12.5cm]{figuras/treeIsomorphism.png}
   \caption{Example of a tree with the hash of each node. }
 \end{figure}
+
+On the above picutre we can see that the hash function is cummulative, and it forms a polynomium. The code for the above algorithm can be written as following in C++14:
+
+\begin{lstlisting}
+vector< vector<int> > adj; // Adjacency list of the graph
+vector<long long> x; // X values for hash calculation
+vector<int> h; // Height of each node
+const int MOD = 1e9 + 7;
+long long hashTree(int u, int p) {
+   long long myHash = 1;
+   for (int v : adj[u])
+      if (v != p)
+         myHash = (myHash * (x[h[u]] + hashTree(v, u))) % MOD;
+   return myHash;
+}
+\end{lstlisting}
+
+The hash of a tree can be defined recursevelly by the hashes of its subtrees. We can define the values of the array \( X \) as random values between \( 0 \) and \( MOD - 1 \). We can also trivially calculate the height of each node recursivelly. The algorithm described is linear.
+
+One interesting caveat of this problem is that, altough hashing trees to check for isomorphism only works with rooted trees, we can make it work for the problem of checking tree isomorphism for arbitrary trees. The basic idea is that we can root the tree by the center or centroid of tree (Because we know that we only have at most 2 centers or centroids on a tree). If we have more than one center or centroid, we can calculate the hash of the tree rooted by both for the check. As this is not on the scope of this thesis I will limit the explanation here, but you can learn more about it in the bibliography \cite{Centroid}.
+
+SPOJ Problem: \url{https://www.spoj.com/problems/TREEISO}
+
