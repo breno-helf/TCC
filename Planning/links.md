@@ -37,3 +37,13 @@
 - https://softwareengineering.stackexchange.com/questions/49550/which-hashing-algorithm-is-best-for-uniqueness-and-speed
 
 - https://cs.uwaterloo.ca/research/tr/1986/CS-86-14.pdf
+
+- https://www.reddit.com/r/programming/comments/d4oxzu/wrote_an_article_explaining_cuckoo_hashing/
+
+- https://programming.guide/hash-tables.html
+
+- https://directory.fsf.org/wiki/Gperf
+
+- https://algs4.cs.princeton.edu/34hash/
+
+- http://moo.nac.uci.edu/~hjm/HOWTO-rclone-to-Gdrive.html

@@ -18,7 +18,7 @@ It is considered one of the possible (and one of the best) implementations of a 
 
 This data structure is usually considered very useful among software engineers and computer scientists, although it usually has a linear worst case cost for retrieving, inserting and deleting a key-value pair. That is because it has a constant average cost for those operations.
 
-Moreover, when talking about hash tables we have the problem of key collision, that is when two keys maps to the same hash value. As we saw in the previous chapter, this is collisions are more common than not. To solve that problem, we have several techniques that envolves different tradeoffs. Those techniques are usually divided into two main categories, open addressing and separate chaining. Other problem to consider regarding this data structure is when to resize the hash table, to minimize the chance of collision and the use o memory. For this last one we usually consider a load factor, \( \alpha \), that is the ratio of keys with the available slots.
+Moreover, when talking about hash tables we have the problem of key collision, that is when two keys maps to the same hash value. As we saw in the previous chapter, collisions are more common than not, so collision resolution is a critical problem. To solve that problem, we have several techniques that envolves different tradeoffs. Those techniques are usually divided into two main categories, open addressing and separate chaining. Other problem to consider regarding this data structure is when to resize the hash table, to minimize the chance of collision and the use o memory. For this last one we usually consider a load factor, \( \alpha \), that is the ratio of keys with the available slots.
 
 Also, hash tables can be easily abstracted to hash sets, that are commonly used to store a set of elements and check if an element is there. We can abstract that data structure to a hash table always with an empty value. Hash sets are one of the common ways to implement sets in programming languages, like unordered\_set from C++14.
 
@@ -50,7 +50,7 @@ class HashTable {
       n = 0;
    }
 
-   unsigned_int hashFunction(string s) {}
+   unsigned int hashFunction(string s) {}
    
    void insert(string key, int value) {}
 
@@ -64,7 +64,7 @@ private:
 }
 \end{lstlisting}
 
-As we can see it is pretty simple. The constructor builds a table of size \( 16 \), and for now we can assume a dinamic resizing every time we have \( 16 \) elements. Later on we will see that this means that we resize every time the load factor, \( \alpha \), is equal to \( 1.00 \). We also can note that at the table part we are storing a pair of key and value, not just value. This is because we may want to retrieve all pairs of the table (like in a regular dictionary). The pairs are usually unordered (If they are not ordered by chance ...), and the iterator has \( O(1) \) step. We will jump the implementation of hashFunction, as already saw plenty of it in the last chapter, so we will go right in for the implementation of \textbf{insert}:
+As we can see it is pretty simple. The constructor builds a table of size \( 16 \), and we can assume a dinamic resizing every time the table is full. Later on we will see that this means that we resize every time the load factor, \( \alpha \), is equal to \( 1.00 \). We also can note that at the table part we are storing a pair of key and value, not just value. This is because we may want to retrieve all pairs of the table (like in a regular dictionary). The pairs are usually unordered (If they are not ordered by chance ...). We will skip the implementation of hashFunction, as we already saw plenty of it in the last chapter, so we will go right in for the implementation of \textbf{insert}:
 
 \begin{lstlisting}
 void insert(string key, int value) {
@@ -104,7 +104,7 @@ We can define open addressing in a general way as a hash table algorithm where t
 
 \[ H(x, i) \]
 
-Where \( x \) is our key and \( i \) is the sequence number. So every time we have a collision in \( H(x, i) \) we can simply go to \( H(x, i + i) \). Given that, lets look into some different probe sequences.
+Where \( x \) is our key and \( i \) is the sequence number. So every time we have a collision in \( H(x, i) \) we can simply go to \( H(x, i + 1) \). Given that, lets look into some different probe sequences.
 
 \subsection{Linear Probing}
 
@@ -173,9 +173,9 @@ With that, the three operations have linear complexity. As we saw, we know hash 
 
 \section{Chaining Hashing}
 
-Chaining hashing is the implementation of a hash table using a container, usally called bucket, to store the (key, value) pairs with a given hash. On this implementation, each bucket of the table is a pointer to a node of a linked list, that will carry the key value pair in our case. We deal with collisions with this implementation by adding a new node to the end of the list.
+Chaining hashing is the implementation of a hash table using a container, usally called bucket, to store the (key, value) pairs with a given hash. On this implementation, each bucket of the table is a linked list, that will carry the key value pair in our case. We deal with collisions with this implementation by adding a new node to the start of the list.
 
-This implementation is considered simpler than open addressing, usually because the way of dealing with collisions is clearer. Also it is less system dependant if we consider performance (as we saw ine of the key advantages of open addressing is that it is cache friendly). That is one of the key reasons that C++ uses chaining hashing for its default implementation of unordered\_hash \cite{HashTableProposal}.
+This implementation is considered simpler than open addressing, usually because the way of dealing with collisions is clearer. Also it is less system dependant if we consider performance (as we saw one of the key advantages of open addressing is that it is cache friendly). That is one of the key reasons that C++ uses chaining hashing for its default implementation of unordered\_hash \cite{HashTableProposal}.
 
 Below we will discuss an implementation of chaining hashing in C++14:
 
@@ -231,4 +231,4 @@ As we can see, with linked list it is clearly easier to erase an element.
 
 \section{Open Addressing vs Chaining Hashing}
 
-When comparing Open Addressing vs Chaning hashing we can cite many pros and cons. I will start with the open addressing pros. Among the pros of open addressing we can see that open addressing techniques such as linear probing tend to be more cache friendly. That is because as the key value pairs are stored in the memory in a sequential way with the vector, when loading a key value pair we will load a chuck of memory that is around him (that will have other key value pairs). Another thing that can be said to ilustrate that is the 80 / 20 percent rule, that when applied to hash tables means that ``in practice'' 80\% of the keys will be accessed 20\% of the time (and 20\% of the keys will be accessed 80\% of the time). This is only for illustration purposes, obviously this is not valid for every application, as we can artificially create one that don't apply. Another advantage of open addressing is that all the memory will be in a single and sequential ``Block'' of memory. 
+When comparing Open Addressing vs Chaning hashing we can cite many pros and cons. Lets start with the open addressing pros. Among the pros of open addressing we can see that open addressing techniques such as linear probing tend to be more cache friendly. That is because as the key value pairs are stored in the memory in a sequential way with the vector, when loading a key value pair we will load a chuck of memory that is around him (that will have other key value pairs). Another thing that can be said to ilustrate that is the 80 / 20 percent rule, that when applied to hash tables means that ``in practice'' 80\% of the keys will be accessed 20\% of the time (and 20\% of the keys will be accessed 80\% of the time). This is only for illustration purposes, obviously this is not valid for every application, as we can artificially create one that don't apply. Another advantage of open addressing is that all the memory will be in a single and sequential ``Block'' of memory. 
