@@ -1,0 +1,30 @@
+% Author: Nelson Lago
+% This file is derived from files in the BibLaTeX distribution
+% and, therefore, is distributed under the LPPL
+
+\ProvidesFile{plainnat-ime.cbx}
+[\abx@cbxid]
+
+\RequireCitationStyle{authoryear}
+\RequirePackage{regexpatch}
+
+% Usando o pacote hyperref, o estilo de citação authoryear transforma
+% apenas o ano da citação em um link para a bibliografia; aqui fazemos
+% toda a citação ser um link, modificando as macros definidas em
+% authoryear.cbx.
+% TODO: os parênteses de textcite não fazem parte do link; isso
+% não é trivial de consertar.
+
+\xpatchbibmacro*{textcite}
+  {\printnames{labelname}}
+  {\bibhyperref{\printnames{labelname}}}
+  {}{}
+
+% letbibmacro não está disponível em versões de biblatex anteriores a
+% nov/2017; vamos fazer a alteração manualmente.
+%\letbibmacro{imedefaultcite}{cite}
+\csletcs{abx@macro@imedefaultcite}{abx@macro@cite}
+
+\renewbibmacro{cite}{%
+    \printtext[bibhyperref]{\usebibmacro{imedefaultcite}}%
+}

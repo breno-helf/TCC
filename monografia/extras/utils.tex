@@ -1,0 +1,175 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% OUTROS PACOTES ÚTEIS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Você provavelmente vai querer ler a documentação de alguns destes pacotes
+% para personalizar algum aspecto do trabalho ou usar algum recurso específico.
+
+% A classe Book inclui o comando \appendix, que (obviamente) permite inserir
+% apêndices no documento. No entanto, não há suporte similar para anexos. Esta
+% package (que não é padrão do LaTeX, foi criada para este modelo) define o
+% comando \annex. Ela deve ser carregada depois de hyperref.
+\dowithsubdir{extras/}{\usepackage{annex}}
+
+% Formatação personalizada das listas "itemize", "enumerate" e
+% "description", além de permitir criar novos tipos de listas
+%\usepackage{paralist}
+% Esta package tem a mesma finalidade, mas é mais "moderna" e tem mais
+% recursos:
+%  * É possível personalizar labels, espaçamento etc.
+%  * É possível definir novos tipos de lista, que podem ou não ser
+%    baseados nos tipos padrão
+%  * É possível "interromper" uma lista e retornar a ela depois sem
+%    perder a numeração
+%  * Com a opção "inline", a package define os ambientes "itemize*",
+%    "description*" e "enumerate*", que fazem os itens da lista como
+%    parte de um único parágrafo
+%\usepackage[inline]{enumitem}
+
+% Sublinhado e outras formas de realce de texto
+\usepackage{soul}
+\usepackage{soulutf8}
+
+% Notação bra-ket
+%\usepackage{braket}
+
+%\num \SI and \SIrange. For example, \SI{10}{\hertz} \SIrange{10}{100}{\hertz}
+%\usepackage[binary-units]{siunitx}
+
+% Citações melhores; se você pretende fazer citações de textos
+% relativamente extensos, vale a pena ler a documentação. biblatex
+% utiliza recursos deste pacote.
+\usepackage{csquotes}
+
+\usepackage{url}
+% URL com fonte sem serifa ao invés de teletype
+\urlstyle{sf}
+
+% Permite inserir comentários, muito bom durante a escrita do texto;
+% você também pode se interessar pela package pdfcomment.
+\usepackage[textsize=scriptsize,colorinlistoftodos,textwidth=2.5cm]{todonotes}
+\presetkeys{todonotes}{color=orange!40!white}{}
+
+% Comando para fazer notas com highlight no texto correspondente:
+% \hltodo[texto][opções]{comentário}
+\makeatletter
+\if@todonotes@disabled
+  \NewDocumentCommand{\hltodo}{O{} O{} +m}{#1}
+\else
+  \NewDocumentCommand{\hltodo}{O{} O{} +m}{
+    \ifstrempty{#1}{}{\texthl{#1}}%
+    \todo[#2]{#3}{}%
+  }
+\fi
+\makeatother
+
+% Vamos reduzir o espaçamento entre linhas nas notas/comentários
+\makeatletter
+\xpatchcmd{\@todo}
+  {\renewcommand{\@todonotes@text}{#2}}
+  {\renewcommand{\@todonotes@text}{\begin{spacing}{0.5}#2\end{spacing}}}
+  {}
+  {}
+\makeatother
+
+% Símbolos adicionais, como \celsius, \ohm, \perthousand etc.
+%\usepackage{gensymb}
+
+% Símbolos adicionais, como \textrightarrow, \texteuro etc.
+\usepackage{textcomp}
+
+% Permite criar listas como glossários, listas de abreviaturas etc.
+% https://en.wikibooks.org/wiki/LaTeX/Glossary
+%\usepackage{glossaries}
+
+% Permite formatar texto em colunas
+\usepackage{multicol}
+
+% Gantt charts; útil para fazer o cronograma para o exame de
+% qualificação, por exemplo.
+\usepackage{pgfgantt}
+
+% Na versão 5 do pacote pgfgantt, a opção "compress calendar"
+% deixou de existir, sendo substituída por "time slot unit=month".
+% Aqui, um truque para funcionar com ambas as versões.
+\makeatletter
+\@ifpackagelater{pgfgantt}{2018/01/01}
+  {\ganttset{time slot unit=month}}
+  {\ganttset{compress calendar}}
+\makeatother
+
+% Estes parâmetros definem a aparência das gantt charts e variam
+% em função da fonte do documento.
+\ganttset{
+    time slot format=isodate-yearmonth,
+    vgrid,
+    x unit=1.7em,
+    y unit title=3ex,
+    y unit chart=4ex,
+    % O "strut" é necessário para alinhar o baseline dos nomes dos meses
+    title label font=\strut\footnotesize,
+    group label font=\footnotesize\bfseries,
+    bar label font=\footnotesize,
+    milestone label font=\footnotesize\itshape,
+    % "align=right" é necessário para \ganttalignnewline funcionar
+    group label node/.append style={align=right},
+    bar label node/.append style={align=right},
+    milestone label node/.append style={align=right},
+    group incomplete/.append style={fill=black!50},
+    bar/.append style={fill=black!25,draw=black},
+    bar incomplete/.append style={fill=white,draw=black},
+    % Não é preciso imprimir "0%"
+    progress label text=\ifnumequal{#1}{0}{}{(#1\%)},
+    % Formato e tamanho dos elementos
+    title height=.9,
+    group top shift=.4,
+    group left shift=0,
+    group right shift=0,
+    group peaks tip position=0,
+    group peaks width=.2,
+    group peaks height=.3,
+    milestone height=.4,
+    milestone top shift=.4,
+    milestone left shift=.8,
+    milestone right shift=.2,
+}
+
+% Em inglês, tanto o nome completo quanto a abreviação do mês de maio
+% são "May"; por conta disso, na tradução em português LaTeX erra a
+% abreviação. Como talvez usemos o nome inteiro do mês em outro lugar,
+% ao invés de forçar a tradução para "Mai" globalmente, fazemos isso
+% apenas em ganttchart.
+\AtBeginEnvironment{ganttchart}{\deftranslation[to=Portuguese]{May}{Mai}}
+
+% Ilustrações, diagramas, gráficos etc. criados diretamente em LaTeX.
+% Também é útil se você quiser importar gráficos gerados com GnuPlot.
+\usepackage{tikz}
+
+% Gráficos gerados diretamente em LaTeX; é possível usar tikz para
+% isso também.
+\usepackage{pgfplots}
+% sobre níveis de compatibilidade do pgfplots, veja
+% https://tex.stackexchange.com/a/81912/183146
+%\pgfplotsset{compat=1.14} % TeXLive 2016
+%\pgfplotsset{compat=1.15} % TeXLive 2017
+%\pgfplotsset{compat=1.16} % TeXLive 2019
+\pgfplotsset{compat=newest}
+
+% Importação direta de arquivos gerados por gnuplot com o
+% driver/terminal "lua tikz"; esta package não faz parte da
+% instalação padrão do LaTeX, mas sim do gnuplot.
+%\usepackage{gnuplot-lua-tikz}
+
+% O formato pdf permite anexar arquivos ao documento, que aparecem
+% na página como ícones "clicáveis"; esta package implementa esse
+% recurso em LaTeX.
+%\usepackage{attachfile}
+
+% Os comandos \TeX e \LaTeX são nativos do LaTeX; esta package acrescenta os
+% comandos \XeLaTeX e \LuaLaTeX. Você provavelmente não precisa desse recurso
+% e, portanto, pode removê-la.
+\usepackage{metalogo}
+\providecommand{\ConTeXt}{\textsc{Con\TeX{}t}}
+% Outros logos da família TeX; você também pode remover estas linhas:
+\usepackage{hologo}
+\renewcommand{\ConTeXt}{\hologo{ConTeXt}}

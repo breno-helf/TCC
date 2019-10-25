@@ -1,0 +1,64 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%% SUMÁRIO, CABEÇALHOS, SEÇÕES %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Formatação personalizada do sumário, lista de tabelas/figuras etc.
+%\usepackage{titletoc}
+
+% Coloca as linhas "Apêndices" e "Anexos" no sumário. Com a opção "inline",
+% cada apêndice/anexo aparece como "Apêndice X" ao invés de apenas "X".
+\dowithsubdir{extras/}{\usepackage{appendixlabel}}
+
+% titlesec permite definir formatação personalizada de títulos, seções etc.
+% Observe que titlesec é incompatível com os comandos refsection
+% e refsegment do pacote biblatex!
+\makeatletter
+\ltx@IfUndefined{chapter}
+    {
+        % A classe atual não define "chapter" e, portanto, não faz sentido
+        % carregar imagechapter. Ao invés disso, vamos usar titlesec apenas
+        % para fazer títulos, seções etc. não serem justificados.
+        \usepackage[raggedright]{titlesec}
+    }
+    {
+        % Esta package utiliza titlesec e implementa a possibilidade de incluir
+        % uma imagem no título dos capítulos com o comando \imgchapter (leia
+        % os comentários no arquivo da package).
+        \dowithsubdir{extras/}{\usepackage{imagechapter}}
+    }
+\makeatother
+
+% Permite saber o número total de páginas; útil para colocar no
+% rodapé algo como "página 3 de 10" com "\thepage de \pageref{LastPage}"
+%\usepackage{lastpage}
+
+% Permite definir cabeçalhos e rodapés
+%\usepackage{fancyhdr}
+
+% Personalização de cabeçalhos e rodapés com o estilo deste modelo
+\dowithsubdir{extras/}{\usepackage{imeusp-headers}}
+
+% Só olha até o nível 2 (seções), ou seja, não coloca nomes de
+% subseções ou subsubseções no sumário (nem nos cabeçalhos).
+\setcounter{tocdepth}{2}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%% ESPAÇAMENTO E ALINHAMENTO %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% LaTeX por default segue o estilo americano e não faz a indentação da
+% primeira linha do primeiro parágrafo de uma seção; este pacote ativa essa
+% indentação, como é o estilo brasileiro
+\usepackage{indentfirst}
+
+% A primeira linha de cada parágrafo costuma ter um pequeno recuo para
+% tornar mais fácil visualizar onde cada parágrafo começa. Além disso, é
+% possível colocar um espaço em branco entre um parágrafo e outro. Esta
+% package coloca o espaço em branco e desabilita o recuo; como queremos
+% o espaço *e* o recuo, é preciso guardar o valor padrão do recuo e
+% redefini-lo depois de carregar a package.
+\newlength\oldparindent
+\setlength\oldparindent\parindent
+\usepackage[parfill]{parskip}
+\setlength\parindent\oldparindent

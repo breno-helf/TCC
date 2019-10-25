@@ -1,0 +1,866 @@
+% Authors: Nelson Lago and Jesus P. Mena-Chalco
+% This file is distributed under the MIT Licence
+
+\ProvidesPackage{imeusp-capa}[2019/10/18 IME/USP initial thesis pages]
+
+% Várias funções úteis
+\RequirePackage{etoolbox}
+
+% Comandos NewDocumentCommand, NewDocumentEnvironment etc.
+% vindos do projeto LaTeX3.
+\RequirePackage{xparse}
+
+% os diversos testes de etoolbox não expandem os argumentos; como precisamos
+% que eles sejam expandidos, definimos aqui um comando auxiliar para isso.
+\NewDocumentCommand\@if@expand@empty{+m +m +m}{%
+  % Força expansão; se #1 for indefinido, csuse expande para a string vazia
+  \edef\tmp{\csuse{#1}}%
+  \ifcsvoid{tmp}{#2}{#3}%
+}
+
+% Parágrafos não-justificados melhores
+\RequirePackage[newcommands]{ragged2e}
+
+% Múltiplos parâmetros opcionais do tipo "key=val"
+\RequirePackage{keyval}
+
+% LaTeX oferece o comando "\maketitle" para criar uma capa / página de rosto
+% padrão. Ela não se adequa ao padrão do IME, então não vamos usar \maketitle.
+% O IME também pede páginas de rosto com formato mais ou menos específico.
+% Então, vamos criar novos comandos: "\capaime" e "\pagrostoime", além dos
+% ambientes para a página de dedicatória e resumo.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% RESUMO E DEDICATÓRIA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% A dedicatória vai em uma página separada, sem numeração,
+% com o texto alinhado à direita e margens esquerda e
+% superior muito grandes. Vamos fazer isso com uma minipage.
+\newenvironment{dedicatoria} {
+  \if@openright\cleardoublepage\else\clearpage\fi
+
+  \thispagestyle{empty}
+  \vspace*{140mm plus 0mm minus 100mm}
+  \noindent
+  \begin{FlushRight}
+     \begin{minipage}[b][100mm][b]{100mm}
+       \begin{FlushRight}
+         \itshape
+} {
+       \end{FlushRight}
+     \end{minipage}\hspace*{3em}
+  \end{FlushRight}
+  \vspace*{50mm plus 0mm minus 10mm}
+  \if@openright\cleardoublepage\else\clearpage\fi
+}
+
+% A página de resumo deve existir em português e inglês
+\NewDocumentEnvironment{resumo}{m} {
+  \if@openright\cleardoublepage\else\clearpage\fi
+  \thispagestyle{empty}
+  \vspace*{2em}
+
+  \ifstrequal{port}{#1}{
+    \begin{center}\Large\textbf{Resumo}\end{center}
+  }{
+    \begin{center}\Large\textbf{Abstract}\end{center}
+  }
+
+  \vspace*{2em}
+
+  \footnotesize
+
+  % Esse é o jeito mais simples de mudar as margens de um parágrafo:
+  % faz de conta que é uma lista
+  \list{}{\rightmargin 3em \leftmargin 3em}
+    \item[]
+      \@refdocumento[#1]
+
+  \vspace*{3em plus 3em minus 1.5em}
+} {
+  \vspace*{2em plus 1em minus 0em}
+
+  \ifstrequal{port}{#1}{%
+    \textbf{Palavras-chave:}\hspace{1em}\@palavraschave%
+  }{%
+    \textbf{Keywords:}\hspace{1em}\@keywords%
+  }
+
+    \endlist
+}
+
+% O formato padrão do pacote epigraph é bem feinho...
+% Outra opção para epígrafes é o pacote quotchap
+\usepackage{epigraph}
+\newcommand{\epigrafe}[2] {%
+  \setlength{\epigraphrule}{0pt}
+  \ifthenelse{\equal{}{#2}}{
+    \epigraph{\itshape\RaggedLeft #1}{}
+  }{
+    \epigraph{\itshape\RaggedLeft #1}{--- #2}
+  }
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%% DEFINIÇÃO DE VARIÁVEIS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Define os campos que vão ser usados na capa
+
+% Às vezes é necessário forçar quebras de linha no título para a capa, mas
+% essas quebras não devem aparecer em outros lugares. Vamos definir duas
+% variáveis para o título, uma para a capa e outra "sanitizada", sem quebras
+% de linha. "Sanitizar" desta forma em LaTeX de maneira que não haja
+% surpresas, por incrível que pareça, é *muito* complicado, mas o código
+% abaixo deve ser suficiente para este caso. Se tiver curiosidade:
+% http://www.matijs.net/blog/2006/07/20/how-to-trim-spaces-in-tex
+
+\NewDocumentCommand\disablelinebreak{s o}{\unskip{} \ignorespaces}
+
+\newcommand*{\titulopt}[1]{
+    \gdef\@tituloptcapa{#1}
+    \gdef\@titulopt{%
+        \let \\ \disablelinebreak%
+        \let \newline \disablelinebreak%
+        \let \break \disablelinebreak%
+        #1%
+    }
+}
+
+\newcommand*{\tituloeng}[1]{
+    \gdef\@tituloengcapa{#1}
+    \gdef\@tituloeng{%
+        \let \\ \disablelinebreak%
+        \let \newline \disablelinebreak%
+        \let \break \disablelinebreak%
+        #1%
+    }
+}
+
+\newcommand*{\subtitulo}[1]{
+    \gdef\@subtitulocapa{#1}
+    \gdef\@subtitulo{%
+        \let \\ \disablelinebreak%
+        \let \newline \disablelinebreak%
+        \let \break \disablelinebreak%
+        #1%
+    }
+}
+
+\newcommand*{\subtituloeng}[1]{
+    \gdef\@subtituloengcapa{#1}
+    \gdef\@subtituloeng{%
+        \let \\ \disablelinebreak%
+        \let \newline \disablelinebreak%
+        \let \break \disablelinebreak%
+        #1%
+    }
+}
+
+% Caso alguém se confunda e use o comando errado
+\let\tituloport\titulopt
+\let\subtituloport\subtitulo
+\let\subtitulopt\subtitulo
+
+\NewDocumentCommand{\orientador}{O{masc} m}{
+  \iftoggle{@tcc}{
+  \ifstrequal{#1}{masc}
+      {\gdef\@labelorientador{Supervisor}}
+      {\gdef\@labelorientador{Supervisora}}
+  }{
+    \ifstrequal{#1}{masc}
+      {\gdef\@labelorientador{Orientador}}
+      {\gdef\@labelorientador{Orientadora}}
+  }
+  \gdef\@orientador{#2}
+}
+
+\NewDocumentCommand{\coorientador}{O{masc} m}{
+  \iftoggle{@tcc}{
+    \ifstrequal{#1}{masc}
+      {\gdef\@labelcoorientador{Cossupervisor}}
+      {\gdef\@labelcoorientador{Cossupervisora}}
+  }{
+    \ifstrequal{#1}{masc}
+      {\gdef\@labelcoorientador{Coorientador}}
+      {\gdef\@labelcoorientador{Coorientadora}}
+  }
+  \gdef\@coorientador{#2}
+}
+
+\newcommand*{\orientadoreng}[1]{\gdef\@orientadoreng{#1}}
+\newcommand*{\coorientadoreng}[1]{\gdef\@coorientadoreng{#1}}
+\newcommand*{\programa}[1]{\gdef\@programa{#1}}
+\newcommand*{\programaeng}[1]{\gdef\@programaeng{#1}}
+\newcommand*{\apoio}[1]{\gdef\@apoio{#1}}
+\newcommand*{\apoioeng}[1]{\gdef\@apoioeng{#1}}
+\newcommand*{\ano}[1]{\gdef\@ano{#1}}
+\newcommand*{\datadefesa}[1]{\gdef\@datadefesa{#1}}
+\newcommand*{\datadefesaeng}[1]{\gdef\@datadefesaeng{#1}}
+\newcommand*{\localdefesa}[1]{\gdef\@localdefesa{#1}}
+\newcommand{\banca}[1]{\gdef\@banca{#1}}
+\newcommand{\bancaeng}[1]{\gdef\@bancaeng{#1}}
+\newcommand*{\palavraschave}[1]{\gdef\@palavraschave{#1}}
+\newcommand*{\keywords}[1]{\gdef\@keywords{#1}}
+\newcommand*{\direitos}[1]{\gdef\@direitos{#1}}
+\newcommand{\fichacatalografica}[1]{\gdef\@fichacatalografica{#1}}
+
+\newtoggle{@mestrado}
+\newtoggle{@doutorado}
+\newtoggle{@tcc}
+\newtoggle{@qualificacao}
+
+\NewDocumentCommand{\tese}{O{masc} O{}}{
+  % "Tese" e "dissertação" têm sentido contrário em língua inglesa:
+  % http://guides.lib.berkeley.edu/dissertations_theses
+  % https://www.grad.ubc.ca/handbook-graduate-supervision/graduate-thesis
+  % Como "Thesis" é o nome genérico, vamos usar para mestrado e doutorado
+  \renewcommand*{\@nometrabalho}{Tese}
+  \renewcommand*{\@nometrabalhoeng}{Thesis}
+  \renewcommand*{\@nometituloeng}{Doctor}
+  \renewcommand*{\@grau}{Doutorado}
+  \renewcommand*{\@graueng}{Doctorate}
+  \toggletrue{@doutorado}
+  \togglefalse{@mestrado}
+  \togglefalse{@tcc}
+  \ifstrequal{#1}{masc}{
+    \renewcommand*{\@nometitulo}{Doutor}
+    \RenewDocumentCommand{\@porquem}{m}{pelo candidato \@author}
+  }{
+    \renewcommand*{\@nometitulo}{Doutora}
+    \RenewDocumentCommand{\@porquem}{m}{pela candidata \@author}
+  }
+  \ifstrequal{#2}{quali}{
+    \toggletrue{@qualificacao}
+    \renewcommand\@nometrabalho{Exame de Qualificação}
+    \renewcommand\@nometrabalhoeng{Qualifying Exam}
+  }{}
+}
+\NewDocumentCommand{\doutorado}{O{masc} O{}}{\tese[#1][#2]}
+
+\NewDocumentCommand{\dissertacao}{O{masc} O{}}{
+  % Veja observação acima
+  \renewcommand*{\@nometrabalho}{Dissertação}
+  \renewcommand*{\@nometrabalhoeng}{Thesis}
+  \renewcommand*{\@nometituloeng}{Master}
+  \renewcommand*{\@grau}{Mestrado}
+  \renewcommand*{\@graueng}{Masters}
+  \toggletrue{@mestrado}
+  \togglefalse{@doutorado}
+  \togglefalse{@tcc}
+  \ifstrequal{#1}{masc}{
+    \renewcommand*{\@nometitulo}{Mestre}
+    \RenewDocumentCommand{\@porquem}{m}{pelo candidato \@author}
+  }{
+    \renewcommand*{\@nometitulo}{Mestra}
+    \RenewDocumentCommand{\@porquem}{m}{pela candidata \@author}
+  }
+  \ifstrequal{#2}{quali}{
+    \toggletrue{@qualificacao}
+    \renewcommand\@nometrabalho{Exame de Qualificação}
+    \renewcommand\@nometrabalhoeng{Qualifying Exam}
+  }{}
+}
+\NewDocumentCommand{\mestrado}{O{masc} O{}}{\dissertacao[#1][#2]}
+
+\NewDocumentCommand{\tcc}{O{masc}}{
+  % Nomes possíveis para o TCC em inglês:
+  %
+  % * monograph/monography
+  %     usado para trabalho de alto nível de um autor "senior",
+  %     então não faz sentido para um trabalho de graduação.
+  %
+  % * undergraduate thesis / bachelor's thesis
+  %     parece plausível.
+  %
+  % * senior project / senior thesis / honor thesis
+  %     usado para "TCCs" de caráter fortemente acadêmico;
+  %     não é o caso aqui.
+  %
+  % * essay / report
+  %     acho razoável porque trata-se de um texto sobre o
+  %     projeto de TCC.
+  \renewcommand*{\@nometrabalho}{Monografia}
+  %\renewcommand*{\@nometrabalhoeng}{Undergraduate Thesis}
+  \renewcommand*{\@nometrabalhoeng}{Capstone Project Report}
+  \renewcommand*{\@nometituloeng}{Bachelor}
+  \renewcommand*{\@grau}{Bacharelado}
+  \renewcommand*{\@graueng}{Bachelor}
+  \renewcommand*{\@nometitulo}{Bacharel}
+  \togglefalse{@mestrado}
+  \togglefalse{@doutorado}
+  \toggletrue{@tcc}
+  \ifstrequal{#1}{masc}
+    {\RenewDocumentCommand{\@porquem}{m}{pelo candidato \@author}}
+    {\RenewDocumentCommand{\@porquem}{m}{pela candidata \@author}}
+}
+
+% Defaults quando o usuário não define alguma dessas variáveis
+
+\titulopt{\@title}
+\tituloeng{\@title}
+
+% Default é vazio; não vamos usar "\subtitulo{}" porque, com isso,
+% \@subtitulo deixa de ser vazio (embora nada seja impresso, ele
+% inclui os comandos para desabilitar quebras de linha)
+\gdef\@subtitulocapa{}
+\gdef\@subtitulo{}
+
+\orientador{Orientador não definido!}
+\programa{Programa não definido!}
+\apoio{}
+\ano{Ano não definido!}
+\datadefesa{Data não definida!}
+\localdefesa{Local não definido!}
+\banca{Banca não definida!}
+\palavraschave{Palavras-chave não definidas!}
+\keywords{Keywords não definidas!}
+\direitos{}
+\NewDocumentCommand{\@porquem}{m}{pelo candidato \@author}
+\fichacatalografica{}
+
+% Se estes não forem definidos, usamos a variável correspondente
+% em português.
+\newcommand*{\@subtituloeng}{\@subtitulo}
+\newcommand*{\@subtituloengcapa}{\@subtitulocapa}
+\newcommand*{\@orientadoreng}{\@orientador}
+\newcommand*{\@coorientadoreng}{\@coorientador}
+\newcommand*{\@programaeng}{\@programa}
+\newcommand*{\@apoioeng}{\@apoio}
+\newcommand*{\@datadefesaeng}{\@datadefesa}
+\newcommand*{\@bancaeng}{\@banca}
+
+\newcommand*{\@nometrabalho}{Dissertação}
+\newcommand*{\@nometrabalhoeng}{Thesis}
+\newcommand*{\@nometitulo}{Mestre}
+\newcommand*{\@nometituloeng}{Master}
+\newcommand*{\@grau}{Mestrado}
+\newcommand*{\@graueng}{Masters}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%% TEXTOS PADRÃO EM PT E ENG %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Com fontspec (ou seja, lualatex/xelatex), o comando \oldstylenums funciona
+% com qualquer fonte que tenha suporte a números old-style. Já com pdflatex,
+% o comando para escolher números old style depende da fonte em uso. Nesse
+% caso, se não soubermos qual a fonte atual (ou seja, não é nem libertine
+% nem libertinus), vamos usar latin modern e torcer para o resultado não ser
+% muito discrepante do restante do texto.
+
+\@ifpackageloaded{fontspec}
+  {\providecommand{\macQuatroNoveNove}{mac~\oldstylenums{499}}}
+  {
+    \providecommand{\macQuatroNoveNove}{{\fontfamily{lmr}\selectfont mac~\oldstylenums{499}}}
+
+    \@ifpackageloaded{libertinus}
+      {\renewcommand{\macQuatroNoveNove}{\LibertinusSerifOsF mac~499}}
+      {}
+
+    \@ifpackageloaded{libertine}
+      {\renewcommand{\macQuatroNoveNove}{\libertineOsF mac~499}}
+      {}
+  }
+
+\newcommand*{\@textocapa}[1][port] {%
+  \vspace{-\baselineskip}\singlespacing\setstretch{.9}%
+  \iftoggle{@tcc} {%
+    \ifstrequal{port}{#1}{%
+      Monografia Final\vspace{.5\baselineskip}\\
+      \macQuatroNoveNove\space%
+      --- Trabalho de\\
+      Formatura Supervisionado%
+    }{%
+      % Veja o comentário mais acima sobre "essay/report"
+      %Final Report\vspace{.5\baselineskip}\\
+      Final Essay\vspace{.5\baselineskip}\\
+      \macQuatroNoveNove\space%
+      --- Capstone Project%
+    }%
+  }{}%
+  \ifboolexpr{ togl {@mestrado} or togl {@doutorado} } {%
+        \iftoggle{@qualificacao} {%
+            \ifstrequal{port}{#1}{%
+                Relatório apresentado ao\\
+                Instituto de Matemática e Estatística\\
+                da Universidade de São Paulo\\
+                para exame de qualificação de\\
+                \@grau{} em Ciências%
+            }{%
+                Report presented to the\\
+                Institute of Mathematics and Statistics\\
+                of the University of São Paulo\\
+                for the \iftoggle{@mestrado}{\@nometituloeng}{\@graueng} of Science\\
+                qualifying examination\\%
+            }%
+        }{% Não é qualificação
+            \ifstrequal{port}{#1}{%
+                \@nometrabalho{} apresentada ao\\
+                Instituto de Matemática e Estatística\\
+                da Universidade de São Paulo\\
+                para obtenção do título de\\
+                \@nometitulo{} em Ciências%
+            }{%
+                \@nometrabalhoeng{} presented to the\\
+                Institute of Mathematics and Statistics\\
+                of the University of São Paulo\\
+                in partial fulfillment\\
+                of the requirements\\
+                for the degree of\\
+                \@nometituloeng{} of Science%
+            }%
+        }
+   }{}%
+  \par%
+}
+
+\newcommand*{\@pessoascapa}[1][port] {%
+  \begin{tabular}{rl}
+    \ifstrequal{port}{#1}{%
+      \iftoggle{@tcc}{}{Programa: & \@programa \tabularnewline}
+      \@labelorientador: & \@orientador \tabularnewline
+      \@if@expand@empty{@coorientador}{}{\@labelcoorientador: & \@coorientador \tabularnewline}%
+    }{%
+      Program: & \@programaeng \tabularnewline
+      Advisor: & \@orientadoreng \tabularnewline
+      \@if@expand@empty{@coorientador}{}{Coadvisor: & \@coorientadoreng \tabularnewline}%
+  }
+  \end{tabular}
+}
+
+\newcommand*{\@textorostoprovisoria}[1][port] {%
+  \iftoggle{@qualificacao}{%
+    \ifstrequal{port}{#1}{%
+      Esta é a versão original do texto de qualificação elaborado
+      \@porquem{}, tal como submetido à Comissão Julgadora.%
+    }{%
+      This is the original version of the qualifying text prepared
+      by the candidate \@author, as submitted to the Examining Committee.%
+    }%
+  }{%
+    \ifstrequal{port}{#1}{%
+      Esta é a versão original da \MakeLowercase{\@nometrabalho} elaborada
+      \@porquem{}, tal como submetida à Comissão Julgadora.%
+    }{%
+      This is the original version of the \MakeLowercase{\@nometrabalhoeng} prepared
+      by the candidate \@author, as submitted to the Examining Committee.%
+    }%
+  }%
+}
+
+\newcommand*{\@textorostodefinitiva}[1][port] {%
+  \ifstrequal{port}{#1}{%
+    Esta versão da \MakeLowercase{\@nometrabalho} contém as correções e alterações
+    sugeridas pela Comissão Julgadora durante a defesa da versão
+    original do trabalho, realizada em \@datadefesa.\\
+    ~\\
+    Uma cópia da versão original está disponível no Instituto de
+    Matemática e Estatística da Universidade de São Paulo.%
+  }{%
+    This version of the \MakeLowercase{\@nometrabalhoeng} includes the corrections
+    and modifications suggested by the Examining Committee during
+    the defense of the original version of the work, which took
+    place on \@datadefesaeng.\\
+    ~\\
+    A copy of the original version is available at the Institute of
+    Mathematics and Statistics of the University of São Paulo.%
+  }%
+}
+
+\newcommand{\@textobanca}[1][port] {%
+  \ifstrequal{port}{#1}{%
+    \noindent Comissão Julgadora:
+
+    \@banca%
+  }{%
+    \noindent Examining Committee:
+
+    \@bancaeng%
+  }
+}
+
+\newcommand{\@refdocumento}[1][port] {%
+  \@author.
+  \ifstrequal{port}{#1}{%
+    \textbf{\@titulopt\@if@expand@empty{@subtitulo}{}{: \textit{\@subtitulo}}}.
+    \@nometrabalho{} (\@grau).
+    Instituto de Matemática e Estatística,
+    Universidade de São Paulo,%
+  }{%
+    \textbf{\@tituloeng\@if@expand@empty{@subtituloeng}{}{: \textit{\@subtituloeng}}}.
+    \@nometrabalhoeng{} (\@graueng).
+    Institute of Mathematics and Statistics,
+    University of São Paulo,%
+  }
+  São Paulo, \@ano.%
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%% POSIÇÃO DOS ELEMENTOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% O IME usa uma capa padrão de cartolina para todas as teses/dissertações.
+% Essa capa tem uma janela recortada por onde se vê o título e o autor do
+% trabalho. Ela fica centralizada na página, tem 100m de largura, 60mm de
+% altura e começa 47mm abaixo do topo da página. Como o documento já tem
+% margens definidas pelo usuário, precisamos calcular quanto precisamos
+% acrescentar ou subtrair dessas margens para colocar o título e autor
+% na posição exata (na verdade, com uma pequena folga: 49mm abaixo do topo
+% da página, 96mm de largura e 56mm de altura).
+%
+% Para centralizar horizontalmente, poderíamos pensar em usar "\center",
+% mas isso não funciona porque ele centraliza o texto em relação à coluna
+% de texto, não à página. Assim, como as margens esquerda e direita do
+% documento podem ser diferentes, a janela não ficaria na posição correta.
+% O que faremos, então, é colocar essa janela em uma minipage e calcular
+% a margem esquerda para que essa minipage fique centralizada.
+%
+% Além disso, outros elementos da capa também não podem ser centralizados
+% com "\center", porque eles ficariam desalinhados em relação à janela
+% com o título e autor. Vamos colocar esses outros elementos em uma
+% minipage também, mas de tamanho diferente da anterior.
+%
+% Então, precisamos calcular três valores: a margem adicional em relação ao
+% topo da página, a margem esquerda da janela com título e autor e a margem
+% esquerda para os demais elementos centralizados da página.
+
+\newcommand*{\@margenscapa}{
+  % Calcula o valor das margens; chamando este comando explicitamente
+  % quando necessário ao invés de calcular os valores durante a
+  % inicialização garante que vamos calcular após o pacote geometry
+  % ter definido as margens.
+
+  % A distância entre o topo da página e o início do texto (fora o cabeçalho)
+  % é dada por (1in + \voffset + \headsep + \topmargin + \headheight).
+  % Queremos colocar a caixa com o título 49mm abaixo do topo, então:
+  \dimgdef\@margemquadrotitulotopo{49mm - (1in + \voffset + \headsep + \topmargin + \headheight)}
+
+  % Quando \vspace é usado no início da página, ele não tem efeito; como
+  % não é isso que queremos, vamos usar \vspace*. No entanto, \vspace*
+  % é implementado inserindo uma \hrule de espessura zero e depois
+  % acrescentando o espaço solicitado. O resultado não é exatamente
+  % o esperado, pois \topskip, \parskip e \baselineskip interagem com
+  % \vspace* de maneira um tanto complexa:
+  % https://tex.stackexchange.com/a/247516/183146
+  %
+  % Aqui, vamos compensar essa diferença. Note que, se a primeira linha
+  % da página tivesse um tamanho de fonte especial, seria necessário
+  % usar o valor de \baselineskip correspondente a essa fonte.
+  \dimgdef\@margemquadrotitulotopo{\@margemquadrotitulotopo - \baselineskip - \parskip}
+
+  % Queremos colocar a caixa com o título centralizada na página. "\center"
+  % centraliza em função da área de texto, não da página inteira, então
+  % não podemos usá-lo, pois as margens esquerda e direita podem ser
+  % diferentes. A distância entre a borda esquerda/interna do papel e o
+  % início do texto é dada por (1in + \hoffset + \oddsidemargin), então:
+  \dimgdef\@margemquadrotituloesq{(\paperwidth - 96mm)/2 - (1in + \hoffset + \oddsidemargin)}
+  \dimgdef\@margemcapaesq{(\paperwidth - 160mm)/2 - (1in + \hoffset + \oddsidemargin)}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%% OS ELEMENTOS QUE COMPÕEM A CAPA E A FOLHA DE ROSTO %%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\NewDocumentCommand{\@versorosto}{} {
+  \begin{list}{}{\rightmargin 3em \leftmargin 3em}
+    \item
+      \@direitos
+
+      \@if@expand@empty{@fichacatalografica} {} {
+        \vspace*{3cm plus 3cm minus 1cm}
+	\setlength{\fboxsep}{20pt}
+	\begin{center}
+        \fbox{
+	  \begin{minipage}[t]{120mm}
+            \setlength\parskip{1em}
+
+            \@fichacatalografica
+
+          \end{minipage}
+        }
+	\end{center}
+      }
+  \end{list}
+}
+
+% Só para TCC
+\newcommand{\@quadroinstituicao}[1][port]{
+
+    % A posição do quadro de título é fixa em relação à página;
+    % a posição deste quadro é definida em função da posição do
+    % quadro de título. Assim, primeiro vamos encontrar onde
+    % deve começar o quadro do título. Veja os comentários em
+    % \@quadrotitulo para entender o mecanismo.
+
+    \vspace*{\@margemquadrotitulotopo}
+
+    \ifdeflength{\@normalstrutheight}
+      {}
+      {
+        \newlength{\@normalstrutheight}
+      }
+    \settoheight{\@normalstrutheight}{\strut}
+    \vspace{-\@normalstrutheight}
+
+    % Estamos alinhados com o quadro do título do trabalho,
+    % mas não é isso que queremos: a parte inferior deste
+    % quadro deve ficar 15mm acima do quadro de título e
+    % este quadro tem 20mm de altura, então precisamos subir:
+    \vspace{-20mm} % Espaço ocupado por este quadro
+    \vspace{-15mm} % Espaço entre este quadro e o quadro de título
+
+    \noindent\strut%
+    \hspace*{\@margemcapaesq}%
+%    \fbox{%
+      \begin{minipage}[t][20mm][s]{160mm}
+        \vspace{0pt plus 20mm}
+
+        \singlespacing\unskip\centering\large
+
+        \ifstrequal{port}{#1}{%
+          \textsc{Universidade de São Paulo\\
+          Instituto de Matemática e Estatística\\
+          Bacharelado em Ciência da Computação}
+        }{%
+          \textsc{University of São Paulo\\
+          Institute of Mathematics and Statistics\\
+          Bachelor of Computer Science}
+        }%
+
+        \vspace{0pt plus 20mm}
+      \end{minipage}
+%    }% fbox
+    \par
+
+    % Agora precisamos voltar o "cursor" para o começo da página
+    % para que o quadro de título seja inserido no lugar certo.
+    % Para isso, vamos:
+    %
+    % 1. Chegar novamente ao início do quadro de título e
+    %
+    % 2. Retroceder o tamanho da margem superior
+
+    % compensa o espaço inserido por \par logo acima
+    \vspace{-\parskip}
+
+    % A altura da minipage já compensou o \vspace{-20mm} acima;
+    % ainda precisamos compensar o \vspace{-15mm}
+    \vspace{15mm}
+
+    % Agora estamos no início do quadro de título, então
+    % podemos recuar exatamente o tamanho da margem superior.
+    \vspace{-\@margemquadrotitulotopo}
+}
+
+% O quadro com o título e o autor que deve ser visível
+% através da janela na capa.
+\NewDocumentCommand{\@quadrotitulo}{O{port}} {
+
+    % Este espaço coloca o topo da próxima linha
+    % na posição que queremos:
+    \vspace*{\@margemquadrotitulotopo}
+
+    % No entanto, a próxima linha contém apenas
+    % uma minipage, e definir o topo de uma linha
+    % desse tipo é complicado. Assim, vamos:
+    %
+    % 1. Acrescentar um \strut a essa linha;
+    %
+    % 2. mover o baseline dessa linha para o topo do \strut;
+    %
+    % 3. Alinhar o topo da minipage ao baseline da linha.
+    %
+    % Sobre alinhamento de minipages:
+    % https://en.wikibooks.org/wiki/LaTeX/Boxes
+
+    \ifdeflength{\@normalstrutheight}
+      {}
+      {
+        \newlength{\@normalstrutheight}
+      }
+    \settoheight{\@normalstrutheight}{\strut}
+
+    \vspace{-\@normalstrutheight}
+
+    \noindent\strut%
+    \hspace*{\@margemquadrotituloesq}%
+%    \fbox{%
+      \begin{minipage}[t][56mm][s]{96mm}
+          \vspace*{2cm plus 1.5cm minus 1.8cm}
+
+          \singlespacing\unskip\centering\large
+
+          \ifstrequal{port}{#1} {%
+            \textbf{\@tituloptcapa}
+
+            \vspace{0.3cm plus 0.2cm minus 0.1cm}
+
+            \textbf{\textit{\@subtitulocapa}}%
+          }{%
+            \textbf{\@tituloengcapa}
+
+            \vspace{0.3cm plus 0.2cm minus 0.1cm}
+
+            \textbf{\textit{\@subtituloengcapa}}%
+          }
+
+          \vspace{1cm plus 1cm minus 0.6cm}
+
+          \@author
+
+          \vspace*{2cm plus 1.5cm minus 1.8cm}
+      \end{minipage}%
+%    }% fbox
+    \par
+}
+
+% As demais informações da capa
+\NewDocumentCommand{\@detalhescapa}{O{port}} {
+  \ifstrequal{port}{#1} {
+    \newcommand*{\@apoiocapa}{\@apoio}
+    \newcommand*{\@datacapa}{\@datadefesa}
+  }{
+    \newcommand*{\@apoiocapa}{\@apoioeng}
+    \newcommand*{\@datacapa}{\@datadefesaeng}
+  }
+
+  \noindent%
+  \hspace*{\@margemcapaesq}%
+%  \fbox{%
+    \begin{minipage}[t][130mm][s]{160mm}
+      \begin{center}
+        \Large
+
+        \vspace*{0.5cm plus 0.5cm minus 0.3cm}
+
+        \textsc{\@textocapa[#1]}
+
+        \vspace*{1.5cm plus 0.5cm minus 0.5cm}
+
+        \large\@pessoascapa[#1]
+
+        \vspace*{2.5cm plus 1cm minus 1cm}
+
+        \normalsize
+
+        \@apoiocapa
+
+        \vspace*{1cm plus 1cm minus 0.3cm}
+
+        \@localdefesa
+
+        \@datacapa
+
+      \end{center}
+    \end{minipage}%
+%  }% fbox
+  \par
+}
+
+% Layout da capa
+\NewDocumentCommand{\capaime}{O{port}} {
+  \@margenscapa
+
+  \cleardoublepage
+  \thispagestyle{empty}
+
+  \begin{hyphenrules}{nohyphenation}
+
+    \iftoggle{@tcc}{\@quadroinstituicao[#1]}
+
+    \@quadrotitulo[#1]
+
+    \vfill
+
+    \@detalhescapa[#1]
+  \end{hyphenrules}
+
+  \if@openright\cleardoublepage\else\clearpage\fi
+}
+
+% As informações da banca que vão apenas na versão definitiva
+% da página de rosto
+\NewDocumentCommand{\@quadrobanca}{O{port} +m} {%
+  \ifstrequal{definitiva}{#2}{%
+    \begin{minipage}[t][][t]{\textwidth}
+      \begin{quote}
+      \normalsize\@textobanca[#1]
+      \end{quote}
+    \end{minipage}%
+  }%
+  {}
+}
+
+% A informação sobre a versão provisória ou definitiva
+\NewDocumentCommand{\@descricaoversao}{O{port} +m} {%
+  % As diretrizes dizem que "A natureza do trabalho, o grau pretendido, o
+  % nome da instituição a que é submetido e a área de concentração devem
+  % ser alinhados a partir do meio da parte impressa da página para a
+  % margem direita, tanto na folha de rosto como na folha de avaliação."
+  %
+  % Assim, queremos alinhar o texto à direita com uma grande margem
+  % à esquerda. Uma solução simples é alinhar o texto à direita
+  % e inserir uma minipage. Dentro dela, definimos o texto
+  % também alinhado à direita.
+
+  \begin{FlushRight}
+    %\fbox{
+      % Margem direita + 80mm de largura significa que a minipage
+      % começa mais ou menos no meio da página.
+      \begin{minipage}[t][50mm][s]{80mm}
+        \begin{FlushRight}
+          \normalsize
+          \ifstrequal{definitiva}{#2}{%
+            \@textorostodefinitiva[#1]%
+          } {%
+            \@textorostoprovisoria[#1]%
+          }%
+        \end{FlushRight}
+      \end{minipage}
+      \par
+    %} % fbox
+  \end{FlushRight}
+}
+
+% Layout para a página de rosto (duas versões, de acordo
+% com a Resolução CoPGr 6018 de 13/10/2011)
+\NewDocumentCommand{\pagrostoime}{O{port} +m} {
+  \@margenscapa
+
+  \cleardoublepage
+
+  \thispagestyle{empty}
+
+  \begin{hyphenrules}{nohyphenation}
+    \@quadrotitulo[#1]
+
+    \vspace*{2cm plus 2cm minus 1cm}
+
+    \@descricaoversao[#1]{#2}
+
+    \vspace*{3.5cm plus 3cm minus 3.5cm}
+
+    \@quadrobanca[#1]{#2}
+  \end{hyphenrules}
+
+  \vspace*{2cm plus 2cm minus 2cm}
+
+  \clearpage
+
+  \thispagestyle{empty}
+
+  \vspace*{4cm plus 4cm minus 2cm}
+
+  \@versorosto
+
+  \vspace*{8cm plus 5cm minus 6cm}
+
+  \if@openright\cleardoublepage\else\clearpage\fi
+}
+
+\endinput

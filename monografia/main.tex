@@ -1,272 +1,303 @@
-% Started with the following Brazilain portugese template, adapted to english:
+% Arquivo LaTeX de exemplo de dissertação/tese a ser apresentada à CPG do IME-USP
 %
-% ---------------------------------------------------------------------------- %
-% Arquivo LaTeX de exemplo de monografia para a disciplina MAC0499
-% 
-% Adaptado em julho/2015 a partir do
+% Criação: Jesús P. Mena-Chalco
+% Revisão: Fabio Kon e Paulo Feofiloff
+% Adaptação para UTF8, biblatex e outras melhorias: Nelson Lago
 %
-% Arquivo LaTeX de exemplo de disserta��o/tese a ser apresentados � CPG do IME-USP
-%
-% Vers�o 5: Sex Mar  9 18:05:40 BRT 2012
-%
-% Cria��o: Jes�s P. Mena-Chalco
-% Revis�o: Fabio Kon e Paulo Feofiloff
-% ---------------------------------------------------------------------------- %
-%
-%
+% Except where otherwise indicated, these files are distributed under
+% the MIT Licence. The example text, which includes the tutorial and
+% examples as well as the explanatory comments in the source, are
+% available under the Creative Commons Attribution International
+% Licence, v4.0 (CC-BY 4.0) - https://creativecommons.org/licenses/by/4.0/
 
-\documentclass[12pt,twoside,a4paper]{book}
 
-% ---------------------------------------------------------------------------- %
-% Pacotes 
-\usepackage[T1]{fontenc}
-\usepackage[english]{babel}
-\usepackage[latin1]{inputenc}
-\usepackage[pdftex]{graphicx}           % usamos arquivos pdf/png como figuras
-\usepackage{setspace}                   % espa�amento flex�vel
-\usepackage{indentfirst}                % indenta��o do primeiro par�grafo
-\usepackage{makeidx}                    % �ndice remissivo
-\usepackage[nottoc]{tocbibind}          % acrescentamos a bibliografia/indice/conteudo no Table of Contents
-\usepackage{courier}                    % usa o Adobe Courier no lugar de Computer Modern Typewriter
-\usepackage{type1cm}                    % fontes realmente escal�veis
-\usepackage{listings}                   % para formatar c�digo-fonte (ex. em Java)
-\usepackage{titletoc}
-%\usepackage[bf,small,compact]{titlesec} % cabe�alhos dos t�tulos: menores e compactos
-\usepackage[fixlanguage]{babelbib}
-\usepackage[font=small,format=plain,labelfont=bf,up,textfont=it,up]{caption}
-\usepackage[usenames,svgnames,dvipsnames]{xcolor}
-\usepackage[a4paper,top=2.54cm,bottom=2.0cm,left=2.0cm,right=2.54cm]{geometry} % margens
-%\usepackage[pdftex,plainpages=false,pdfpagelabels,pagebackref,colorlinks=true,citecolor=black,linkcolor=black,urlcolor=black,filecolor=black,bookmarksopen=true]{hyperref} % links em preto
-\usepackage[pdftex,plainpages=false,pdfpagelabels,pagebackref,colorlinks=true,citecolor=DarkGreen,linkcolor=NavyBlue,urlcolor=DarkRed,filecolor=green,bookmarksopen=true]{hyperref} % links coloridos
-\usepackage[all]{hypcap}                    % soluciona o problema com o hyperref e capitulos
-\usepackage[square, numbers]{natbib} % cita��o bibliogr�fica textual(plainnat-ime.bst)
-\usepackage{emptypage}  % para n�o colocar n�mero de p�gina em p�gina vazia
-\usepackage{csquotes}
-\usepackage{amsmath}
-\fontsize{60}{62}\usefont{OT1}{cmr}{m}{n}{\selectfont}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PREÂMBULO LaTeX %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% ---------------------------------------------------------------------------- %
-% Cabe�alhos similares ao TAOCP de Donald E. Knuth
-\usepackage{fancyhdr}
-\pagestyle{fancy}
-\fancyhf{}
-\renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{#1}}{}}
-\renewcommand{\sectionmark}[1]{\markright{\MakeUppercase{#1}}{}}
-\renewcommand{\headrulewidth}{0pt}
-\newcommand{\TODO}[1]{{\textcolor{red}{\textbf{TODO:} #1}} \\}
+% "Book" tem capítulos (e partes, mas normalmente não usamos) e, se o documento
+% é frente-e-verso, cada capítulo começa em uma página de numeração ímpar.
+% Report é similar, mas cada capítulo começa em uma nova página, par ou ímpar.
+% É possível mudar esse comportamento com a opção "openany". Observe que você
+% pode adaptar este modelo para escrever artigos, mudando a classe do
+% documento de "book" para "article" ou a classe de algum periódico específico.
+% No entanto, o arquivo "artigo.tex" é um ponto de partida melhor: ele é
+% similar a este, mas já inclui as mudanças necessárias para a classe article.
+%
+% A opção frente-e-verso aqui significa, por exemplo, que as margens das páginas
+% ímpares e pares são diferentes ou que números de página aparecem à direita
+% ou à esquerda alternadamente. Nada impede que você crie um documento "só
+% frente" e, ao imprimir, faça a impressão frente-e-verso.
+%
+% Aqui também definimos a língua padrão do documento e línguas adicionais. A
+% classe em si não usa essa informação mas, passando as opções de língua aqui,
+% elas são repassadas para todas as packages, e diversas packages mudam
+% seu comportamento em função da língua (em especial, babel/polyglossia).
+% A última língua da lista é a língua padrão do documento.
+\documentclass[12pt,twoside,brazil,english]{book}
+%\documentclass[12pt,twoside,english,brazil]{book}
 
-% ---------------------------------------------------------------------------- %
-\graphicspath{{./figuras/}}             % caminho das figuras (recomend�vel)
-\frenchspacing                          % arruma o espa�o: id est (i.e.) e exempli gratia (e.g.) 
-\urlstyle{same}                         % URL com o mesmo estilo do texto e n�o mono-spaced
-\makeindex                              % para o �ndice remissivo
-\raggedbottom                           % para n�o permitir espa�os extra no texto
-\fontsize{60}{62}\usefont{OT1}{cmr}{m}{n}{\selectfont}
-\cleardoublepage
-\normalsize
+% Com papel tamanho A4, queremos estas margens:
+%
+% topo: 32mm
+% pé: 28mm
+% esquerda/interna: 24mm
+% direita/externa: 34mm
+%
+% Para isso, definimos os tamanhos do texto, do cabeçalho e do rodapé,
+% e deixamos a package geometry calcular os demais valores. Assim,
+% obtemos o mesmo resultado impresso, mas com margens diferentes, se
+% o tamanho do papel for diferente.
 
-% ---------------------------------------------------------------------------- %
-% Op��es de listing usados para o c�digo fonte
-% Ref: http://en.wikibooks.org/wiki/LaTeX/Packages/Listings
-\lstset{ %
-language=C++,                  % choose the language of the code
-basicstyle=\footnotesize,
-keywordstyle=\color{blue}\footnotesize,
-stringstyle=\color{red}\footnotesize,
-commentstyle=\color{green}\footnotesize,
-morecomment=[l][\color{magenta}]{\#},
-numbers=left,                   % where to put the line-numbers
-stepnumber=1,                   % the step between two line-numbers. If it's 1 each line will be numbered
-numbersep=5pt,                  % how far the line-numbers are from the code
-showspaces=false,               % show spaces adding particular underscores
-showstringspaces=false,         % underline spaces within strings
-showtabs=false,                 % show tabs within strings adding particular underscores
-frame=single,	                % adds a frame around the code
-framerule=0.6pt,
-tabsize=2,	                    % sets default tabsize to 2 spaces
-captionpos=b,                   % sets the caption-position to bottom
-breaklines=true,                % sets automatic line breaking
-breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
-escapeinside={\%*}{*)},         % if you want to add a comment within your code
-backgroundcolor=\color[rgb]{1.0,1.0,1.0}, % choose the background color.
-rulecolor=\color[rgb]{0.9,0.9,0.9},
-extendedchars=true,
-xleftmargin=10pt,
-xrightmargin=10pt,
-framexleftmargin=10pt,
-framexrightmargin=10pt
+\usepackage[a4paper]{geometry}
+
+\geometry{
+  %top=32mm,
+  %bottom=28mm,
+  %left=24mm,
+  %right=34mm,
+  textwidth=152mm, % 210-24-34
+  textheight=237mm, % 297-32-28
+  vmarginratio=8:7, % 32:28
+  hmarginratio=12:17, % 24:34
+  % Com geometry, esta medida não é tão relevante; basta garantir que ela
+  % seja menor que "top" e que o texto do cabeçalho caiba nela.
+  headheight=25.4mm,
+  % distância entre o início do texto principal e a base do cabeçalho;
+  % ou seja, o cabeçalho "invade" a margem superior nessa medida. Essa
+  % é a medida que determina a posição do cabeçalho
+  headsep=11mm,
+  footskip=10mm,
+  marginpar=20mm,
+  marginparsep=5mm,
 }
 
+% Vários pacotes e opções de configuração genéricos; para personalizar o
+% resultado, modifique estes arquivos.
+\input{extras/basics}
+\input{extras/fonts}
+\input{extras/floats}
+\input{extras/thesis-formatting}
+\input{extras/index}
+\input{extras/hyperlinks}
+\input{extras/source-code}
+\input{extras/utils}
+
+% Diretórios onde estão as figuras; com isso, não é preciso colocar o caminho
+% completo em \includegraphics (e nem a extensão).
+\graphicspath{{figuras/},{logos/}}
+
+% Comandos rápidos para mudar de língua:
+% \en -> muda para o inglês
+% \br -> muda para o português
+% \texten{blah} -> o texto "blah" é em inglês
+% \textbr{blah} -> o texto "blah" é em português
+\babeltags{br = brazil, en = english}
+
+% Espaçamento simples
+\onehalfspacing
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BIBLIOGRAFIA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% O estilo de citação e de lista de referências usado por biblatex
+\PassOptionsToPackage{
+  % Estilo similar a plainnat
+  bibstyle=extras/plainnat-ime,
+  citestyle=extras/plainnat-ime,
+  % Estilo similar a alpha
+  %bibstyle=alphabetic,
+  %citestyle=alphabetic,
+  % O estilo numérico é comum em artigos
+  %bibstyle=numeric,
+  %citestyle=numeric,
+  % Um estilo que busca ser compatível com a ABNT:
+  %bibstyle=abnt,
+  %citestyle=abnt,
+  %style=bwl-FU,
+}{biblatex}
+
+% Para personalizar outros aspectos da bibliografia e citações ou
+% para utilizar bibtex, modifique este arquivo.
+\input{extras/bibconfig}
+
+% O arquivo com os dados bibliográficos; você pode usar este comando
+% mais de uma vez para acrescentar múltiplos arquivos
+\addbibresource{bibliografia.bib}
+
+% Este comando permite acrescentar itens à lista de referências sem incluir
+% uma referência de fato no texto (pode ser usado em qualquer lugar do texto)
+%\nocite{bronevetsky02,schmidt03:MSc, FSF:GNU-GPL, CORBA:spec, MenaChalco08}
+% Com este comando, todos os itens do arquivo .bib são incluídos na lista
+% de referências
+%\nocite{*}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% METADADOS (TÍTULO, AUTOR ETC.) %%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Estes comandos definem o título e autoria do trabalho e devem sempre ser
+% definidos, pois além de serem utilizados para criar a capa (tanto no estilo
+% do IME quanto com o comando padrão \maketitle), também são armazenados nos
+% metadados do PDF.
+\title{Hash Functions and Hash Tables}
+\author{Breno Helfstein Moura}
+% O pacote hyperref armazena alguns metadados no PDF gerado (em particular,
+% o conteúdo de "\title" e "\author"). Também é possível armazenar outros
+% dados, como uma lista de palavras-chave.
+\hypersetup{
+  pdfkeywords={Hash, Hashing, Table, Function},
+}
+
+% Este pacote define o formato sugerido da capa, páginas de rosto,
+% dedicatória e resumo. Se você pretende criar essas páginas manualmente,
+% não precisa carregar este pacote nem carregar o arquivo folhas-de-rosto.
+\dowithsubdir{extras/}{\usepackage{imeusp-capa}}
+
+% É possível definir como determinadas palavras podem (ou não) ser
+% hifenizadas; no entanto, a hifelização automática geralmente funciona bem
+\hyphenation{documentclass latexmk Fu-la-no}
+
+
 % ---------------------------------------------------------------------------- %
-% Corpo do texto
+% Opções de listing usados para o código fonte
+% Ref: http://en.wikibooks.org/wiki/LaTeX/Packages/Listings
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%% AQUI COMEÇA O CONTEÚDO DE FATO %%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{document}
 
-\frontmatter 
-% cabe�alho para as p�ginas das se��es anteriores ao cap�tulo 1 (frontmatter)
-\fancyhead[RO]{{\footnotesize\rightmark}\hspace{2em}\thepage}
-\setcounter{tocdepth}{2}
-\fancyhead[LE]{\thepage\hspace{2em}\footnotesize{\leftmark}}
-\fancyhead[RE,LO]{}
-\fancyhead[RO]{{\footnotesize\rightmark}\hspace{2em}\thepage}
+% Aqui vai o conteúdo inicial que aparece antes do capítulo 1, ou seja,
+% página de rosto, resumo, sumário etc. O comando frontmatter faz números
+% de página aparecem em algarismos romanos ao invés de arábicos e
+% desabilita a contagem de capítulos.
+\frontmatter
 
-\onehalfspacing  % espa�amento
-
-% ---------------------------------------------------------------------------- %
-% CAPA
-\thispagestyle{empty}
-\begin{center}
-    \vspace*{2.3cm}
-    University of S�o Paulo\\
-    Institute of Mathematics and Statistics\\
-    Bachelor's in Computer Science
+% Este formato está (re)definido na package imeusp-headers
+\pagestyle{plain}
 
 
-    \vspace*{3cm}
-    \Large{Breno Helfstein Moura}
-    
+%%%%%%%%%%%%%%%%%%%%%%%%%%% CAPA E FOLHAS DE ROSTO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    \vspace{3cm}
-    \textbf{\Large{Hash Functions and Hash Tables}}
-    
-       
-    \vskip 5cm
-    \normalsize{S�o Paulo}
+% Para gerar o título sem seguir o formato deste modelo, você pode usar o
+% comando padrão do LaTeX "\maketitle".
+%\maketitle
 
-    \normalsize{November de 2019}
-  \end{center}
+% Capa e folhas de rosto no formato sugerido para teses/dissertações do IME/USP.
+% Se for gerar a capa etc. manualmente, remova.
+\onehalfspacing % Espaçamento 1,5 nas páginas iniciais
+%\input{conteudo-exemplo/folhas-de-rosto}
+\input{conteudo/folhas-de-rosto}
 
-% ---------------------------------------------------------------------------- %
-% P�gina de rosto
-%
-\newpage
-\thispagestyle{empty}
-    \begin{center}
-        \vspace*{2.3 cm}
-        \textbf{\Large{Hash Functions and Hash Tables}}
-        \vspace*{2 cm}
-    \end{center}
-
-    \vskip 2cm
-
-    \begin{flushright}
-	Final undergraduate thesis for subject \\
-        MAC0499 -- Trabalho de Formatura Supervisionado.
-    \end{flushright}
-
-    \vskip 5cm
-
-    \begin{center}
-    Supervisor: Prof. Dr. Jose Coelho de Pina Junior \\
-    $[$ Cosupervisor: Prof. Dr. Nina S. T. Hirata $]$
-
-    \vskip 5cm
-    \normalsize{S�o Paulo}
-
-    \normalsize{November de 2019}
-    \end{center}
-\pagebreak
+% Um parágrafo em LaTeX termina com uma linha vazia; como não é possível ter
+% certeza que um arquivo incluído (neste caso, "folhas-de-rosto") terminou
+% com uma linha vazia, é recomendável usar o comando "par" após "input" para
+% garantir que o último parágrafo do arquivo incluído realmente terminou.
+\par
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CAPÍTULOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\pagenumbering{roman}     % come�amos a numerar 
-
-%% % ---------------------------------------------------------------------------- %
-%% % Agradecimentos:
-%% % Se o candidato n�o quer fazer agradecimentos, deve simplesmente eliminar esta p�gina 
-%% \chapter*{Agradecimentos}
-%% Texto texto texto texto texto texto texto texto texto texto texto texto texto
-%% texto texto texto texto texto texto texto texto texto texto texto texto texto
-%% texto texto texto texto texto texto texto texto texto texto texto texto texto
-%% texto texto texto texto. Texto opcional.
-
-
-
-% ---------------------------------------------------------------------------- %
-% Resumo
-\chapter*{Abstract}
-
-During this undergraduate thesis I will explain about two of the most fascinating and used ideas in Computer Science, hash functions and hash tables. I divided this thesis in three main parts:
-
-\begin{itemize}
-   \item Hash functions
-   \item Hash tables
-   \item Applications
-\end{itemize}
-
-During the first part I explain why hash functions are an important idea in Computer Science, summarize some of the ideas Donald Knuth presented on his book (The Art of Computer programming, Vol. 3) and use some metrics to evaluate what is a good hash function.
-
-During the second part I talk about one of the most used data structures in computer programming, hash tables. I will explain what constitute a hash table, show some of the classic implementations of this data structure and explain some of the most used open addressing strategies. It is nice to observe here that although hash tables is a simple concept, there is still debates regarding this subject with no clear consensus on what is a state of the art hash table.
-
-During the third, and last, part I will cite and explain some application of hash functions in computer science problems. I will explain Rabin-Karp, a string search algorithm that uses hashing and a solution to identify isomorphisms on trees using hashing functions.
-
-I hope this is as fun to read for you as it was for me to write!
-\\
-
-\noindent \textbf{Keywords:} hash functions, hash tables, collision-resolution, open-addressing.
-
-% ---------------------------------------------------------------------------- %
-% Abstract
-% \chapter*{Abstract}
-
-% Elemento obrigat�rio, elaborado com as mesmas caracter�sticas do resumo em
-% l�ngua portuguesa.
-% \\
-
-% \noindent \textbf{Keywords:} keyword1, keyword2, keyword3.
-
-
-% ---------------------------------------------------------------------------- %
-% Summary
-\tableofcontents    % print contents
-
-
-%% % ---------------------------------------------------------------------------- %
-%% % Listas de figuras e tabelas criadas automaticamente
-%% \listoffigures            
-%% \listoftables            
-
-
-
-% ---------------------------------------------------------------------------- %
-% Chapters of the thesis
+% Aqui vai o conteúdo principal do trabalho, ou seja, os capítulos que compõem
+% a dissertação/tese. O comando mainmatter reinicia a contagem de páginas,
+% modifica a numeração para números arábicos e ativa a contagem de capítulos.
 \mainmatter
 
-% Head of all chapters
-\fancyhead[RE,LO]{\thesection}
+% Este formato está definido na package imeusp-headers e só funciona com
+% book/report, pois usa o nome dos capítulos nos cabeçalhos.
+\pagestyle{mainmatter}
 
-\singlespacing              % simple spacing
-\onehalfspacing             % one and a half spacing
+% Espaçamento 1,5
+\onehalfspacing
 
-
-\input cap-introduction     % associated with file: 'cap-introduction.tex'
-\input cap-hash-functions   % associated with file: 'cap-hash-functions.tex'
-\input cap-hash-tables      % associated with file: 'cap-hash-tables.tex'
-\input cap-applications     % associated with file: 'cap-applications.tex'
-\input cap-conclusions      % associated with file: 'cap-conclusoes.tex'
-
-% Head for apendix
-\renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{\appendixname\ \thechapter}} {\MakeUppercase{#1}} }
-\fancyhead[RE,LO]{}
-\appendix
-
-\include{apendix}      % associated with file: 'ape-conjuntos.tex'
+%\input{conteudo-exemplo/capitulos}
+\input{conteudo/capitulos}
+\par
 
 
-% ---------------------------------------------------------------------------- %
-% Bibliografia
-\backmatter \singlespacing   % simple spacing
-\bibliographystyle{plainnat-ime} % Bibliographic table citation
-\bibliography{bibliografia}  % associated with file: 'bibliografia.bib'
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% APÊNDICES E ANEXOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Um apêndice é algum conteúdo adicional de sua autoria que colabora com a
+% ideia geral do texto mas que, por alguma razão, não precisa fazer parte
+% da sequência do discurso; por exemplo, a demonstração de um teorema, as
+% perguntas usadas em uma pesquisa qualitativa etc.
+%
+% Um anexo é um documento que não é de sua autoria mas que é relevante para
+% a tese; por exemplo, a especificação do padrão que o trabalho discute.
+%
+% Os comandos appendix e annex reiniciam a numeração de capítulos e passam
+% a numerá-los com letras. "annex" não faz parte de nenhuma classe padrão,
+% ele foi criado para este modelo (em annex.sty e utils.tex). Se o
+% trabalho não tiver apêndices ou anexos, remova estas linhas.
+%
+% Diferentemente de \mainmatter, \backmatter etc., \appendix e \annex não
+% forçam o início de uma nova página. Em geral isso não é importante, pois
+% o comando seguinte costuma ser "\chapter", mas pode causar problemas com
+% a formatação dos cabeçalhos. Assim, vamos forçar uma nova página antes
+% de cada um deles.
+
+%%%% Apêndices %%%%
+%\makeatletter
+%\if@openright\cleardoublepage\else\clearpage\fi
+%\makeatother
+
+% Este formato está definido na package imeusp-headers.
+%\pagestyle{appendix}
+
+%\appendix
+
+%\input{conteudo-exemplo/apendices}
+%\input{conteudo/apendices}
+%\par
+
+%%%% Anexos %%%%
+%\makeatletter
+%\if@openright\cleardoublepage\else\clearpage\fi
+%\makeatother
+
+% Este formato está definido na package imeusp-headers (note que é o mesmo
+% que o anterior; repetimos aqui caso você queira desabilitar toda a seção
+% de apêndices).
+%\pagestyle{appendix}
+
+%\annex
+
+%\input{conteudo-exemplo/anexos}
+%\input{conteudo/anexos}
+%\par
 
 
-%%%  ---------------------------------------------------------------------------- %
-%% % �ndice remissivo
-%% \index{TBP|see{periodicidade regi�o codificante}}
-%% \index{DSP|see{processamento digital de sinais}}
-%% \index{STFT|see{transformada de Fourier de tempo reduzido}}
-%% \index{DFT|see{transformada discreta de Fourier}}
-%% \index{Fourier!transformada|see{transformada de Fourier}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SEÇÕES FINAIS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% \printindex   % imprime o �ndice remissivo no documento
+% Aqui vão a bibliografia, índice remissivo e outras seções similares.
+
+% O comando backmatter desabilita a numeração de capítulos.
+\backmatter
+
+% Este formato está definido na package imeusp-headers
+\pagestyle{backmatter}
+
+% Espaço adicional no sumário antes das referências / índice remissivo
+\addtocontents{toc}{\vspace{2\baselineskip plus .5\baselineskip minus .5\baselineskip}}
+
+% A bibliografia é obrigatória
+
+%%%%%%%%% Bibliografia com natbib (preterido): %%%%%%%%%
+%\bibliographystyle{extras/alpha-ime}% citação bibliográfica alpha
+%\bibliographystyle{extras/plainnat-ime} % citação bibliográfica textual
+%\bibliography{bibliografia}  % associado ao arquivo: 'bibliografia.bib'
+
+%%%%%%%% Bibliografia com biblatex (preferido): %%%%%%%%
+
+\printbibliography[
+  title=\refname\label{bibliografia}, % "Referências", recomendado pela ABNT
+  %title=\bibname\label{bibliografia}, % "Bibliografia"
+  % Inclui a bibliografia no sumário
+  heading=bibintoc,
+]
+
+% imprime o índice remissivo no documento (opcional)
+\printindex
 
 \end{document}

@@ -11,16 +11,19 @@ public:
       table.resize(m);
       n = 0;
    }
-
+   
    unsigned int hashFunction(string s) {
       return hash<string>()(s) % m;
    }
    
    void insert(string key, int value) {
-      unsigned int idx = hashFunction(key);      
+      unsigned int idx = hashFunction(key);
+      unsigned int j = 0;
       while (table[idx] != pair<string, int>("", 0) &&
-             table[idx] != pair<string, int>("==TOMBSTONE==", 0))
-         idx = (idx + 1) % m;      
+             table[idx] != pair<string, int>("==TOMBSTONE==", 0)) {
+         idx = (idx + 2 * j + 1) % m;
+         j++;
+      }
       table[idx] = pair<string, int>(key, value);
       n++;
       resizeIfNecessary();
@@ -28,24 +31,28 @@ public:
    
    int find(string key) {
       unsigned int idx = hashFunction(key);
+      unsigned int j = 0;
       while (table[idx] != pair<string, int>("", 0)) {
          if (table[idx].first == key) 
             return table[idx].second;
-         idx = (idx + 1) % m;
+         idx = (idx + 2 * j + 1) % m;
+         j++;
       }
       return 0;
    }
-      
+   
    void remove(string key) {
       unsigned int idx = hashFunction(key);
+      unsigned int j = 0;
       while (table[idx] != pair<string, int>("", 0)) {
          if (table[idx].first == key) 
             break;
-         idx = (idx + 1) % m;
+         idx = (idx + 2 * j + 1) % m;
+         j++;
       }
             
       if (table[idx].first == key) {
-         string nextKey = table[(idx + 1) % m].first;
+         string nextKey = table[(idx + 2 * j + 1) % m].first;
          if (nextKey != "" && hashFunction(nextKey) == hashFunction(key))
             table[idx] = pair<string, int>("==TOMBSTONE==", 0);
          else
@@ -55,7 +62,7 @@ public:
    }
    
 private:
-   double alpha = .5;
+   double alpha = 1;
    void resizeIfNecessary() {
       if (n >= m * alpha) {
          vector< pair<string, int> > oldTable = table;
