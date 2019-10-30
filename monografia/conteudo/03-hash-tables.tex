@@ -246,6 +246,8 @@ void insert(string key, int value) {
 
 For the \texttt{find} method we can do various sort of lookups. Here we will focus on the lookup that is most similar with linear probing, but with a tweak that will make finding that keys are not present faster. We can keep that of what the PSL of that key-value pair would be if were inserted, and if we find a Node with a greater PSL that means the pair is not present. That is because all Nodes after it will also have a PSL greater than the current PSL. The implementation of what was described above would be the following in C++14:
 
+\newpage
+
 \begin{lstlisting}
 int find(string key) {
   unsigned int idx = hashFunction(key);
