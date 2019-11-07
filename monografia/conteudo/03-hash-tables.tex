@@ -1,3 +1,4 @@
+
 %% ------------------------------------------------------------------------- %%
 \chapter{Hash Tables}
 \label{cap:Hash Tables}
@@ -294,13 +295,145 @@ We can always do that because the keys are always sorted according to the their 
 
 The worst time complexity of all operations is linear and the expected time complexity is constant. The expected lenght of the longest PSL in a full table is \( \log n \).
 
-\subsection{Coalesced Hashing}
-
 \subsection{Cuckoo Hashing}
 
-\subsection{When to resize an array}
+Another well known strategy for collision resolution in open addressing is Cuckoo Hashing. It is a different strategy regarding the previous ones because it uses more than one array, usually 2, but up to any number of arrays, to perform collision resolution. It is usually classified as open addressing because each slot can hold to up one key-value pair. For this explanation let's asssume that we are using 2 arrays. Cuckoo hashing requires also one hash function per array used, in our case 2 hash functions.
+
+%% Image representing cuckoo hashing
+
+For the insertion of cuckoo hashing we try to insert the key in the first table and if a collision occurs we swap the key value pair that we are trying to insert with the element that is currently on the table and then try to insert it on the next array. If a collision occurs in the other array we swap the pairs and try again on the next one, until we find an empty position or we reach a certain threshold. The threshold is important because we can have cycles.
+
+%% Image Representing insertion.
+
+The code for the algorithm described above is the following in C++14:
+
+\begin{lstlisting}
+void insert(string key, int value) {
+  unsigned int j = 0, it = 0;
+  unsigned int idx = hashFunction(key, j), lim = maxLoop();
+  pair<string, int> toInsert = pair<string, int>(key, value);
+  while (table[j][idx] != pair<string, int>("", 0) && it < lim) {
+    swap(table[j][idx], toInsert);
+    j = (j + 1) % numTables;
+    idx = hashFunction(toInsert.first, j);
+    it++;
+  }
+  if (it == lim)
+    resize();
+  table[j][idx] = toInsert;
+  n++;
+  resizeIfNecessary();
+}
+\end{lstlisting}
+
+This gives a very strong property to this collision resolution approach, that is every key value pair will be in its corresponding position in exactly one of the arrays. And this will give constant Lookup and Removal time. 
+
+In order to find an key value pair we just need to look if the key value pair is present in one of the tables. The code is the following in C++14:
+
+\begin{lstlisting}
+int find(string key) {
+  for (unsigned int j = 0; j < numTables; j++) {
+    unsigned int idx = hashFunction(key, j);
+    if (table[j][idx].first == key)
+      return table[j][idx].second;
+  }
+  return 0;
+}
+\end{lstlisting}
+
+For removal we can simply erase the key value pair from the table, as no key value pair affect the lookup of any other pair. The code is the following in C++14:
+
+\begin{lstlisting}
+void remove(string key) {
+  for (unsigned int j = 0; j < numTables; j++) {
+    unsigned int idx = hashFunction(key, j);
+    if (table[j][idx].first == key) {
+      table[j][idx] = pair<string, int>("", 0);
+      n--;
+    }
+  }
+}
+\end{lstlisting}
+
+Besides the amazing property of guaranteed constant lookup and removal, Cuckoo hashing has the problem of cycles during insertion, which can cause unwanted rehashes. To deal with that, many implementations also use a stash to keep a constant amount of elements in case the threshold is reached.
+
+\subsection{Coalesced Hashing}
+
+Another well knwon strategy, described in Donald Knuths book \citep{TAOCP3}, is Coalesced Hashing. Although without much advantages in contrast with previous strategies, coalesced hashing condenses the hash table well in memory and is very similar to Chaining Hashing, our next topic.
+
+The main idea of coalesced hashing is to add a new parameter to our key value pairs in the table, called next. That would create linked lists in the table in case we have a collision. To find the next element in case a collision we can find the first free bucket looking to the array in reverse order. The function to find the next free bucket is the following in C++14:
+
+\begin{lstlisting}
+int nextFreeBucket() {
+  for (int i = m - 1; i >= 0; i--) {
+    if (table[i].isDefaultNode())
+      return (unsigned int)i;
+    }
+  return -1; // error
+}
+\end{lstlisting}
+
+To insert an element, in case of a collision, we need to traverse the linked list beggining on the bucket that the key hashes to until the end. Then we add a new Node to the end of the linked list, pointing to the next free bucket. The complete code of the insertion algorithm will be shown later on.
+
+To lookup for an element, we can traverse the linked list until we find a matching Node. The code for the find method would be the following in C++14:
+
+\begin{lstlisting}
+int find(string key) {
+  unsigned int idx = hashFunction(key);
+  while (idx != -1) {
+    if (table[idx].key == key) 
+      return table[idx].value;
+    idx = table[idx].next;         
+  }    
+  return 0;
+}
+\end{lstlisting}
+
+To remove an node in coalesced hashing it is very dificult, as many other nodes can depend on it. For this reason the best way to delete an element in coalesced hashing is using a strategy that is known as Tombstoning. The idea of this strategy is to put a placeholder value, that will be considered as occupied by the find method but as free by the insertion method. The code for that in C++14 would be the following:
+
+\begin{lstlisting}
+void remove(string key) {
+  unsigned int idx = hashFunction(key);
+  while (idx != -1) {
+    if (table[idx].key == key) 
+      break;
+    idx = table[idx].next;         
+  }
+  if (table[idx].key == key) {
+    table[idx].transformTombstone();
+    n--;
+  }
+}
+\end{lstlisting}
+
+For this reason, the insertion method explained earlier on would have to be a little bit different, considering tombstones. The code would look like the following in C++14:
+
+\begin{lstlisting}
+void insert(string key, int value) {
+  unsigned int idx = hashFunction(key);
+  Node toInsert = Node(key, value, -1);
+  if (!table[idx].isDefaultNode()) {
+    while (table[idx].next != -1 && !table[idx].isTombstone())
+      idx = table[idx].next; 
+    if (!table[idx].isTombstone()) {
+      table[idx].next = nextFreeBucket();
+      idx = table[idx].next;
+    }
+  }
+  table[idx] = toInsert;
+  n++;
+  resizeIfNecessary();
+}
+\end{lstlisting}
 
 \subsection{How to delete an entry}
+
+In open addressing deleting an entry is considered hard by many of the collsion resolution methods. Between clearing the entry and reashing, clearing the entry and shifting the elements back or using tombstone, tombstone is usually considered the fastest approach due to its lazyness.
+The problem with tombstones is that it can make the table ``dirty'' if we have a high number of deletions, making lookups or insertions slower. So one suggestion is to rehash your table in the case of a high number of tombstones.
+
+
+
+\subsection{When to resize an array}
 
 \section{Chaining Hashing}
 
