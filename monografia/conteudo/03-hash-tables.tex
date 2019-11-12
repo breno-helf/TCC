@@ -71,10 +71,10 @@ As we can see it is pretty simple. The constructor builds a table of size \( 16 
 
 \begin{lstlisting}
 void insert(string key, int value) {
+  resizeIfNecessary();
   unsigned int idx = hashFunction(key);
   table[idx] = pair<string, int>(key, value);
   n++;
-  resizeIfNecessary();
 }
 \end{lstlisting}
 
@@ -119,12 +119,12 @@ where \( M \) is the table size. That is a very simple probe sequence with not m
 
 \begin{lstlisting}
 void insert(string key, int value) {
+  resizeIfNecessary();
   unsigned int idx = hashFunction(key);
   while (table[idx] != pair<string, int>("", 0))
     idx = (idx + 1) % m;      
   table[idx] = pair<string, int>(key, value);
   n++;
-  resizeIfNecessary();
 }
 \end{lstlisting}
 
@@ -200,7 +200,7 @@ These last three implementations of hash table gives us linear time worst case c
 
 \subsection{Robin Hood Hashing}
 
-Robin Hood Hashing is an optimization technique regarding colision resolution with open addressing. It should be paired with Linear Probing, Quadratic Probing or Double Hashing, but usually it is paired with linear probing due to it's good locality and cache friendlieness. It's basic is that it minimizes the distance of each key from its ``Home Slot'', that is, its initial hash value position. \citep{RobinHoodHashing}
+Robin Hood Hashing is an optimization technique regarding colision resolution with open addressing. It should be paired with Linear Probing, Quadratic Probing or Double Hashing, but usually it is paired with linear probing due to it's good locality and cache friendlieness. It's basic is that it minimizes the distance of each key from its ``Home Slot'', that is, its initial hash value position. \citep{RobinHoodHashing}. Also, Robin Hood hashing is one of the few open addressing strategies to be used by defualt in some languages, such as Rust.
 
 In order to minimize the distance from each key from its home slot, Robin Hood hashing uses a concept that is called Probe Sequence Length, or PSL of an key-value pair. The PSL of a key value pair is the number of probes required to find that pair. For that reason we need to define a new class to store in our table, that we will call \texttt{Node}:
 
@@ -231,6 +231,7 @@ So as explained when inserting an element we first look for an empty position. W
 
 \begin{lstlisting}
 void insert(string key, int value) {
+  resizeIfNecessary();
   unsigned int idx = hashFunction(key);
   Node toInsert = Node(key, value, 0);
   while (table[idx] != defaultNode) {
@@ -241,7 +242,6 @@ void insert(string key, int value) {
   }
   table[idx] = toInsert;
   n++;
-  resizeIfNecessary();
 }
 \end{lstlisting}
 
@@ -309,6 +309,7 @@ The code for the algorithm described above is the following in C++14:
 
 \begin{lstlisting}
 void insert(string key, int value) {
+  resizeIfNecessary();
   unsigned int j = 0, it = 0;
   unsigned int idx = hashFunction(key, j), lim = maxLoop();
   pair<string, int> toInsert = pair<string, int>(key, value);
@@ -322,7 +323,6 @@ void insert(string key, int value) {
     resize();
   table[j][idx] = toInsert;
   n++;
-  resizeIfNecessary();
 }
 \end{lstlisting}
 
@@ -410,6 +410,7 @@ For this reason, the insertion method explained earlier on would have to be a li
 
 \begin{lstlisting}
 void insert(string key, int value) {
+  resizeIfNecessary();
   unsigned int idx = hashFunction(key);
   Node toInsert = Node(key, value, -1);
   if (!table[idx].isDefaultNode()) {
@@ -422,7 +423,6 @@ void insert(string key, int value) {
   }
   table[idx] = toInsert;
   n++;
-  resizeIfNecessary();
 }
 \end{lstlisting}
 
@@ -431,9 +431,9 @@ void insert(string key, int value) {
 In open addressing deleting an entry is considered hard by many of the collsion resolution methods. Between clearing the entry and reashing, clearing the entry and shifting the elements back or using tombstone, tombstone is usually considered the fastest approach due to its lazyness.
 The problem with tombstones is that it can make the table ``dirty'' if we have a high number of deletions, making lookups or insertions slower. So one suggestion is to rehash your table in the case of a high number of tombstones.
 
-
-
 \subsection{When to resize an array}
+
+In open addressing the load factor to resize a hash table can't be greater than 1.0, because the table can't have more elements than its capacity (That is not true for chaining hashing, as we will see later on). A good load factor depends on several factors, such as the strategy used. Some strategies are more ``permissive'' of a load factor closer to 1, Robin Hood for example can still work well with load factors close to 0.9 and doesn't lose much performance with load factors greater than that \citep{RobinHoodDefault}. On the other hand Cuckoo Hashing doesn't work well with load factors greater than 0.5. Higher load factors means a better use o memory, which is an advantage of Open Addressing, where lower load factors means more memory used but greater efficiency when using the data structure. For that reason we trie to always use the greater load factor possible without degrading much performance when using open addressing. In general this value ranges from 0.3 for cuckoo hashing up to .9 for robin hood hashing.
 
 \section{Chaining Hashing}
 
@@ -449,10 +449,10 @@ For this Chaining hashing implementation we will use C++14 STL data structure li
 
 \begin{lstlisting}
 void insert(string key, int value) {
+  resizeIfNecessary();
   unsigned int idx = hashFunction(key);      
   table[idx].emplace_front(key, value);
   n++;
-  resizeIfNecessary();
 }
 \end{lstlisting}
 
@@ -517,11 +517,15 @@ int find(string key) {
 
 Here we are using the \texttt{splice} method of list C++ standard library to move an element inside a list. This still keeps the complexity of \texttt{find} in linear worst time and constant expected time. It is important to notice here that if our container wasn't a linked list we could take longer than constant time to move it to front.
 
-\subsection{When to resize an array}
-
 \subsection{How to delete an entry}
 
 To delete an entry in chaining hashing the deletion is delegated to the container that contains the key. That is, if we have a linked list as our container we just delegate the deletion to it. This is much easier is create less problems than open addressing deletion. That is one of the one of the reasons why chaining hashing is usually choosen for default hash table implementation in many languages, like in C++ \citep{UnorderedMapDiscussion}.
+
+\subsection{When to resize an array}
+
+In contrast to open addressing, chaining hashing can have max load factors greater than 1.0, altough many times those are not used, and when they are used they are not far from 1.0. Default hash tables of C++ and Java uses chaining hashing, and the max load factor for a hash table in C++ is 1.0, while for java it is 0.75. \citep{MaxLoadFactorCplusplus}.
+It can be easily proven that the expected time complexity for operations in chaining hashing is \( O(1 + \alpha) \) where \( \alpha \) is the max load factor. For that reasons an alpha as big as 2 still works reasonably well with chaining hashing.
+Altough chaining hashing can still work well with bigger load factors it end up using more memory and also has a worse locality for cache purposes.
 
 \section{Open Addressing vs Chaining Hashing}
 
