@@ -35,10 +35,9 @@ It is also important to notice that hash tables have applications in different a
 \end{figure}
 
 
-\newpage 
-\section{Open Addressing}
+\newpage
 
-\subsection{Implementing a no collision hash table}
+\section{No collision open addressing hash table }
 
 To start let's give an example of a hash table that has a perfect hash function, that has no collisions. For that example we will use open addressing, that basically means that all data will be contained in an array. The operations \texttt{insert}, \texttt{find} and \texttt{remove} would be very easy to implement. For the sake of simplicity, I will assume all the keys are strings. To start lets look at this simple class with dummy methods:
 
@@ -101,7 +100,7 @@ void remove(string key) {
 
 Here we make the assumption that an empty position has an empty string. We could also carry a boolean (usually called a tombstone) to check if the position is occupied or not. 
 
-\subsection{Formal definition}
+\section{Open addressing formal definition}
 
 We can define open addressing in a general way as a hash table algorithm where the data always stay within the same vector. So, in the case of a collision, we need to define a systematic way to traverse the table. The sequence of elements I need to traverse when I have a collision is called \textit{``Probe sequence''}. With that our hash function would change to the following:
 
@@ -109,7 +108,7 @@ We can define open addressing in a general way as a hash table algorithm where t
 
 Where \( x \) is our key and \( i \) is the sequence number. So every time we have a collision in \( H(x, i) \) we can simply go to \( H(x, i + 1) \). Given that, lets look into some different probe sequences.
 
-\subsection{Linear Probing}
+\section{Linear Probing}
 
 Linear probing is one of the most simple an practical probe sequences known. The probe sequence is basically:
 
@@ -178,7 +177,7 @@ With that, the three operations have linear complexity. As we saw, we know hash 
 
 However linear probing has the problem of clustering, that is long chains of occupied positions. This generates a greater problem, as long chains are only expected to get longer and longer. This can get worse if the hash function is not too sensitive to changes, having a lot of sequential hash values. 
 
-\subsection{Quadratic Probing}
+\section{Quadratic Probing}
 
 Another strategy that we can have for resolving collisions is quadratic probing. That probe sequence can be defined as:
 
@@ -188,7 +187,7 @@ That solves the problem of having sequential hash values. The implmentation of q
 
 However, quadratic probing doesn't solve the problem of clustering. Long chains are still expected to get longer and longer, the only diference is that the positions that lead to a longer chain are better distributed in the table. Another thing to notice is that quadratic probing has a worse locality than linear probing. 
 
-\subsection{Double Hashing}
+\section{Double Hashing}
 
 As we saw the two strategies above have the problem of clustering, due to the fact that the sequences are the same for all keys. For that reason double hashing is a very good approach for open addressing. Double hashing probe sequence can be defined as following:
 
@@ -198,7 +197,7 @@ Where \( H_1 \) and \( H_2 \) are two distinct hash functions. In that way not o
 
 These last three implementations of hash table gives us linear time worst case complexity for all operations and constant time expected time complexity under the simple unform hashing assumption.
 
-\subsection{Robin Hood Hashing}
+\section{Robin Hood Hashing}
 
 Robin Hood Hashing is an optimization technique regarding colision resolution with open addressing. It should be paired with Linear Probing, Quadratic Probing or Double Hashing, but usually it is paired with linear probing due to it's good locality and cache friendlieness. It's basic is that it minimizes the distance of each key from its ``Home Slot'', that is, its initial hash value position. \citep{RobinHoodHashing}. Also, Robin Hood hashing is one of the few open addressing strategies to be used by defualt in some languages, such as Rust.
 
@@ -295,7 +294,7 @@ We can always do that because the keys are always sorted according to the their 
 
 The worst time complexity of all operations is linear and the expected time complexity is constant. The expected lenght of the longest PSL in a full table is \( \log n \).
 
-\subsection{Cuckoo Hashing}
+\section{Cuckoo Hashing}
 
 Another well known strategy for collision resolution in open addressing is Cuckoo Hashing. It is a different strategy regarding the previous ones because it uses more than one array, usually 2, but up to any number of arrays, to perform collision resolution. It is usually classified as open addressing because each slot can hold to up one key-value pair. For this explanation let's asssume that we are using 2 arrays. Cuckoo hashing requires also one hash function per array used, in our case 2 hash functions.
 
@@ -357,7 +356,7 @@ void remove(string key) {
 
 Besides the amazing property of guaranteed constant lookup and removal, Cuckoo hashing has the problem of cycles during insertion, which can cause unwanted rehashes. To deal with that, many implementations also use a stash to keep a constant amount of elements in case the threshold is reached.
 
-\subsection{Coalesced Hashing}
+\section{Coalesced Hashing}
 
 Another well knwon strategy, described in Donald Knuths book \citep{TAOCP3}, is Coalesced Hashing. Although without much advantages in contrast with previous strategies, coalesced hashing condenses the hash table well in memory and is very similar to Chaining Hashing, our next topic.
 
@@ -426,16 +425,7 @@ void insert(string key, int value) {
 }
 \end{lstlisting}
 
-\subsection{How to delete an entry}
-
-In open addressing deleting an entry is considered hard by many of the collsion resolution methods. Between clearing the entry and reashing, clearing the entry and shifting the elements back or using tombstone, tombstone is usually considered the fastest approach due to its lazyness.
-The problem with tombstones is that it can make the table ``dirty'' if we have a high number of deletions, making lookups or insertions slower. So one suggestion is to rehash your table in the case of a high number of tombstones.
-
-\subsection{When to resize an array}
-
-In open addressing the load factor to resize a hash table can't be greater than 1.0, because the table can't have more elements than its capacity (That is not true for chaining hashing, as we will see later on). A good load factor depends on several factors, such as the strategy used. Some strategies are more ``permissive'' of a load factor closer to 1, Robin Hood for example can still work well with load factors close to 0.9 and doesn't lose much performance with load factors greater than that \citep{RobinHoodDefault}. On the other hand Cuckoo Hashing doesn't work well with load factors greater than 0.5. Higher load factors means a better use o memory, which is an advantage of Open Addressing, where lower load factors means more memory used but greater efficiency when using the data structure. For that reason we trie to always use the greater load factor possible without degrading much performance when using open addressing. In general this value ranges from 0.3 for cuckoo hashing up to .9 for robin hood hashing.
-
-\section{Chaining Hashing}
+\section{Chaining hashing}
 
 Chaining hashing, also known as closed addressing, is the implementation of a hash table using a container, usually called bucket, to store the (key, value) pairs with a given hash. On this implementation, each bucket of the table is a linked list, that will carry the key value pair in our case. We deal with collisions with this implementation by adding a new node to the start of the list.
 
@@ -443,7 +433,7 @@ This implementation is considered simpler than open addressing, usually because 
 
 Below we will discuss an implementation of chaining hashing in C++14:
 
-\subsection{Simple Chaining Hashing Algorithm}
+\section{Simple Chaining Hashing Algorithm}
 
 For this Chaining hashing implementation we will use C++14 STL data structure list as our container. list is a doubly linked list. For our \texttt{insert} we can implement it in the following way:
 
@@ -493,7 +483,7 @@ The naive of chaining hashing with a linked list gives linear worst time complex
 
 %One interesting thing to notice regarding chaining hashing implementation in C++ is that we may have a greater performance with implementations using vector instead of list, because of the better locality of vector.
 
-\subsection{Move to front}
+\section{Move to front}
 
 One great optimization to chaining hashing is every time you execute the \texttt{find} method to move to the beginning of the container the element that was found. That will keep in the beggining of the container the elements that are searched the most. As in many applications we can apply the 80 / 20 rule this greatly helps in time performance.
 
@@ -517,11 +507,17 @@ int find(string key) {
 
 Here we are using the \texttt{splice} method of list C++ standard library to move an element inside a list. This still keeps the complexity of \texttt{find} in linear worst time and constant expected time. It is important to notice here that if our container wasn't a linked list we could take longer than constant time to move it to front.
 
-\subsection{How to delete an entry}
 
-To delete an entry in chaining hashing the deletion is delegated to the container that contains the key. That is, if we have a linked list as our container we just delegate the deletion to it. This is much easier is create less problems than open addressing deletion. That is one of the one of the reasons why chaining hashing is usually choosen for default hash table implementation in many languages, like in C++ \citep{UnorderedMapDiscussion}.
+\section{How to delete an entry}
 
-\subsection{When to resize an array}
+In open addressing deleting an entry is considered hard by many of the collsion resolution methods. Between clearing the entry and reashing, clearing the entry and shifting the elements back or using tombstone, tombstone is usually considered the fastest approach due to its lazyness.
+The problem with tombstones is that it can make the table ``dirty'' if we have a high number of deletions, making lookups or insertions slower. So one suggestion is to rehash your table in the case of a high number of tombstones.
+
+In contrast, deleting an entry in chaining hashing is delegated to the container that contains the key. That is, if we have a linked list as our container we just delegate the deletion to it. This is much easier is create less problems than open addressing deletion. That is one of the one of the reasons why chaining hashing is usually choosen for default hash table implementation in many languages, like in C++ \citep{UnorderedMapDiscussion}.
+
+\section{When to resize an array}
+
+In open addressing the load factor to resize a hash table can't be greater than 1.0, because the table can't have more elements than its capacity (That is not true for chaining hashing, as we will see later on). A good load factor depends on several factors, such as the strategy used. Some strategies are more ``permissive'' of a load factor closer to 1, Robin Hood for example can still work well with load factors close to 0.9 and doesn't lose much performance with load factors greater than that \citep{RobinHoodDefault}. On the other hand Cuckoo Hashing doesn't work well with load factors greater than 0.5. Higher load factors means a better use o memory, which is an advantage of Open Addressing, where lower load factors means more memory used but greater efficiency when using the data structure. For that reason we trie to always use the greater load factor possible without degrading much performance when using open addressing. In general this value ranges from 0.3 for cuckoo hashing up to .9 for robin hood hashing.
 
 In contrast to open addressing, chaining hashing can have max load factors greater than 1.0, altough many times those are not used, and when they are used they are not far from 1.0. Default hash tables of C++ and Java uses chaining hashing, and the max load factor for a hash table in C++ is 1.0, while for java it is 0.75. \citep{MaxLoadFactorCplusplus}.
 It can be easily proven that the expected time complexity for operations in chaining hashing is \( O(1 + \alpha) \) where \( \alpha \) is the max load factor. For that reasons an alpha as big as 2 still works reasonably well with chaining hashing.
