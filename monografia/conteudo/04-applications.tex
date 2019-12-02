@@ -218,13 +218,13 @@ On the above picture we can see that the hash function is cumulative, and it for
 \begin{lstlisting}
 vector< vector<int> > adj; // Adjacency list of the graph
 vector<long long> x; // X values for hash calculation
-vector<int> h; // Height of each node
+vector<int> d; // Height of each node
 const int MOD = 1e9 + 7;
 long long hashTree(int u, int p) {
    long long myHash = 1;
    for (int v : adj[u])
       if (v != p)
-         myHash = (myHash * (x[h[u]] + hashTree(v, u))) % MOD;
+         myHash = (myHash * (d[h[u]] + hashTree(v, u))) % MOD;
    return myHash;
 }
 \end{lstlisting}
