@@ -14,7 +14,7 @@ Outside computer science, the word \textit{``hash''} in the English language mea
 
 They have wide applications in computer science, being used in information and data security, compilers, distributed systems and hardcore algorithms. In this chapter we first define and explain the basics of a hash function, then we give an intuition in some metrics that tries to capture the idea of what is expected of a good hash function, as discussed in the famous \textit{``Red Dragon Book''} \citep{DragonBook} along with some reproduction of known results in the area.
 
-The value extracted from the hash function for an object or key is usually called \textit{Hash Value} or simply \textit{value}. The hash value is in general, but not necessarily, smaller than the object that generated it. For example, we can have a hash function that takes Gigabytes or Terabytes files and return an 8 bytes hash value.
+The value extracted from the hash function for an object or key is usually called \textit{hash value} or simply \textit{value}. The hash value is in general, but not necessarily, smaller than the object that generated it. For example, we can have a hash function that takes Gigabytes or Terabytes files and return an 8 bytes hash value.
 
 \begin{figure}[h!]
   \centering
@@ -24,21 +24,19 @@ The value extracted from the hash function for an object or key is usually calle
 
 \bigskip
 
-\section{Definition of Hash Function}
+\section{Definition}
 
-To formalize, lets define a hash function as a function \( H \) that takes an element \( x \) in \( X \) and associate to \( x \) a integer \( H(x) \) in the interval \( [0,M) \), in symbols
-
+A hash function over a set \( X \) a function \( H \) that takes an element \( x \) in \( X \) and associate to \( x \) a integer \( H(x) \) in the interval \( [0,M) \), for some integer \( M \). In symbols
 \[ H: X \rightarrow [0, M) \]
+When dealing with hash tables, \( X \) is the set of possible keys and \( M \) is the size of the table, which is usually just an array. Moreover, we saw earlier that hash functions are usually more useful when \( |X| > M \). This is the same definition used by Donald Knuth \citep{TAOCP3} and some articles \citep{RobinHoodHashing}. This definition makes sense for our purpose because we will be talking mostly about hash functions used in hash tables. In that case we want integers that will be indexes in an array (as we will see later on). In other cases we may see hash values as strings, like for when we hash an string for password storage or when we use a hash function in files for checking integrity (for when we are checking if two files are the same). For the goal of this thesis we will not be focusing on those functions, but it is important to notice that strings can also be easily associated to integers if we just look at their bytes.
 
-When dealing with hash tables \( M \) represent its size and as we saw earlier, hash function are usually more useful when \( |X| > M \). This is the same definition used by Donald Knuth \citep{TAOCP3} and some articles \citep{RobinHoodHashing}. This definition makes sense for our case because we will be talking mostly about hash functions used in hash tables, and in that case we want integers that will be indexes in an array (as we will see later on). In other cases we may see hash functions value as strings, like for when we hash an string for password storage or when we use a hash function in files for check-sum (for when we are checking if two files are the same). For the goal of this thesis we will not be focusing on those functions, but it is important to notice that strings can also be easily associated to integers if we just look at the bytes.
+For our purpose we are looking for a hash function that performs well for the construction of hash tables. Ideally, these functions should be fast to compute and minimizes the number of collisions. Depending on our goals we might want a different metric, for check-sums for example we may want a function that is very sensible to changes, and for passwords one that is very hard to find its inverse, those are so called cryptographic functions. For some collision resolution techniques, as we will see later, we may also want that the hash function disperse the values well too. Intuitively, a hash function should look like a random function having a given key as seed.
 
-For our specific case we are looking at a hash function that is good for the construction of hash tables. Ideally, these functions should be fast to calculate and minimizes the number of collisions. Depending on our goals we might want a different metric, for check-sums for example we may want a function that is very sensible to changes, and for passwords one that is very hard to find its inverse, those are so called cryptographic functions. For some collision resolution techniques, as we will see later, we may also want that the hash function disperse the values well too.
+As written in Knuth's book, we know that it is theoretically impossible to create a hash function that generates true random data from non random data in actual file, but we can do pretty close to that or in some cases, even fewer collision than an uniformly random function. Knuth describes two specific methods for simple hash function, named \textit{division hashing} and \textit{multiplicative hashing} techniques. As the name suggests, the first is based on division operation and the former on multiplication operation.
 
-As said in Donald Knuth's book, we know that it is theoretically impossible to create a hash function that generates true random data from non random data in actual file, but we can do pretty close to that (or in some cases, even fewer collision than an uniformly random function).  Donald Knuth describes 2 specific methods for simple hash function, named \textit{division hashing} and \textit{multiplicative hashing} techniques. As the name suggests, the first is based on division operation and the former on multiplication operation.
+\section{Division and Multiplicative Methods}
 
-\section{Division and Multiplicative Method}
-
-The division hashing method simply to represent the data as a number take the remainder of that number modulo a certain value. Supposing that we can represent the data as a non negative integer \( X \) the division hashing would be to choose a value M and the hashing function would be \( X ~\mod~ M \). The C++14 code would look as following:
+The \textit{division hashing} method maps an integer \( X \) associated to the data to its remainder modulo an integer \( M \). Supposing that we can represent the data as a non negative integer \( X \) the division hashing would be to choose a value M and the hashing function would be \( X \mod M \). The code would look as following:
 
 \begin{lstlisting}
 unsigned int divisionHashing(unsigned int X, unsigned int M) {
@@ -46,9 +44,9 @@ unsigned int divisionHashing(unsigned int X, unsigned int M) {
 }
 \end{lstlisting}
 
-A good hash function combines number theory, statistics and engineering and in general, large prime numbers tend to be a good value to \( M \), because if not we may have unwanted patterns or repetitions. One great example of this is if \( M \) is even, then the parity of hash value of \( X \) will match the parity of \( X \) (which will cause a bad distribution). The same pattern will happen in different intervals for different powers of \( 2 \).
+A good hash function combines number theory, statistics and engineering and in general, large prime numbers tend to be a good value to \( M \), to avoid unwanted patterns or repetitions. One great example of this is if \( M \) is even, then the parity of hash value of \( X \) will match the parity of \( X \) (which will cause a bad distribution). The same pattern will happen in different intervals for different powers of \( 2 \).
 
-For multiplicative hashing, let's first suppose that we can represent the data as a non-negative integer \( X \) and we choose a constant \( S \), where \( 0 < s < 1 \). Then we multiply \( X \) by \( S \) and extract the fractional part of \( X * S \), that is \( X * S ~\mod ~ 1 \). We can calculate that by doing: \( X * S - \lfloor X * S \rfloor \). Then we multiply that value, that will be between 0 and 1, by \( M \). The C++14 code would what was described above look as following:
+For \textit{multiplicative hashing}, let's first suppose once more that we can represent the data as a non-negative integer \( X \) and we have chosen a constant \( S \), where \( 0 < S < 1 \). Then we multiply \( X \) by \( S \) and extract the fractional part of \( X \times S \), that is \( X \times S \mod  1 \). We can calculate that by doing: \( X \times S - \lfloor X \times S \rfloor \). Then we multiply that value, that will be between 0 and 1, by \( M \). The code of what was described above would look as following:
 
 \medskip
 
@@ -61,14 +59,14 @@ unsigned int multiplicativeHashing(unsigned int X,
 }
 \end{lstlisting}
 
-In Knuth's book he describes \( S \) as being an integer \( A \) divided by \( w \), where \( w \) is the size of a word in our computer. He restricts \( A \) to be relatively prime to \( w \), being \( w \) the size of a ``word'' in the machine. That definition is often useful if you want to retrieve a value \( Y \) for a given hash value \( F \). We can do that due to bezout theorem. It is good to note here that if \( H(X) = F \) and \( H(Y) = F \), \( X \) is not necessarily equal to \( Y \), as two different keys can have the same hash value.
+In Knuth's book he describes \( S \) as being an integer \( A \) divided by \( w \), where \( w \) is the size of a ``word'' in our computer. He restricts \( A \) to be relatively prime to \( w \). That definition is often useful if you want to retrieve a value \( Y \) for a given hash value \( F \). This can be done via Bezout theorem \citep{TAOCP3}. It is good to note here that if \( H(X) = F \) and \( H(Y) = F \), \( X \) is not necessarily equal to \( Y \), as two different keys can have the same hash value.
 
 \section{Hashing Strings}
 
 We have many ways of converting non numerical data to non negative integers. In the end, it is all just a sequence bytes, that when read in a specific way form another type of data, such as images or strings. For example, one way of transforming a string to a non-negative integer is summing the ASCII value of its characters. The C++14 code for that would look as following:
 
 \begin{lstlisting}
-unsigned int convertStringToInteger(string str) {
+unsigned int stringToInteger(string str) {
   unsigned int hashValue = 0;
   for (char c : str) {
     hashValue += (int) c;
@@ -77,7 +75,7 @@ unsigned int convertStringToInteger(string str) {
 }
 \end{lstlisting}
 
-We always use unsigned integers for our non negative integer calculations due to the natural modulo operation of it on overflow cases. It is equivalent to having a \( mod \ 2^{32} \) every time it overflows, as we only look at the leading 32 bits. We can also use XOR function to mix numbers together. 
+We always use unsigned integers for our non negative integer calculations due to the natural modulo operation of it on overflow cases. It is equivalent to having a \( \mod \ 2^{32} \) every time it overflows, as we only look at the leading 32 bits. We can also use XOR function to mix numbers together. 
 
 There is also a very common type of hash functions that tend to work pretty well for strings \citep{DragonHashFunc}. It is a ``superset'' of multiplicative hash functions, or a generalization. The C++14 code would look as following:
 
@@ -107,16 +105,14 @@ The above function is very common for string hashing, and by just choosing a dif
 \section{Quality of a Hash Functions}
 
 Now that we know some good templates for producing hash functions lets try to find a concrete metric or formula that measures the quality of a hash function. Fortunately, the famous book Compilers: Principles, Techniques, and Tools, also known as ``Red Dragon Book'' \citep{DragonBook}, has already proposed a quantity to measure the quality of a hash function. The formula gives this quantity:
-
-\[ \sum_{j = 0}^{m - 1} \frac{b_j(b_j + 1)/2}{ (n/2m)(n + 2m - 1) } \]
-
-where \( n \) is the number of keys, \( m \) is the number of total slots and \( b_j \) is the number of keys in the \( j \)-th slot. The intuition for the numerator is the number of operations we will need to execute to find each element of the table. For example, we need 1 operation to find the first element, 2 to find the second, and so on. That means that we will end up with an arithmetic progression. We know that a hash function that distributes the keys in a uniformly random distribution has expected bucket size of \( n / m \), so we can calculate that the expected value of the numerator formula is \( (n/2m)(n + 2m - 1) \). So that gives us a ratio of collisions (thinking just about operations to access a value) of ``our'' hash function with an ``ideal'' function. That means that a value close to \( 1.00 \) of the above formula is good, and values below to \( 1.00 \) means that we had less conflicts than an uniformly distributed random function.
+\[ \mathlarger{\sum}_{j = 0}^{m - 1} \frac{b_j(b_j + 1)/2}{ (n/2m)(n + 2m - 1) }, \]
+where \( n \) is the number of keys, \( m \) is the number of total slots and \( b_j \) is the number of keys in the \( j \)-th slot. The intuition for the numerator is that it represents the number of operations we will need to perform to find each element of the table. For example, we need 1 operation to find the first element, 2 to find the second, and so on. That means that we will end up with an arithmetic progression. We know that a hash function that distributes the keys according to an uniformly random distribution has expected bucket size of \( n / m \), so we can calculate that the expected value of the numerator formula is \( (n/2m)(n + 2m - 1) \). So that gives us a ratio of collisions (thinking just about operations to access a value) of ``our'' hash function with an ``ideal'' function. That means that a value close to \( 1.00 \) of the above formula is good, and values below to \( 1.00 \) means that we had less conflicts than an uniformly distributed random function.
 
 From common data as used in Dragon Book and Strchr website \citep{DragonHashFunc} I will reproduce some tests with the previously cited hash functions.
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=16cm]{figuras/1031HashFunc.png}
+  \includegraphics[width=14cm]{figuras/1031HashFunc.png}
   \caption{Functions tested against a ``small'' table}
 \end{figure}
 
@@ -124,7 +120,7 @@ From common data as used in Dragon Book and Strchr website \citep{DragonHashFunc
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=16cm]{figuras/16411HashFunc.png}
+  \includegraphics[width=14cm]{figuras/16411HashFunc.png}
   \caption{Functions tested against a ``medium'' sized table}
 \end{figure}
 
@@ -132,30 +128,30 @@ From common data as used in Dragon Book and Strchr website \citep{DragonHashFunc
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=16cm]{figuras/1031101HashFunc.png}
+  \includegraphics[width=14cm]{figuras/1031101HashFunc.png}
   \caption{Functions tested against a ``large'' table}
 \end{figure}
 
 \medskip
 
-The results are shown in the same way displayed in the Red Dragon Book, with Hash functions in the X axis and the ratio displayed in the y axis, with different identification for each file. I choose 3 sizes of tables to count collisions, a ``small'', ``medium'' and a ``large'' table, the small table having a load factor (The percentage of the table occupied) of approximately \( \sim 0.5 \), the medium with \( \sim 0.05 \) and large with \( \sim 0.005 \). It's assumed that the modulo is not the responsibility of the hash function, so all hash functions return values from 0 to \( 2^{32} - 1 \), and the modulo is taken depending on the size of the table. From that we can already see that the load factor doesn't make a good hash function bad, but expose problems of ``bad'' hash functions in some cases. 
+The results are shown in the same way displayed in the Red Dragon Book, with hash functions in the \( x \) axis and the ratio displayed in the \( y \) axis, with different identification for each file. We consider three sizes of tables to to count collisions, a ``small'', ``medium'' and a ``large'' table, the small table having a load factor (The percentage of the table occupied) of approximately \( \sim 0.5 \), the medium with \( \sim 0.05 \) and large with \( \sim 0.005 \). It's assumed that the modulo is not the responsibility of the hash function, so all hash functions return values from 0 to \( 2^{32} - 1 \), and the modulo is taken depending on the size of the table. From that we can already see that the load factor doesn't make a good hash function bad, but expose problems of ``bad'' hash functions in some cases. 
 
-Another thing that it is important to notice from the graph is the red dotted lines. The top one is the ``Upper'' threshold, which results greater than 6 are just considered ``Big'', as in some cases the ratio exploded to values up to 200. The lower 2 red lines are in \( y = 1.05 \) and \( y = 0.95 \) which is the interval that we consider a hash function to have ``Good'' values. 
+Another fact that it is important to notice from the graph is the red dotted lines. The top one is the ``Upper'' threshold, which results greater than 6 are just considered ``Big'', as in some cases the ratio exploded to values up to 200. The lower 2 red lines are in \( y = 1.05 \) and \( y = 0.95 \) which is the interval that we consider a hash function to have ``Good'' values. 
 
 The tests were made with 10 different hash functions, tested against 9 different files (Provided by strchr website). All of the code used to test this can be found in the github repo \citep{GithubRepo}. The 10 hash functions are the following:
 
 \begin{itemize}
-\item \textbf{bernsteinHashADD}: The bernstein hash function described earlier. We use the given hash template adding the elements. The multiplier is 33 and initial value is 5381. In the end we XOR the bits of the hash with itself shifted 16 to the right (That is half of the bits with our implementation).
+\item \textbf{bernsteinHashADD}: The Bernstein hash function described earlier. We use the given hash template adding the elements. The multiplier is 33 and initial value is 5381. In the end we XOR the bits of the hash with itself shifted 16 to the right (That is half of the bits with our implementation).
   
 \item \textbf{bernsteinHashXOR}: The same as above but substituting the first adding operator by the XOR operation.
 
-\item \textbf{kernighanRitchieHashADD} The Kernighan Ritchie Hash function described earlier. We use the given hash template adding the elements. The multiplier is 31 and initial value is 0.
+\item \textbf{kernighanRitchieHashADD} The Kernighan and Ritchie Hash function described earlier. We use the given hash template adding the elements. The multiplier is 31 and initial value is 0.
 
 \item \textbf{kernighanRitchieHashXOR} The same as above but substituting the first adding operator by the XOR operation.
 
-\item \textbf{redDragonBookHash} The hash function tested in the red dragon book. It is described as x65599 in the book.
+\item \textbf{redDragonBookHash} The hash function tested in the Red Dragon Book. It is described as x65599 in the book.
 
-\item \textbf{defaultHash} The default hash function of c++ standard template library.
+\item \textbf{defaultHash} The default hash function of C++ standard template library.
 
 \item \textbf{paulHesiehHash} A fast hash function described by Paul Hesieh. It is fast to calculate and more complex than Knuth multiplicative or division Hashing.
   
@@ -168,16 +164,16 @@ The tests were made with 10 different hash functions, tested against 9 different
 
 We have a variety of hash functions, with all being considered ``fast'' hash functions. The files tested include common words in English and french, strings of some IP values, numbers, common variable names and words with common prefix and suffix.
 
-First thing we can notice from those graphs is that changing the ADD function to XOR doesn't make a good multiplicative hash function bad. Both are actually ``Equivalent'' given that we are also multiplying the values. For ``dumbHashADD'' and ``dumbHashXOR'' we can see clear differences, with ``dumbHashXOR'' being clearly worse. This can be explained by the cancellation property of XOR. We can see this example on the hash of this IP below:
+First thing we can notice from those graphs is that changing the ADD function to XOR doesn't make a good multiplicative hash function bad. Both are actually ``Equivalent'' given that we are also multiplying the values. For \texttt{dumbHashADD} and \texttt{dumbHashXOR} we can see clear differences, with \texttt{dumbHashXOR} being clearly worse. This can be explained by the cancellation property of XOR. We can see this example on the hash of this IP below:
 
-\[ dumbHashXOR('168.1.1.0') = dumbHashXOR('168.2.2.0') = dumbHashXOR('124.6.8.0') \]
+\texttt{dumbHashXOR('168.1.1.0') = dumbHashXOR('168.2.2.0') = dumbHashXOR('124.6.8.0')}
 
 We can see that many different IPs have the same hash value. More than that, XOR don't increase the number of bits, so all the hashes will be of just 1 byte.
 
-Other thing that we can notice is that ``identity'' hash is good or perfect in some cases. One obvious case that ``identity'' function works perfectly is for numbers (We will have 0 collisions). Some languages, like python 3, use the identity function to calculate hash for integers, as it is very fast and produces no collisions. But we can see that for other cases, such as common prefix, it works terrible as we just get the first 4 bytes.
+Other thing that we can notice is that ``identity'' hash is good or perfect in some cases. One obvious case that ``identity'' function works perfectly is for numbers as we will have 0 collisions. Some languages, like Python 3, use the identity function to calculate hash for integers, as it is very fast and produces no collisions. But we can see that for other cases, such as common prefix, it works terrible as we just get the first 4 bytes.
 
 The most common multiplicative hash functions tend to work similarly well, being reasonably close to an uniformly random function (that is our ``ideal'' hash function) in all cases.
 
 As we can see, we don't need a lot of complexity to make a good hash function for a hash table. We have some functions working better for some specific case, like identity function working well for numbers, but general functions already work well enough.
 
-One thing that is important to say here is that hash function is a very vast topic, and here we just covered hash functions related to hash tables. Hash functions have applications in distributed systems (With consistent hashing), database indexing, caching, compilers (As it is explored in the red dragon book) and cryptography. Each application has different requirements and make some hash functions better than others.
+One thing that is important to note here is that hash function is a very vast topic, and here we just covered hash functions related to hash tables. Hash functions have applications in distributed systems (consistent hashing), database indexing, caching, compilers (Red Dragon Book) and cryptography. Each application has different requirements and make some hash functions better than others.
