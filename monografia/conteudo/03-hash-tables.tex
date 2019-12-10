@@ -109,7 +109,7 @@ where \( x \) is our key and \( i \) is the probe sequence number. So every time
 \section{Linear Probing}
 
 Linear probing is one of the most simple an practical probe sequences known. The probe sequence is basically:
-\[ h(x, i) = (H(x) + i) \mod M \],
+\[ h(x, i) = (H(x) + i) ~\mathrm{mod}~ M \],
 where \( M \) is the table size. That is a very simple probe sequence with not much secret on it. To implement the \texttt{insert} we can do the following:
 
 \begin{lstlisting}
