@@ -17,13 +17,13 @@ Hash tables or hash maps is one of the most used applications of hash functions.
 
 It is one of the possible, and many times considered the best, implementations of a dictionary. It has to implement the \texttt{insert}, \texttt{find} and \texttt{remove} operations, that can be accessed from outside the dictionary. It usually implements a lot of other private methods. 
 
-This data structure is usually considered very useful among software engineers and computer scientists, although it usually has a linear worst case cost for retrieving, inserting and deleting a key-value pair. That is because it has a constant average cost for those operations.
+This data structure is usually considered very useful among software engineers and computer scientists, although it usually has a linear worst case cost for retrieving, inserting and deleting a key-value pair. That is because hash tables usually have a constant average cost for those operations.
 
-Moreover, when talking about hash tables we have the problem of key collision, that is when two keys maps to the same hash value. As we saw in the previous chapter, collisions are more common than not, so collision resolution is a critical problem. To solve that problem, we have several techniques that involves different trade-offs. Those techniques are usually divided into two main categories, open addressing and separate chaining. Other problem to consider regarding this data structure is when to resize the hash table, to minimize the chance of collision and the use o memory. For this last one we usually consider a load factor, \( \alpha \), that is the ratio of keys with the available slots.
+Moreover, when talking about hash tables we have the problem of key collision, that is when two keys map to the same hash value. As we saw in the previous chapter, collisions are more common than not, so collision resolution is a critical problem. To solve that problem, we have several techniques that involve different trade-offs. Those techniques are usually divided into two main categories, open addressing and separate chaining. Other problem to consider regarding this data structure is when to resize the hash table, to minimize the chance of collision and the use o memory. For this last one we usually consider a load factor, \( \alpha \), that is the ratio of keys with the available slots in the table.
 
 \newpage
 
-Also, hash tables can be easily abstracted to hash sets, that are commonly used to store a set of elements and check whether an element is in the set. We can abstract that data structure to a hash table always with an empty value. Hash sets are one of the common ways to implement sets in programming languages, like unordered\_set from C++14.
+Also, hash tables can be easily abstracted to hash sets, commonly used to store a set of elements and check whether an element is in the set. We can abstract hash sets to a hash table always with an empty value. Hash sets are one of the common ways to implement sets in programming languages, like unordered\_set from C++14.
 
 It is also important to notice that hash tables have applications in different areas of computer science also, like compilers, caches and database indexing.
 
@@ -31,15 +31,17 @@ It is also important to notice that hash tables have applications in different a
 \begin{figure}[h!]
   \centering
   \includegraphics[width=12cm]{figuras/hash-table.pdf}
-  \caption{Example of a hash table from string to string, more specifically name to number. Source: Wikipedia, Jorge Stolfi }
+  \caption{Example of a hash table from string to string, more specifically name to phone number. Source: Wikipedia, Jorge Stolfi }
+  \label{fig:hashTable}
 \end{figure}
 
+In the above figure (\ref{fig:hashTable}), we can see an example of a hash function that matches names of people to phone numbers, as we saw in the first chapter. This table has no collisions, and we can see that, for example, ``Jhon Smith'' has a hash value of 2 and his value in the table is ``521-1234''. That is we associated a names with phone numbers.
 
 \newpage
 
 \section{No collision open addressing hash table }
 
-To start let's give an example of a hash table that has a perfect hash function, that is a function from \( X \) to \( [0, M) \) with no collisions from the used keys. For that example we use open addressing, that basically means that all data will be contained in an array (that is, the whole table). The operations \texttt{insert}, \texttt{find} and \texttt{remove} would be very easy to implement. For the sake of simplicity, I will assume all the keys are strings and values are integers. To start lets look at this simple class with dummy methods:
+To start let's give an example of a hash table that has a perfect hash function, that is a function from \( X \) to \( [0, M) \) with no collisions from the used keys. For that example we use open addressing, that basically means that all data will be contained in an array (that is, the whole table). The operations \texttt{insert}, \texttt{find} and \texttt{remove} would be very easy to implement. For the sake of simplicity, we will assume all the keys are strings and values are integers. To start lets look at this simple class with dummy methods:
 
 \begin{lstlisting}
 class HashTable {
@@ -123,7 +125,7 @@ void insert(string key, int value) {
 }
 \end{lstlisting}
 
-That assumes that \texttt{pair<string, int>("", 0)} is the empty position, and performs a linear search until it finds one empty position to put the new (key, value) pair. The implementation of find \texttt{find} is very similar:
+That assumes that \texttt{pair<string, int>("", 0)} is the empty position, and performs a linear search until it finds one empty position to put the new (key, value) pair. The implementation of \texttt{find} is very similar:
 
 \newpage
 
@@ -177,23 +179,23 @@ However linear probing has the problem of clustering, that is long chains of occ
 
 Another strategy for resolving collisions is quadratic probing. In this case, the probe sequence can be defined as:
 \[ h(x, i) = (H(x) + i^2) \mod M \]
-That solves the problem of having sequential hash values. The implementation of quadratic probing is very similar to the the implementation of linear probing, with the exception that instead of adding one for each step we can keep the initial value and add the square of a counter.
+That solves the problem of having sequential hash values. The implementation of quadratic probing is very similar to the implementation of linear probing, with the exception that instead of adding one for each step we can keep the initial value and add the square of a counter.
 
-However, quadratic probing doesn't solve the problem of clustering. Long chains are still expected to get longer and longer, the only difference is that the positions that lead to a longer chain are better distributed in the table. Another thing to notice is that quadratic probing has a worse locality than linear probing. 
+However, quadratic probing doesn't solve the problem of clustering. Long chains are still expected to get longer and longer, the only difference is that the positions that lead to a longer chain are better distributed in the table. Another thing to notice is that quadratic probing has a worse locality and cache friendliness than linear probing. 
 
 \section{Double Hashing}
 
 As we saw the two strategies above have the problem of clustering, due to the fact that the sequences are the same for all keys. For that reason double hashing is a very good approach for open addressing. Double hashing probe sequence can be defined as following:
 \[ h(x, i) = (H_1(x) + i * H_2(x)) \mod M \],
-where \( H_1 \) and \( H_2 \) are two distinct hash functions. In that way not only the initial hash value will depend on \( x \), but it's probe sequence offset will too. The implementation of double hashing is very similar to both quadratic and linear probing, with the difference that we sum a different offset.
+where \( H_1 \) and \( H_2 \) are two distinct hash functions. In that way not only the initial hash value will depend on \( x \), but it's probe sequence offset (that is, the number of slots between \(h(x, i) \) and \(h(x, i + 1) \)) will too. The implementation of double hashing is very similar to both quadratic and linear probing, except that we sum a different offset.
 
-These last three implementations of hash table gives us linear time worst case complexity for all operations and constant time expected time complexity under the simple uniform hashing assumption.
+These last three implementations of hash table give us linear time worst case complexity for all operations and constant time expected time complexity under the simple uniform hashing assumption.
 
 \section{Robin Hood Hashing}
 
-Robin Hood Hashing is an optimization technique regarding collision resolution with open addressing. It should be paired with Linear Probing, Quadratic Probing or Double Hashing, but usually it is paired with linear probing due to it's good locality and cache friendliness. It's basic is that it minimizes the distance of each key from its ``home Slot'', that is, its initial hash value position. \citep{RobinHoodHashing}. Also, Robin Hood hashing is one of the few open addressing strategies to be built-in in hash tables of some languages, such as Rust.
+Robin Hood Hashing is an optimization technique regarding collision resolution with open addressing. It should be paired with Linear Probing, Quadratic Probing or Double Hashing, but usually it is paired with linear probing due to it is good locality and cache friendliness. It is basic is that it minimizes the distance of each key from its ``home Slot'', that is, its initial hash value position. \citep{RobinHoodHashing}. Also, Robin Hood hashing is one of the few open addressing strategies to be built-in in hash tables of some languages, such as Rust.
 
-In order to minimize the distance from each key from its home slot, Robin Hood hashing uses a concept that is called Probe Sequence Length, or PSL, of an key-value pair. The PSL of a key-value pair is the number of probes required to find that pair. For that reason we need to define a new class to store in our table, that we will call \texttt{Node}:
+In order to minimize the distance from each key from its home slot, Robin Hood hashing uses a concept that is called Probe Sequence Length, or PSL, of a key-value pair. The PSL of a key-value pair is the number of probes required to find that pair. For that reason we need to define a new class to store in our table, that we will call \texttt{Node}:
 
 \begin{lstlisting}
 class Node {
@@ -217,7 +219,7 @@ const Node defaultNode = Node();
 
 \texttt{Node} is a very simple class that stores a key, a value and an unsigned integer that is the PSL. The main idea around Robin Hood hashing it to move the Nodes with a low PSL in favor of Nodes with a high PSL. We can think of Nodes with a high PSL as poor, because we take longer to find it, and Nodes with a low PSL as rich because we can find them faster. For that reason the algorithm is called Robin Hood Hashing \citep{RobinHoodHashing}.
 
-So as explained when inserting an element we first look for an empty position. While searching for it, we check whether the \texttt{Node} that is in our way has a lower PSL than the Node that we are inserting, and if that is the case we swap them, securing a position for the current Node and move the other node forward. The implementation of that algorithm using Linear Probing would be the following:
+As explained when inserting an element we first look for an empty position. While searching for it, we check whether the \texttt{Node} that is in the way has a lower PSL than the Node that we are inserting, and if that is the case we swap them, securing a position for the current Node and move the other node forward. The implementation of this algorithm using Linear Probing would be the following:
 
 \begin{lstlisting}
 void insert(string key, int value) {
@@ -235,7 +237,7 @@ void insert(string key, int value) {
 }
 \end{lstlisting}
 
-For the \texttt{find} method we can do various sort of lookups. Here we will focus on the lookup that is most similar with linear probing, but with a tweak that will make finding that keys are not present faster. We can keep that of what the PSL of that key-value pair would be if were inserted, and if we find a Node with a greater PSL that means the pair is not present. That is because all Nodes after it will also have a PSL greater than the current PSL. The implementation of what was described above would be the following:
+For the \texttt{find} method we can use different lookup techniques. Here we will focus on the lookup that is most similar with linear probing, but with a tweak that will make finding that keys are not present faster. While searching for a key, we can calculate what the PSL of that key would be if were inserted, and if we find a Node with a greater PSL that means the pair is not present. That is because all Nodes after it will also have a PSL greater than the current PSL. The implementation of what was described above would be the following:
 
 \newpage
 
@@ -256,7 +258,7 @@ int find(string key) {
 }
 \end{lstlisting}
 
-For the removal we can do a thing called \textit{backward shifting}. Although this will be discussed more in depth in the ``How to delete an entry'' section, this approach is unique to robin hood hashing and has a greater performance than rehashing.
+For the removal we can apply \textit{backward shifting}. Although this will be discussed more in depth in the ``How to delete an entry'' section, this approach is unique to robin hood hashing and has a better performance than rehashing.
 
 \textit{Backward shifting} consists in first clearing out the slot that contains the key to be removed, then shifting the following keys one step back until a Node with 0 PSL or an empty slot is encountered. The code for that would be the following:
 
@@ -286,7 +288,7 @@ We can always do that because the keys are always sorted according to the their 
 The worst time complexity of all operations is linear and the expected time complexity is constant. The expected length of the longest PSL in a full table is \( \log n \).
 \section{Cuckoo Hashing}
 
-Another well known strategy for collision resolution in open addressing is Cuckoo Hashing. It is a different strategy regarding the previous ones because it uses more than one array, usually two, but up to any number of arrays, to perform collision resolution. It is usually classified as open addressing because each slot can hold to up one key-value pair. For this explanation let's assume that we are using two arrays. Cuckoo hashing requires also one hash function per array used, in our case two hash functions.
+Another well known strategy for collision resolution in open addressing is Cuckoo Hashing. It is a different strategy regarding the previous ones because it uses more than one array, usually two, but up to any number of arrays, to perform collision resolution. It is usually classified as open addressing because each slot can hold up to one key-value pair. For this explanation let's assume that we are using two arrays. Cuckoo hashing requires also one hash function per array used, in our case two hash functions.
 
 %% Image representing cuckoo hashing
 
@@ -317,7 +319,7 @@ void insert(string key, int value) {
 
 This gives a very strong property to this collision resolution approach, that is every key value pair will be in its corresponding position in exactly one of the arrays. And this will give constant Lookup and Removal time. 
 
-In order to find an key value pair we just need to look if the key value pair is present in one of the tables. The code is the following:
+In order to find a key value pair we just need to look if the key value pair is present in one of the tables. The code is the following:
 
 \begin{lstlisting}
 int find(string key) {
@@ -344,7 +346,7 @@ void remove(string key) {
 }
 \end{lstlisting}
 
-Besides the amazing property of guaranteed constant lookup and removal, Cuckoo hashing has the problem of cycles during insertion, which can cause unwanted rehashes. To deal with that, many implementations also use a stash to keep a constant amount of elements in case the threshold is reached.
+Besides the amazing property of guaranteed constant lookup and removal, Cuckoo hashing has the problem of cycles during insertion, which can cause unwanted rehashes. To deal with that, many implementations also use a stash to keep a constant amount of elements in case the threshold is reached. A stash is a sort of ``bin'' of fixed size that we put key-value pairs that failed insertion, and during lookup we would also need to look at the stash.
 
 \section{Coalesced Hashing}
 
@@ -378,7 +380,7 @@ int find(string key) {
 }
 \end{lstlisting}
 
-To remove an node in coalesced hashing it is very difficult, as many other nodes can depend on it. For this reason the best way to delete an element in coalesced hashing is using a strategy that is known as tombstoning. The idea of this strategy is to put a placeholder value, that will be considered as occupied by the find method but as free by the insertion method. The code for that would be the following:
+Removing a node in coalesced hashing is very difficult, as many other nodes can depend on it. For this reason the best way to delete an element in coalesced hashing is by using a strategy that is known as tombstoning. The idea of this strategy is to put a placeholder value, that will be considered as occupied by the find method but as free by the insertion method. The code for that would be the following:
 
 \begin{lstlisting}
 void remove(string key) {
@@ -421,7 +423,7 @@ Chaining hashing, also known as closed addressing, is the implementation of a ha
 
 This implementation is considered simpler than open addressing, usually because the way of dealing with collisions is clearer. Also it is less system dependent if we consider performance (as we saw one of the key advantages of open addressing is that it is cache friendly). That is one of the key reasons that C++ uses chaining hashing for its default implementation of unordered\_hash \citep{HashTableProposal}.
 
-Below we will discuss an implementation of chaining hashing:
+Below we will discuss an implementation of chaining hashing.
 
 \section{Simple Chaining Hashing Algorithm}
 
@@ -467,7 +469,7 @@ void remove(string key) {
 
 As we can see, with linked list it is clearly easier to erase an element. 
 
-The naive of chaining hashing with a linked list gives linear worst time complexity for all operations and constant expected time complexity under the assumption of simple uniform hashing. 
+The naive algorithm of chaining hashing with a linked list gives linear worst time complexity for all operations and constant expected time complexity under the assumption of simple uniform hashing. 
 
 % THINK ABOUT PUTTING THAT.
 
@@ -475,7 +477,7 @@ The naive of chaining hashing with a linked list gives linear worst time complex
 
 \section{Move to front}
 
-One great optimization to chaining hashing is every time you execute the \texttt{find} method to move to the beginning of the container the element that was found. That will keep in the beginning of the container the elements that are searched the most. As in many applications we can apply the 80 / 20 rule this greatly helps in time performance.
+One great optimization to chaining hashing is every time you execute the \texttt{find} method to move to the beginning of the container the element that was found. That will keep in the beginning of the container the elements that are searched the most. As in many applications we can apply the 80 / 20 rule this greatly helps in time performance. The 80 / 20 rule is basically the idea that usually, 20\% of the keys will represent 80\% of the searches, this rule is also cited by Knuth \citep{TAOCP3}.
 
 If our container is a linked list we can easily adapt the above implementation to move to front every time we search an element, with const time complexity cost. The implementation of \texttt{find} would be the following:
 
@@ -503,16 +505,16 @@ Here we are using the \texttt{splice} method of list C++ standard library to mov
 In open addressing deleting an entry is considered hard by many of the collision resolution methods. Between clearing the entry and rehashing, clearing the entry and shifting the elements back or using tombstone, tombstone is usually considered the fastest approach due to its laziness.
 The problem with tombstones is that it can make the table ``dirty'' if we have a high number of deletions, making lookups or insertions slower. So one suggestion is to rehash your table in the case of a high number of tombstones.
 
-In contrast, deleting an entry in chaining hashing is delegated to the container that contains the key. That is, if we have a linked list as our container we just delegate the deletion to it. This is much easier is create less problems than open addressing deletion. That is one of the one of the reasons why chaining hashing is usually chosen for default hash table implementation in many languages, like in C++ \citep{UnorderedMapDiscussion}.
+In contrast, deleting an entry in chaining hashing is delegated to the container that contains the key. That is, if we have a linked list as our container we just delegate the deletion to it. This is much easier is create less problems than open addressing deletion. That is one of the reasons why chaining hashing is usually chosen for default hash table implementation in many languages, like in C++ \citep{UnorderedMapDiscussion}.
 
 \section{When to resize an array}
 
-In open addressing the load factor to resize a hash table can't be greater than 1.0, because the table can't have more elements than its capacity, that is not true for chaining hashing as we will see later on. A good load factor depends on several factors, such as the strategy used. Some strategies are more ``permissive'' of a load factor closer to 1, Robin Hood for example can still work well with load factors close to 0.9 and doesn't lose much performance with load factors greater than that \citep{RobinHoodDefault}. On the other hand Cuckoo Hashing doesn't work well with load factors greater than 0.5. Higher load factors means a better use o memory, which is an advantage of Open Addressing, where lower load factors means more memory used but greater efficiency when using the data structure. For that reason we try to always use the greater load factor possible without degrading much performance when using open addressing. In general this value ranges from 0.3 for cuckoo hashing up to .9 for robin hood hashing.
+In open addressing the load factor to resize a hash table can't be greater than 1.0, because the table can't have more elements than its capacity. That is not true for chaining hashing as we will see later on. A good load factor depends on several factors, such as the strategy used. Some strategies are more ``permissive'' of a load factor closer to 1, Robin Hood for example can still work well with load factors close to 0.9 and doesn't lose much performance with load factors greater than that \citep{RobinHoodDefault}. On the other hand, Cuckoo Hashing doesn't work well with load factors greater than 0.5. Higher load factors means a better use o memory, which is an advantage of Open Addressing, where lower load factors means more memory used but greater efficiency when using the data structure. For that reason we try to always use the greater load factor possible without degrading much performance when using open addressing. In general this value ranges from 0.3 for cuckoo hashing up to .9 for Robin Hood hashing.
 
-In contrast to open addressing, chaining hashing can have max load factors greater than 1.0, although many times those are not used, and when they are used they are not far from 1.0. Default hash tables of C++ and Java uses chaining hashing, and the max load factor for a hash table in C++ is 1.0, while for java it is 0.75. \citep{MaxLoadFactorCplusplus}.
-It can be easily proven that the expected time complexity for operations in chaining hashing is \( O(1 + \alpha) \) where \( \alpha \) is the max load factor. For that reasons an alpha as big as 2 still works reasonably well with chaining hashing.
-Although chaining hashing can still work well with bigger load factors it end up using more memory and also has a worse locality for cache purposes.
+In contrast to open addressing, chaining hashing can have max load factors greater than 1.0, although many times those are not used, and when they are used they are not far from 1.0. Default hash tables of C++ and Java use chaining hashing, and the max load factor for a hash table in C++ is 1.0, while for java is 0.75. \citep{MaxLoadFactorCplusplus}.
+It can be easily proven that the expected time complexity for operations in chaining hashing is \( O(1 + \alpha) \) where \( \alpha \) is the max load factor. For that reason an big alphas still works reasonably well with chaining hashing. Golang for example has 6.5 as max load factor.
+Although chaining hashing can still work well with bigger load factors it ends up using more memory and also has a worse locality for cache purposes.
 
 \section{Open Addressing vs Chaining Hashing}
 
-When comparing Open Addressing vs Chaining hashing we can cite many pros and cons. Lets start with the open addressing pros. Among the pros of open addressing we can see that open addressing techniques such as linear probing tend to be more cache friendly. That is because as the key value pairs are stored in the memory in a sequential way with the vector, when loading a key value pair we will load a chuck of memory that is around him (that will have other key value pairs). Another thing that can be said to illustrate that is the 80 / 20 rule, that when applied to hash tables means that ``in practice'' 80\% of the keys will be accessed 20\% of the time (and 20\% of the keys will be accessed 80\% of the time). This is only for illustration purposes, obviously this is not valid for every application, as we can artificially create one that don't apply. Another advantage of open addressing is that all the memory will be in a single and sequential ``Block'' of memory. 
+When comparing Open Addressing vs Chaining hashing we can cite many pros and cons. Let us start with the open addressing pros. Among the pros of open addressing we can see that open addressing techniques such as linear probing tend to be more cache friendly. That is because as the key value pairs are stored in the memory in a sequential way with the vector, when loading a key value pair we will load a chunck of memory that is around it (that will have other key value pairs). Related to it is the 80 / 20 rule, that when applied to hash tables means that ``in practice'' 80\% of the keys will be accessed 20\% of the time (and 20\% of the keys will be accessed 80\% of the time). This is only for illustration purposes, obviously this is not valid for every application, as we can artificially create one that does not follow the rule. Another advantage of open addressing is that all the memory will be in a single and sequential ``Block'' of memory. 

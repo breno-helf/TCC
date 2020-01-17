@@ -2,11 +2,11 @@
 \chapter{Final Remarks}
 \label{cap:conclusions}
 
-As we can see by previous chapters, hash functions and hash tables are very wide topics, with several details that we can have pages and pages with explanations. During this text the goal is to give a glance of how to implement a hash table data structure, with some other applications of the hash function itself.
+As we can see by previous chapters, hash functions and hash tables are very wide topics, with several details that we can have pages and pages with explanations. This text aimed to provide a glance on how to implement a hash table data structure, with some other applications of the hash function itself.
 
-It is important to notice that almost every programming language has it's implementation of a hash table, with some having a built-in implementation of a hash function for external usage. The most famous that we can cite here is Java, C++ (which have an implementation on STL), Golang, Python, Ruby, C\# and Scala. It's implementation may differ among paradigms as well, for example although in Scala Mutable hash maps uses chaining hashing, it also uses a Hash Trie for immutable hash maps, which is a complete different implementation with it's own specificalities and benefits for functional programming languages. \citep{hashMapAnalysis} 
+It is important to notice that almost every programming language has it's implementation of a hash table, with some having a built-in implementation of a hash function for external usage. The most famous that we can cite here is Java, C++ (which have an implementation on STL), Golang, Python, Ruby, C\# and Scala. Its implementation may differ among paradigms as well, for example although in Scala Mutable hash maps uses chaining hashing, it also uses a Hash Trie for immutable hash maps, which is a complete different implementation with it's own specificalities and benefits for functional programming languages. \citep{hashMapAnalysis} 
 
-One other interesting fact about hash tables is that it is an example about how memory locality is important in modern data structures. Memory locality is the proximity of the data accessed, which means that the data of your data structure is close to each other and it is ``cache friendly''. Although not accounted by usual complexity analysis, it is an important factor for regular used data structures, as one of the key performance factors of modern day processors.
+Another interesting fact about hash tables is that it is an example about how memory locality is important in modern data structures. Memory locality is the proximity of the data accessed, which means that the data of your data structure is close to each other and it is ``cache friendly''. Although not accounted by usual complexity analysis, it is an important factor for regular used data structures, as one of the key performance factors of modern day processors.
 
 During this text I also realized how deep we can go in each hash related topic. For that reason there are many contents that are not included here but are interesting to learn about. The main topics that would be included if I had more time were:
 
@@ -16,7 +16,7 @@ During this text I also realized how deep we can go in each hash related topic. 
 \item A deep analysis of the hash tables implemented during this text
 \end{itemize}
 
-Consistent hashing is a very interesting topic, because it is a special kind of hash function commonly used to implement sharded databases. It is special because when the table is resized, only \( \frac{K}{n} \) keys needs to be remapped on average, where K is the number of keys and N is the number of slots.\citep{wikiConsistent} This is very interesting and very useful in the context of databases because it easily allows horizontal scaling (that is, adding more machines).
+Consistent hashing is a very interesting topic, because it is a special kind of hash function commonly used to implement sharded databases. It is special because when the table is resized, only \( \frac{K}{n} \) keys need to be remapped on average, where K is the number of keys and N is the number of slots.\citep{wikiConsistent} This is very interesting and very useful in the context of databases because it easily allows horizontal scaling (that is, adding more machines).
 
 Another interesting topic that I would have liked to discuss is distributed hash tables. A very used application in modern day, distributed hash table is a service that simulated a hash table lookup in a distributed environment. Common examples of this is modern services such as Memcached and Redis, that allow fast responses and scaling in modern web applications.
 

@@ -10,12 +10,12 @@
 %\end{itemize}
 %% ------------------------------------------------------------------------- %%
 
-Hash functions and hash tables have a great number of applications in computer science. During this last section I focus on applications of hash functions in algorithms, but citing superficially applications in other areas (like cryptography, data deduplication and caching).
+Hash functions and hash tables have a great number of applications in computer science. In this chapter we present applications of hash functions in algorithms, and other areas (like cryptography, data deduplication and caching).
 
-Among the applications that I explain in this section there is a focus in two applications: Rabin-Karp string matching algorithm and hashing of a rooted tree for isomorphism checking. Rabin-karp string matching algorithm is one of the main applicat
-ion of a technique called rolling hashing. Hashing of rooted tree for isomorphism checking is an interesting application sometimes used in competitive programming.
+We focus in two applications: Rabin-Karp \citep{RabinKarpWiki} string matching algorithm and hashing of a rooted tree for isomorphism checking. Rabin-karp string matching algorithm is one of the main application of a technique called rolling hashing. Hashing of rooted tree for isomorphism checking \citep{TreeIsomorphism} is an interesting application sometimes used in competitive programming.
 
-To motivate the start of this thesis I will start using hash tables to solve a very simple, yet famous, problem called 3-sum.
+We start by presenting the so called 3-sum problem as a motivation.
+
 \section{3-sum problem}
 The problem is stated as following:
 
@@ -25,7 +25,7 @@ The problem is stated as following:
 
 \medskip
 
-This a very interesting problem that has many different solutions. To start I will show and explain to you the brute force solution:
+This a very interesting problem that has many different solutions. To start we present the brute force solution:
 
 \begin{lstlisting}
 bool threeSumWithoutHashTable(vector<int>& v, int S) {
@@ -63,7 +63,7 @@ bool threeSumWithHashTable(vector<int>& v, int S) {
 
 \medskip
 
-The above solution solves the problem in \( O(n^2) \), time complexity (average and expected) and \( O(n) \) memory complexity. Although the worst case scenario is \( O(n^3) \) and it uses more memory, this solution is way faster in practice for large input cases. To showcase this I made some simulations with different array sizes. The arrays were generated randomly and 100 arrays were generated for each test case, the results are: \\
+The above solution solves the problem in \( O(n^2) \) time complexity (average and expected) and \( O(n) \) memory complexity. Although the worst case scenario is \( O(n^3) \) and it uses more memory, this solution is way faster in practice for large input cases. To showcase this we did some simulations with different array sizes. The arrays were generated randomly and 100 arrays were generated for each test case, the results are: \\
 
 \bigskip
 
@@ -87,17 +87,17 @@ The above solution solves the problem in \( O(n^2) \), time complexity (average 
 
 \bigskip
 
-As we can see for the table above, the three sum solution using hash table quickly surpasses the brute force implementation. To learn more about how the tests were made, you can check the GithubRepo \citep{GithubRepo}.
+As we can see in the table above, the three sum solution using hash table quickly surpasses the brute force implementation. To learn more about how the tests were made, you can check the GithubRepo \citep{GithubRepo}.
 
 \section{Rabin-Karp}
 
-Rabin karp is a famous pattern matching on string algorithm. Differently than other classic solutions to pattern matching, such as Knuth-Morris-Pratt algorithm or Boyer Moore, Rabin karp is based on hashing. It relies on the property that if the hash of two strings is different, they are certainly different strings, and if they are equal, they can be the same string. The definition of the pattern matching problem is the following:
+Rabin Karp is a famous pattern matching on string algorithm. Differently than other classic solutions to pattern matching, such as Knuth-Morris-Pratt \citep{KMSWiki} algorithm or Boyer Moore \citep{BMWiki}, Rabin Karp is based on hashing. It relies on the property that if the hashes of two strings are not equal, they are certainly different strings, and if they are equal, they can be the same string. The definition of the pattern matching problem is the following:
 
 \medskip
 
 \textquote{\textit{Make a function that given two strings, one string t and one string p, it returns the index of the first occurrence of p in t, or -1 if p is not present in t. It is guaranteed that the length of t is greater than the length of p.}}
 
-So given two strings, we need to find the first occurrence of \( p \) in \( t \). To first solve this problem, I will use the naive, brute force solution:
+So given two strings, we need to find the first occurrence of \( p \) in \( t \). To first solve this problem, we use the naive, brute force solution:
 
 \begin{lstlisting}
 int findPatternBruteForce(string t, string p) {
@@ -160,9 +160,9 @@ int findPatternRabinKarp(string t, string p) {
 }
 \end{lstlisting}
 
-the expected time complexity of this algorithm is \( O(n) \), because the number of string collisions on line 17 on the code above is expected to be low. One interesting fact is that when testing both algorithms shown against each other, for random strings, generated with random lowercase alphabetic characters, the first algorithm is actually faster. That is because in most cases we would exit the brute force early on (we have actually \( (1/26)^j \) chance of getting to the next step for each check for an alphabetical random string), making it ``expected linear'' for this case. And as Rabin Karp has an overhead for calculating the hash, that makes it slower for that case. But that doesn't mean that the algorithm is actually worse, for real text and for random strings where each character is repeated 100 times the algorithm show its strength.
+The expected time complexity of this algorithm is \( O(n) \), because the number of string collisions on line 17 on the code above is expected to be low. One interesting fact is that when testing both algorithms shown against each other, for random strings, generated with random lowercase alphabetic characters, the first algorithm is actually faster. That is because in most cases we would exit the brute force early on (we have actually \( (1/26)^j \) chance of getting to the next step for each check for an alphabetical random string), making it ``expected linear'' for this case. And as Rabin Karp has an overhead for calculating the hash, that makes it slower for that case. But that doesn't mean that the algorithm is actually worse, for real text and for random strings where each character is repeated 100 times the algorithm show its strength.
 
-All the code and tests made for this algorithm can be find in my github \citep{GithubRepo}.
+All the code and tests made for this algorithm can be find in github \citep{GithubRepo}.
 
 \section{Complete tripartite graph}
 
@@ -170,21 +170,21 @@ We can also use hashing for graph problems. This is a pretty specific problem bu
 
 \medskip
 
-\textquote{\textit{Given an undirected graph, decided if the vertices can be partitioned in three groups, such that no two vertices of the same group are connected and every two vertices of different groups are connected .}}
+\textquote{\textit{Given an undirected graph, decide if the vertices can be partitioned in three groups, such that no two vertices of the same group are connected and every two vertices of different groups are connected .}}
 
 That is, given a graph decide if the graph is a tripartite complete graph. 
 
-One thing that we can easily notice in that problem is that all the vertices from a partition will have the same adjacency list (They will look to all the other vertices). From that we can hash every adjacency list into an integer, and divide the nodes in groups. If we have 3 groups, we have a potential tripartition. Then we can double check if all the vertices in a partition have an adjacency list of size \( n - partitionSize \), where \( n \) is the number of vertices in the graph and \( partitionSize \) is the size of the partition. That will guarantee that they are pointing to all vertices outside the partition.
+We can notice that all the vertices from a partition will have the same adjacency list (They will be adjacent all the other vertices). From that we can hash every adjacency list into an integer, and divide the nodes in groups. If we have 3 groups, we have a potential tripartition. Then we can double check if all the vertices in a partition have an adjacency list of size \( n - partitionSize \), where \( n \) is the number of vertices in the graph and \( partitionSize \) is the size of the partition. That will guarantee that they are pointing to all vertices outside the partition.
 
-For the hashing algorithm on the solution of this problem, we can use any of the hashing algorithms described in the first chapter, as we can see an array of integers as a string. If we use a hashing algorithm that is not \( dumbXOR \) or \( dumbADD \), we need to first sort the array to ensure that all equivalent lists will have the same array.
+For the hashing algorithm in the solution of this problem, we can use any of the hashing algorithms described in the first chapter, as we can see an array of integers as a string. If we use a hashing algorithm that is not \( dumbXOR \) or \( dumbADD \), we need to first sort the array to ensure that all equivalent lists will have the same array.
 
-If we use \( dumbXOR \) or \( dumbADD \), one thing that can help to minimize collisions is to give each vertex a random value in a greater set. For examples, if we have \( n = 10^5 \) for the size of our graph, we can map the nodes to a random value between \( 0 \) and \( 10^9 + 7 \). That would increase the size of our potential hashes, minimizing the possible collisions. This problem can be seen in codeforces: \url{https://codeforces.com/contest/1228/problem/D}
+If we use \( dumbXOR \) or \( dumbADD \), one thing that can help to minimize collisions is to give each vertex a random value in a greater set. For example if we have \( n = 10^5 \) for the size of our graph, we can map the nodes to a random value between \( 0 \) and \( 10^9 + 7 \). That would increase the size of our potential hashes, minimizing the possible collisions. This problem can be seen in codeforces: \url{https://codeforces.com/contest/1228/problem/D}
 
 \medskip
 
 \section{Hashing trees to check for isomorphism}
 
-For this last algorithmic application of hash functions and hash tables I will describe how to decide if two rooted trees are isomorphic. We say that two trees,  \( T_1 \) and \( T_2 \) are isomorphic if there is a bijection between vertices \(V_1 \) and \(V_2 \) such that:
+For this last algorithmic application of hash functions and hash tables we describe how to decide if two rooted trees are isomorphic. We say that two trees,  \( T_1 \) and \( T_2 \) are isomorphic if there is a bijection \( \phi \) between the set of vertices \(V_1 \) and \(V_2\) of the trees, such that:
 
 \[ \forall u, v \in V_1~ ~ u ~adj_{T_1} ~v \iff \phi(u) ~adj_{T_2} ~\phi(v) \]
 
@@ -194,24 +194,25 @@ Given that definition, we can state the problem of deciding if two trees are iso
 
 \medskip
 
-\textquote{\textit{Make a function that given two rooted trees, decide if they are isomorphic.}}
+\textquote{\textit{Write a function that given two rooted trees, decide if they are isomorphic.}}
 
 \medskip
 
-We could solve this problem using hash functions if we knew how to hash trees to integers. As we saw in the first chapter, everything is bits in the end and we just need a smart way of representing our data. We can represent a rooted tree as a node that points to its child nodes and so on. So we could define a great hash function that always collide when we have isomorphic trees. The following hash function was described by competitive programmer \textit{rng\_58} in his blog \citep{TreeIsomorphism}.
+We could solve this problem using hash functions if we knew how to hash trees to integers. As we saw in the first chapter, everything is bits in the end and we just need a smart way of representing our data. We can represent a rooted tree as a node that points to its child nodes and so on. So we could define a hash function that always collide when we have isomorphic trees. The following hash function was described by competitive programmer \textit{rng\_58} in his blog \citep{TreeIsomorphism}.
 
 
 \[ Hash(N) = \begin{cases} x_0 ~\text{if N is a leaf (has no childs)} \\
     \Pi_{i = 1}^{k} (x_d + Hash(C_i)) ~mod M ~\text{where} ~C_i ~\text{is a child node, and d is the height of N}
   \end{cases} \]
 
-For that function we need an array \( x \) at the least the size of the maximum height between both trees. That function is actually a polynomial value of our tree. We can visualize that on the following image:
+For that function we need an array \( x \) of size at least the maximum height between both trees. That function is actually a polynomial value of our tree. We can visualize that on the following image:
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=12.5cm]{figuras/treeIsomorphism.png}
+  \includegraphics[width=8.5cm]{figuras/treeIsomorphism.png}
   \caption{Example of a tree with the hash of each node. }
 \end{figure}
+
 
 On the above picture we can see that the hash function is cumulative, and it forms a polynomial function in the end. The code for the above algorithm can be written as following in C++14:
 
@@ -231,7 +232,7 @@ long long hashTree(int u, int p) {
 
 The hash of a tree can be defined recursively by the hashes of its subtrees. We can define the values of the array \( X \) as random values between \( 0 \) and \texttt{MOD - 1}. We can also trivially calculate the height of each node recursively. The algorithm described is linear.
 
-One interesting caveat of this problem is that, although hashing trees to check for isomorphism only works with rooted trees, we can make it work for the problem of checking tree isomorphism for arbitrary trees. The basic idea is that we can root the tree by the center or centroid of tree (Because we know that we only have at most 2 centers or centroids on a tree). If we have more than one center or centroid, we can calculate the hash of the tree rooted by both for the check. As this is not on the scope of this thesis I will limit the explanation here, but you can learn more about it in the bibliography \citep{Centroid}.
+One interesting caveat of this problem is that, although hashing trees to check for isomorphism only works with rooted trees, we can make it work for the problem of checking tree isomorphism for arbitrary trees. The basic idea is that we can root the tree by the center or centroid of tree (Because we know that we only have at most 2 centers or centroids on a tree). If we have more than one center or centroid, we can calculate the hash of the tree rooted by both and check if at least one of the hashed match. As this is not on the scope of this text I will limit the explanation here, but one can learn more about it in the bibliography \citep{Centroid}.
 
 It is also important to cite here that there is another algorithm, the Aho-Hopcroft-Ulman algorithm, that runs in worst case linear time complexity that also solves the tree isomorphism problem. This algorithm is based on comparing both trees in a bottom up fashion \cite{AHU}.
 
