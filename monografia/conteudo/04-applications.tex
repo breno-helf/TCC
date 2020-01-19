@@ -27,6 +27,8 @@ The problem is stated as following:
 
 This a very interesting problem that has many different solutions. To start we present the brute force solution:
 
+\newpage
+
 \begin{lstlisting}
 bool threeSumWithoutHashTable(vector<int>& v, int S) {
    for (int i = 0; i < v.size(); i++)
@@ -37,11 +39,7 @@ bool threeSumWithoutHashTable(vector<int>& v, int S) {
 }
 \end{lstlisting}
 
-\medskip
-
 The above solution solves the problem in \( O(n^3) \) time complexity and \( O(1) \) memory complexity, being \( n \) the size of the array. It doesn't allocate any memory but checks every triple to find if one satisfy the condition. The question is, can we do better in time complexity using hash tables? The answer is yes:
-
-\medskip
 
 \begin{lstlisting}
 bool threeSumWithHashTable(vector<int>& v, int S) {
@@ -60,8 +58,6 @@ bool threeSumWithHashTable(vector<int>& v, int S) {
    return false;
 }
 \end{lstlisting}
-
-\medskip
 
 The above solution solves the problem in \( O(n^2) \) time complexity (average and expected) and \( O(n) \) memory complexity. Although the worst case scenario is \( O(n^3) \) and it uses more memory, this solution is way faster in practice for large input cases. To showcase this we did some simulations with different array sizes. The arrays were generated randomly and 100 arrays were generated for each test case, the results are: \\
 
@@ -85,20 +81,13 @@ The above solution solves the problem in \( O(n^2) \) time complexity (average a
   \hline
 \end{tabular}
 
-\bigskip
-
 As we can see in the table above, the three sum solution using hash table quickly surpasses the brute force implementation. To learn more about how the tests were made, you can check the GithubRepo \citep{GithubRepo}.
-
 \section{Rabin-Karp}
-
 Rabin Karp is a famous pattern matching on string algorithm. Differently than other classic solutions to pattern matching, such as Knuth-Morris-Pratt \citep{KMSWiki} algorithm or Boyer Moore \citep{BMWiki}, Rabin Karp is based on hashing. It relies on the property that if the hashes of two strings are not equal, they are certainly different strings, and if they are equal, they can be the same string. The definition of the pattern matching problem is the following:
-
-\medskip
 
 \textquote{\textit{Make a function that given two strings, one string t and one string p, it returns the index of the first occurrence of p in t, or -1 if p is not present in t. It is guaranteed that the length of t is greater than the length of p.}}
 
 So given two strings, we need to find the first occurrence of \( p \) in \( t \). To first solve this problem, we use the naive, brute force solution:
-
 \begin{lstlisting}
 int findPatternBruteForce(string t, string p) {
    for (int i = 0; i <= t.size() - p.size(); i++) {

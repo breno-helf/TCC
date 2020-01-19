@@ -108,6 +108,8 @@ We can define open addressing in a general way as a hash table algorithm where t
 \[ h(x, i) \],
 where \( x \) is our key and \( i \) is the probe sequence number. So every time we have a collision in \( h(x, i) \) we can simply go to \( h(x, i + 1) \). Given that, lets look into some different probe sequences.
 
+At the end of each section there will be a \rightthumbsup and a \rightthumbsdown to indicate a summary of pros and cons.
+
 \section{Linear Probing}
 
 Linear probing is one of the most simple an practical probe sequences known. The probe sequence is basically:
@@ -175,6 +177,10 @@ With that, the three operations have linear time complexity in the worst case. A
 
 However linear probing has the problem of clustering, that is long chains of occupied positions. This generates a greater problem, as long chains are only expected to get longer and longer. This can get worse if the hash function is not too sensitive to changes, having a lot of sequential hash values. 
 
+\rightthumbsup It is easy to implement and cache friedly.
+
+\rightthumbsdown It has problems with clustering.
+
 \section{Quadratic Probing}
 
 Another strategy for resolving collisions is quadratic probing. In this case, the probe sequence can be defined as:
@@ -182,6 +188,10 @@ Another strategy for resolving collisions is quadratic probing. In this case, th
 That solves the problem of having sequential hash values. The implementation of quadratic probing is very similar to the implementation of linear probing, with the exception that instead of adding one for each step we can keep the initial value and add the square of a counter.
 
 However, quadratic probing doesn't solve the problem of clustering. Long chains are still expected to get longer and longer, the only difference is that the positions that lead to a longer chain are better distributed in the table. Another thing to notice is that quadratic probing has a worse locality and cache friendliness than linear probing. 
+
+\rightthumbsup It is easy to implement and has less problems with clustering than linear probing
+
+\rightthumbsdown It is less cache friendly than linear probing and still has some clustering problems
 
 \section{Double Hashing}
 
@@ -191,11 +201,17 @@ where \( H_1 \) and \( H_2 \) are two distinct hash functions. In that way not o
 
 These last three implementations of hash table give us linear time worst case complexity for all operations and constant time expected time complexity under the simple uniform hashing assumption.
 
+\rightthumbsup has even less problems with clustering than linear probing and quadratic probing
+
+\rightthumbsdown It is less cache friendly than linear probing and requires 2 hash functions
+
 \section{Robin Hood Hashing}
 
 Robin Hood Hashing is an optimization technique regarding collision resolution with open addressing. It should be paired with Linear Probing, Quadratic Probing or Double Hashing, but usually it is paired with linear probing due to it is good locality and cache friendliness. It is basic is that it minimizes the distance of each key from its ``home Slot'', that is, its initial hash value position. \citep{RobinHoodHashing}. Also, Robin Hood hashing is one of the few open addressing strategies to be built-in in hash tables of some languages, such as Rust.
 
 In order to minimize the distance from each key from its home slot, Robin Hood hashing uses a concept that is called Probe Sequence Length, or PSL, of a key-value pair. The PSL of a key-value pair is the number of probes required to find that pair. For that reason we need to define a new class to store in our table, that we will call \texttt{Node}:
+
+\newpage
 
 \begin{lstlisting}
 class Node {
@@ -221,6 +237,8 @@ const Node defaultNode = Node();
 
 As explained when inserting an element we first look for an empty position. While searching for it, we check whether the \texttt{Node} that is in the way has a lower PSL than the Node that we are inserting, and if that is the case we swap them, securing a position for the current Node and move the other node forward. The implementation of this algorithm using Linear Probing would be the following:
 
+\newpage
+
 \begin{lstlisting}
 void insert(string key, int value) {
   resizeIfNecessary();
@@ -238,8 +256,6 @@ void insert(string key, int value) {
 \end{lstlisting}
 
 For the \texttt{find} method we can use different lookup techniques. Here we will focus on the lookup that is most similar with linear probing, but with a tweak that will make finding that keys are not present faster. While searching for a key, we can calculate what the PSL of that key would be if were inserted, and if we find a Node with a greater PSL that means the pair is not present. That is because all Nodes after it will also have a PSL greater than the current PSL. The implementation of what was described above would be the following:
-
-\newpage
 
 \begin{lstlisting}
 int find(string key) {
@@ -286,6 +302,11 @@ void remove(string key) {
 We can always do that because the keys are always sorted according to the their home slot (That is, the first Node with PSL that is 0 that comes before them).
 
 The worst time complexity of all operations is linear and the expected time complexity is constant. The expected length of the longest PSL in a full table is \( \log n \).
+
+\rightthumbsup It is easy to implement and it is cache friendly. Also has a better performance than linear probing.
+
+\rightthumbsdown Uses more memory than linear probing and also more complex to implement
+
 \section{Cuckoo Hashing}
 
 Another well known strategy for collision resolution in open addressing is Cuckoo Hashing. It is a different strategy regarding the previous ones because it uses more than one array, usually two, but up to any number of arrays, to perform collision resolution. It is usually classified as open addressing because each slot can hold up to one key-value pair. For this explanation let's assume that we are using two arrays. Cuckoo hashing requires also one hash function per array used, in our case two hash functions.
@@ -321,6 +342,8 @@ This gives a very strong property to this collision resolution approach, that is
 
 In order to find a key value pair we just need to look if the key value pair is present in one of the tables. The code is the following:
 
+\newpage
+
 \begin{lstlisting}
 int find(string key) {
   for (unsigned int j = 0; j < numTables; j++) {
@@ -347,6 +370,10 @@ void remove(string key) {
 \end{lstlisting}
 
 Besides the amazing property of guaranteed constant lookup and removal, Cuckoo hashing has the problem of cycles during insertion, which can cause unwanted rehashes. To deal with that, many implementations also use a stash to keep a constant amount of elements in case the threshold is reached. A stash is a sort of ``bin'' of fixed size that we put key-value pairs that failed insertion, and during lookup we would also need to look at the stash.
+
+\rightthumbsup Has guaranteed constant lookup and deletion
+
+\rightthumbsdown Complex to implement, insertion can be very slow
 
 \section{Coalesced Hashing}
 
@@ -381,6 +408,8 @@ int find(string key) {
 \end{lstlisting}
 
 Removing a node in coalesced hashing is very difficult, as many other nodes can depend on it. For this reason the best way to delete an element in coalesced hashing is by using a strategy that is known as tombstoning. The idea of this strategy is to put a placeholder value, that will be considered as occupied by the find method but as free by the insertion method. The code for that would be the following:
+
+\newpage
 
 \begin{lstlisting}
 void remove(string key) {
@@ -417,13 +446,17 @@ void insert(string key, int value) {
 }
 \end{lstlisting}
 
+\rightthumbsup It uses little memory
+
+\rightthumbsdown Has complex deletion and usually very slow
+
 \section{Chaining hashing}
 
 Chaining hashing, also known as closed addressing, is the implementation of a hash table using a container, usually called bucket, to store the (key, value) pairs with a given hash. On this implementation, each bucket of the table is a linked list, that will carry the key value pair in our case. We deal with collisions with this implementation by adding a new node to the start of the list.
 
 This implementation is considered simpler than open addressing, usually because the way of dealing with collisions is clearer. Also it is less system dependent if we consider performance (as we saw one of the key advantages of open addressing is that it is cache friendly). That is one of the key reasons that C++ uses chaining hashing for its default implementation of unordered\_hash \citep{HashTableProposal}.
 
-Below we will discuss an implementation of chaining hashing.
+Below we will discuss an implementation of chaining hashing and just like in open addressing at the end of each section there will be a \rightthumbsup and a \rightthumbsdown to indicate a summary of pros and cons.
 
 \section{Simple Chaining Hashing Algorithm}
 
@@ -441,6 +474,8 @@ void insert(string key, int value) {
 As we can see it is a very simple implementation, we just push a new element in the front of the list pointed in the idx. As before we add the counter of elements in the list and call resizeIfNcessary().
 
 For \texttt{find} we can implement in the following way:
+
+\newpage
 
 \begin{lstlisting}
 int find(string key) {
@@ -471,6 +506,10 @@ As we can see, with linked list it is clearly easier to erase an element.
 
 The naive algorithm of chaining hashing with a linked list gives linear worst time complexity for all operations and constant expected time complexity under the assumption of simple uniform hashing. 
 
+\rightthumbsup Very consistent implementation, which makes it a good choice for default and built in hash tables.
+
+\rightthumbsdown Not as fast as open addressing variants, usually due to not being as cache friendly.
+
 % THINK ABOUT PUTTING THAT.
 
 %One interesting thing to notice regarding chaining hashing implementation in C++ is that we may have a greater performance with implementations using vector instead of list, because of the better locality of vector.
@@ -499,6 +538,9 @@ int find(string key) {
 
 Here we are using the \texttt{splice} method of list C++ standard library to move an element inside a list. This still keeps the complexity of \texttt{find} in linear worst time and constant expected time. It is important to notice here that if our container wasn't a linked list we could take longer than constant time to move it to front.
 
+\rightthumbsup Faster than normal chaining hashing if you have some keys more requested by lookup than others.
+
+\rightthumbsdown Slower than normal chaining hashing if lookups are usually for different keys.
 
 \section{How to delete an entry}
 
